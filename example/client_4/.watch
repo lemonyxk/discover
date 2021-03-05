@@ -1,0 +1,41 @@
+[ignore]
+.idea
+.git
+.watch
+vendor
+node_modules
+main
+data*
+example*
+client*
+
+
+[command]
+#
+# you command
+# whatever will be executed
+# example: ls
+#
+# dir or file: you command
+# variable: $DIR = project dir
+# execute when the dir or file has changed
+# example: echo $PATH
+#          main.go: echo hello
+#          .: go run main.go
+#          .: go run $DIR/main.go
+#          ./src: ls
+#          ./test*: echo test
+#
+
+#go build -o main ../../main.go && ./main --file config.json
+go run ../main.go --config config.json
+
+[host]
+# http://127.0.0.1:12365
+# http://127.0.0.1:12365/reload?name=.
+# http://127.0.0.1:12365/reload
+# http://127.0.0.1:12365/reload?name=$DIR
+# http://127.0.0.1:12365/reload?name=./src
+# http://127.0.0.1:12365/reload?name=./src*
+
+http://127.0.0.1:12368/reload

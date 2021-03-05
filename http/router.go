@@ -1,0 +1,79 @@
+/**
+* @program: discover
+*
+* @description:
+*
+* @author: lemo
+*
+* @create: 2021-02-02 18:01
+**/
+
+package http
+
+import (
+	"errors"
+
+	"github.com/lemoyxk/kitty/http"
+	"github.com/lemoyxk/kitty/http/server"
+	"github.com/lemoyxk/utils"
+
+	"discover/app"
+)
+
+func Router(router *server.Router) {
+	router.Group().Before(localIP, secret).Handler(func(handler *server.RouteHandler) {
+		handler.Post("/Join").Handler(Join)
+		handler.Post("/Leave").Handler(Leave)
+		handler.Get("/IsMaster").Handler(IsMaster)
+	})
+
+	router.Group().Before(localIP, ready).Handler(func(handler *server.RouteHandler) {
+		handler.Get("/WhoIsMaster").Handler(WhoIsMaster)
+		handler.Get("/ServerList").Handler(ServerList)
+		handler.Get("/Get").Handler(Get)
+	})
+
+	router.Group().Before(localIP, ready, isMaster).Handler(func(handler *server.RouteHandler) {
+		handler.Post("/Set").Handler(Set)
+		handler.Post("/Delete").Handler(Delete)
+		// handler.Post("/Login").Handler(Login)
+		// handler.Post("/LoginOut").Handler(LoginOut)
+	})
+}
+
+func secret(stream *http.Stream) error {
+	var secret = stream.AutoGet("secret").String()
+	if app.Node.Config.Secret != secret {
+		var msg = "NO\nNO PERMISSION"
+		_ = stream.EndString(msg)
+		return errors.New(msg)
+	}
+	return nil
+}
+
+func isMaster(stream *http.Stream) error {
+	if !app.Node.IsMaster() {
+		var msg = "NO\nNOT Master"
+		_ = stream.EndString(msg)
+		return errors.New(msg)
+	}
+	return nil
+}
+
+func localIP(stream *http.Stream) error {
+	if !utils.Addr.IsLocalIP(stream.ClientIP()) {
+		var msg = "NO\nNOT LOCAL IP"
+		_ = stream.EndString(msg)
+		return errors.New(msg)
+	}
+	return nil
+}
+
+func ready(stream *http.Stream) error {
+	if !app.Node.IsReady() {
+		var msg = "NO\nNOT READY"
+		_ = stream.EndString(msg)
+		return errors.New(msg)
+	}
+	return nil
+}

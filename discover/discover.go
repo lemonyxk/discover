@@ -1,0 +1,179 @@
+/**
+* @program: discover
+*
+* @description:
+*
+* @author: lemo
+*
+* @create: 2021-02-27 16:35
+**/
+
+package discover
+
+import (
+	"errors"
+	"sync/atomic"
+	"time"
+
+	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/kitty/socket"
+	client2 "github.com/lemoyxk/kitty/socket/websocket/client"
+
+	"discover/structs"
+)
+
+var hasAlive int32 = 0
+var hasKey int32 = 0
+
+type discover struct {
+	serverList []structs.WhoIsMaster
+	master     structs.Address
+	register   *client2.Client
+	listen     *client2.Client
+
+	registerFn func()
+	aliveFn    func()
+	listenFn   func()
+}
+
+type alive struct {
+	dis        *discover
+	serverList []string
+}
+
+func (dis *discover) Register(serverName, addr string) {
+
+	if serverName == "" || addr == "" {
+		panic("server name or addr is empty")
+	}
+
+	dis.registerFn = func() {
+
+		var stream, err = dis.register.Async().JsonEmit(socket.JsonPack{
+			Event: "/Register",
+			Data: structs.ServerInfo{
+				ServerName: serverName,
+				Addr:       addr,
+			},
+		})
+		if err != nil {
+			console.Info(err)
+			time.Sleep(time.Second)
+			dis.registerFn()
+			return
+		}
+
+		if string(stream.Data) != `"OK"` {
+			console.Info(errors.New(string(stream.Data)))
+			time.Sleep(time.Second)
+			dis.registerFn()
+			return
+		}
+	}
+
+	dis.registerFn()
+}
+
+func (dis *discover) Alive(serverList ...string) *alive {
+
+	if atomic.AddInt32(&hasAlive, 1) > 1 {
+		panic("repeat monitoring")
+	}
+
+	return &alive{
+		dis:        dis,
+		serverList: serverList,
+	}
+}
+
+func (w *alive) Watch(fn func(data string)) {
+
+	if len(w.serverList) == 0 {
+		return
+	}
+
+	w.dis.aliveFn = func() {
+		w.dis.register.GetRouter().Remove("/OnRegister")
+		w.dis.register.GetRouter().Route("/OnRegister").Handler(func(client *client2.Client, stream *socket.Stream) error {
+			fn(string(stream.Data))
+			return nil
+		})
+
+		var err = w.dis.register.JsonEmit(socket.JsonPack{
+			Event: "/OnRegister",
+			Data:  w.serverList,
+		})
+		if err != nil {
+			time.Sleep(time.Second)
+			w.dis.aliveFn()
+			return
+		}
+	}
+
+	w.dis.aliveFn()
+}
+
+type key struct {
+	dis     *discover
+	keyList []string
+}
+
+func (dis *discover) Key(keyList ...string) *key {
+
+	if atomic.AddInt32(&hasKey, 1) > 1 {
+		panic("repeat monitoring")
+	}
+
+	return &key{
+		dis:     dis,
+		keyList: keyList,
+	}
+}
+
+func (k *key) Watch(fn func(data string)) {
+
+	if len(k.keyList) == 0 {
+		return
+	}
+
+	k.dis.listenFn = func() {
+
+		k.dis.listen.GetRouter().Remove("/OnListen")
+		k.dis.listen.GetRouter().Route("/OnListen").Handler(func(client *client2.Client, stream *socket.Stream) error {
+			fn(string(stream.Data))
+			return nil
+		})
+
+		var stream, err = k.dis.listen.Async().JsonEmit(socket.JsonPack{
+			Event: "/Listen",
+			Data:  k.keyList,
+		})
+		if err != nil {
+			console.Info(err)
+			time.Sleep(time.Second)
+			k.dis.listenFn()
+			return
+		}
+
+		if string(stream.Data) != `"OK"` {
+			console.Info(errors.New(string(stream.Data)))
+			time.Sleep(time.Second)
+			k.dis.listenFn()
+			return
+		}
+	}
+
+	k.dis.listenFn()
+}
+
+func (dis *discover) refreshMaster() {
+	var register = dis.getMasterServer()
+	dis.register.Host = register.Tcp
+	console.Info("new register addr:", register.Addr)
+}
+
+func (dis *discover) refreshCluster() {
+	var listen = dis.randomAddr()
+	dis.listen.Host = listen.Tcp
+	console.Info("new listen addr:", listen.Addr)
+}
