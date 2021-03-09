@@ -18,6 +18,7 @@ import (
 	"github.com/lemoyxk/kitty/socket/websocket/server"
 
 	"discover/app"
+	"discover/message"
 )
 
 func Start(host string, fn func()) {
@@ -52,9 +53,9 @@ func Start(host string, fn func()) {
 			var list = app.Node.Alive.GetData(data.ServerInfo.ServerName)
 			var connections = app.Node.Alive.GetConn(data.ServerInfo.ServerName)
 			for i := 0; i < len(connections); i++ {
-				_ = connections[i].JsonEmit(socket.JsonPack{
+				_ = connections[i].ProtoBufEmit(socket.ProtoBufPack{
 					Event: "/OnRegister",
-					Data:  list,
+					Data:  &message.ServerInfoList{List: list},
 				})
 			}
 		}

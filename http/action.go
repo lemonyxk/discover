@@ -59,7 +59,7 @@ func IsMaster(stream *http.Stream) error {
 }
 
 func WhoIsMaster(stream *http.Stream) error {
-	return stream.EndString("OK\n" + app.Node.GetMaster().Addr)
+	return stream.EndString("OK\n" + string(utils.Json.Encode(app.Node.GetMaster())))
 }
 
 // NOTICE
@@ -131,43 +131,3 @@ func Delete(stream *http.Stream) error {
 
 	return stream.EndString("OK")
 }
-
-//
-// func Login(stream *http.Stream) error {
-//
-// 	var serverName = stream.Form.First("serverName").String()
-// 	if serverName == "" {
-// 		return stream.EndString("NO\nSERVER NAME IS EMPTY")
-// 	}
-//
-// 	var addr = stream.Form.First("addr").String()
-// 	if addr == "" {
-// 		return stream.EndString("NO\nADDR IS EMPTY")
-// 	}
-//
-// 	var err = app.Node.State.Add(serverName, addr)
-// 	if err != nil {
-// 		return stream.EndString("NO\n" + err.Error())
-// 	}
-//
-// 	return stream.EndString("OK")
-// }
-//
-// func LoginOut(stream *http.Stream) error {
-// 	var serverName = stream.Form.First("serverName").String()
-// 	if serverName == "" {
-// 		return stream.EndString("NO\nSERVER NAME IS EMPTY")
-// 	}
-//
-// 	var addr = stream.Form.First("addr").String()
-// 	if addr == "" {
-// 		return stream.EndString("NO\nADDR IS EMPTY")
-// 	}
-//
-// 	var err = app.Node.State.Delete(serverName, addr)
-// 	if err != nil {
-// 		return stream.EndString("NO\n" + err.Error())
-// 	}
-//
-// 	return stream.EndString("OK")
-// }

@@ -15,13 +15,13 @@ import (
 
 	"github.com/lemoyxk/kitty/socket/websocket/server"
 
-	"discover/structs"
+	"discover/message"
 )
 
 type alive struct {
 	mux  sync.Mutex
 	conn map[string][]*server.Conn
-	data map[string][]structs.ServerInfo
+	data map[string][]*message.ServerInfo
 }
 
 func (s *alive) AllConn() map[string][]*server.Conn {
@@ -101,13 +101,13 @@ func (s *alive) DestroyConn() {
 	s.conn = make(map[string][]*server.Conn)
 }
 
-func (s *alive) AllData() map[string][]structs.ServerInfo {
+func (s *alive) AllData() map[string][]*message.ServerInfo {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	return s.data
 }
 
-func (s *alive) GetData(serverName string) []structs.ServerInfo {
+func (s *alive) GetData(serverName string) []*message.ServerInfo {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	var list, ok = s.data[serverName]
@@ -121,14 +121,14 @@ func (s *alive) AddData(serverName, addr string) bool {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 
-	var info = structs.ServerInfo{
+	var info = message.ServerInfo{
 		ServerName: serverName,
 		Addr:       addr,
 	}
 
 	var list, ok = s.data[serverName]
 	if !ok {
-		s.data[serverName] = append(s.data[serverName], info)
+		s.data[serverName] = append(s.data[serverName], &info)
 		return true
 	}
 
@@ -139,7 +139,7 @@ func (s *alive) AddData(serverName, addr string) bool {
 		}
 	}
 
-	s.data[serverName] = append(s.data[serverName], info)
+	s.data[serverName] = append(s.data[serverName], &info)
 
 	return true
 }
@@ -181,5 +181,5 @@ func (s *alive) DeleteData(serverName, addr string) bool {
 func (s *alive) DestroyData() {
 	s.mux.Lock()
 	defer s.mux.Unlock()
-	s.data = map[string][]structs.ServerInfo{}
+	s.data = map[string][]*message.ServerInfo{}
 }

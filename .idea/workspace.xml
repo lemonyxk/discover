@@ -2,57 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1b9bbf93-090f-4100-b063-0a9288e65d86" name="Default Changelist" comment="1.init.">
-      <change afterPath="$PROJECT_DIR$/.idea/discover.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.watch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/addr.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/alive.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/change.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/key.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/map.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/node.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/regster.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/discover/action.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/discover/client.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/discover/discover.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/discover/key.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/discover/url.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_1/.watch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_1/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_1/data/raft.db" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_2/.watch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_2/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_2/data/raft.db" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_3/.watch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_3/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_3/data/raft.db" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_4/.watch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_4/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/client_4/data/raft.db" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example_client/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/http/action.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/http/router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/http/server.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/store/bolt.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/store/store.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/store/utils.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/structs/structs.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tcp/action.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tcp/router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tcp/server.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/udp/client/action.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/udp/client/client.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/udp/client/router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/udp/server/action.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/udp/server/router.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/udp/server/server.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/protobuf/message.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/discover.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discover.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.watch" beforeDir="false" afterPath="$PROJECT_DIR$/.watch" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/addr.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/addr.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/alive.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/alive.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/map.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/map.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/node.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/node.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/discover/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/discover/discover.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/discover.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/discover/url.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/url.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/client_1/data/raft.db" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_1/data/raft.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/client_2/data/raft.db" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_2/data/raft.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/client_3/data/raft.db" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_3/data/raft.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/client_4/data/raft.db" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_4/data/raft.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example_client/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example_client/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/action.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/structs/structs.go" beforeDir="false" afterPath="$PROJECT_DIR$/structs/structs.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tcp/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/action.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tcp/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tcp/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/udp/client/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/udp/client/action.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/udp/server/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/udp/server/action.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +75,7 @@
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/app" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="com.goide.configuration.GoLibrariesConfigurableProvider" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">

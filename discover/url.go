@@ -18,10 +18,11 @@ import (
 	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/utils"
 
-	"discover/structs"
+	"discover/message"
 )
 
-func (dis *discover) getServerList() []structs.WhoIsMaster {
+// will never be nil
+func (dis *discover) getServerList() []*message.WhoIsMaster {
 
 	var rAddr = dis.randomAddr()
 
@@ -41,18 +42,19 @@ func (dis *discover) getServerList() []structs.WhoIsMaster {
 		return dis.getServerList()
 	}
 
-	var serverList []structs.WhoIsMaster
+	var serverList []*message.WhoIsMaster
 
 	_ = utils.Json.Decode(res.Bytes()[3:], &serverList)
 
 	return serverList
 }
 
-func (dis *discover) getMasterServer() structs.Address {
+// will never be nil
+func (dis *discover) getMasterServer() *message.Address {
 
 	dis.serverList = dis.getServerList()
 
-	var master structs.Address
+	var master *message.Address
 
 	for i := 0; i < len(dis.serverList); i++ {
 		if dis.serverList[i].IsMaster {
@@ -61,7 +63,7 @@ func (dis *discover) getMasterServer() structs.Address {
 		}
 	}
 
-	if master.Addr == "" {
+	if master == nil {
 		time.Sleep(time.Millisecond * 1000)
 		return dis.getMasterServer()
 	}
@@ -71,13 +73,14 @@ func (dis *discover) getMasterServer() structs.Address {
 	return master
 }
 
-func (dis *discover) randomAddr() structs.Address {
+// will never be nil
+func (dis *discover) randomAddr() *message.Address {
 	var index = utils.Rand.RandomIntn(0, len(dis.serverList))
 	return dis.serverList[index].Addr
 }
 
 func (dis *discover) url(path string, master bool) string {
-	var addr structs.Address
+	var addr *message.Address
 
 	if master {
 		addr = dis.master

@@ -19,7 +19,7 @@ import (
 	client2 "github.com/lemoyxk/kitty/socket/websocket/client"
 
 	"discover/app"
-	"discover/structs"
+	"discover/message"
 )
 
 func New(serverList []string) *discover {
@@ -31,7 +31,7 @@ func New(serverList []string) *discover {
 	var dis = &discover{}
 
 	for i := 0; i < len(serverList); i++ {
-		dis.serverList = append(dis.serverList, structs.WhoIsMaster{Addr: app.ParseAddr(serverList[i])})
+		dis.serverList = append(dis.serverList, &message.WhoIsMaster{Addr: app.ParseAddr(serverList[i])})
 	}
 
 	dis.getMasterServer()

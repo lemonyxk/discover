@@ -36,8 +36,6 @@ func Router(router *server.Router) {
 	router.Group().Before(localIP, ready, isMaster).Handler(func(handler *server.RouteHandler) {
 		handler.Post("/Set").Handler(Set)
 		handler.Post("/Delete").Handler(Delete)
-		// handler.Post("/Login").Handler(Login)
-		// handler.Post("/LoginOut").Handler(LoginOut)
 	})
 }
 
@@ -53,7 +51,7 @@ func secret(stream *http.Stream) error {
 
 func isMaster(stream *http.Stream) error {
 	if !app.Node.IsMaster() {
-		var msg = "NO\nNOT Master"
+		var msg = "NO\nNOT MASTER"
 		_ = stream.EndString(msg)
 		return errors.New(msg)
 	}

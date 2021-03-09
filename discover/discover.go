@@ -15,19 +15,20 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/kitty/socket"
 	client2 "github.com/lemoyxk/kitty/socket/websocket/client"
 
-	"discover/structs"
+	"discover/message"
 )
 
 var hasAlive int32 = 0
 var hasKey int32 = 0
 
 type discover struct {
-	serverList []structs.WhoIsMaster
-	master     structs.Address
+	serverList []*message.WhoIsMaster
+	master     *message.Address
 	register   *client2.Client
 	listen     *client2.Client
 
@@ -49,9 +50,9 @@ func (dis *discover) Register(serverName, addr string) {
 
 	dis.registerFn = func() {
 
-		var stream, err = dis.register.Async().JsonEmit(socket.JsonPack{
+		var stream, err = dis.register.Async().ProtoBufEmit(socket.ProtoBufPack{
 			Event: "/Register",
-			Data: structs.ServerInfo{
+			Data: &message.ServerInfo{
 				ServerName: serverName,
 				Addr:       addr,
 			},
@@ -63,7 +64,7 @@ func (dis *discover) Register(serverName, addr string) {
 			return
 		}
 
-		if string(stream.Data) != `"OK"` {
+		if string(stream.Data) != "OK" {
 			console.Info(errors.New(string(stream.Data)))
 			time.Sleep(time.Second)
 			dis.registerFn()
@@ -86,7 +87,7 @@ func (dis *discover) Alive(serverList ...string) *alive {
 	}
 }
 
-func (w *alive) Watch(fn func(data string)) {
+func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
 
 	if len(w.serverList) == 0 {
 		return
@@ -95,13 +96,18 @@ func (w *alive) Watch(fn func(data string)) {
 	w.dis.aliveFn = func() {
 		w.dis.register.GetRouter().Remove("/OnRegister")
 		w.dis.register.GetRouter().Route("/OnRegister").Handler(func(client *client2.Client, stream *socket.Stream) error {
-			fn(string(stream.Data))
+			var data message.ServerInfoList
+			var err = proto.UnmarshalMerge(stream.Data, &data)
+			if err != nil {
+				return err
+			}
+			fn(data.List)
 			return nil
 		})
 
-		var err = w.dis.register.JsonEmit(socket.JsonPack{
+		var err = w.dis.register.ProtoBufEmit(socket.ProtoBufPack{
 			Event: "/OnRegister",
-			Data:  w.serverList,
+			Data:  &message.ServerList{List: w.serverList},
 		})
 		if err != nil {
 			time.Sleep(time.Second)
@@ -144,9 +150,9 @@ func (k *key) Watch(fn func(data string)) {
 			return nil
 		})
 
-		var stream, err = k.dis.listen.Async().JsonEmit(socket.JsonPack{
+		var stream, err = k.dis.listen.Async().ProtoBufEmit(socket.ProtoBufPack{
 			Event: "/Listen",
-			Data:  k.keyList,
+			Data:  &message.KeyList{List: k.keyList},
 		})
 		if err != nil {
 			console.Info(err)
@@ -155,7 +161,7 @@ func (k *key) Watch(fn func(data string)) {
 			return
 		}
 
-		if string(stream.Data) != `"OK"` {
+		if string(stream.Data) != "OK" {
 			console.Info(errors.New(string(stream.Data)))
 			time.Sleep(time.Second)
 			k.dis.listenFn()

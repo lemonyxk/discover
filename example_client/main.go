@@ -16,13 +16,14 @@ import (
 	"github.com/lemoyxk/console"
 
 	"discover/discover"
+	"discover/message"
 )
 
 func main() {
 
 	var dis = discover.New([]string{"127.0.0.1:11002"})
 
-	dis.Alive("test", "test1").Watch(func(data string) {
+	dis.Alive("test", "test1").Watch(func(data []*message.ServerInfo) {
 		console.Info(data)
 	})
 

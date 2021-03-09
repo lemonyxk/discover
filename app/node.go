@@ -24,6 +24,7 @@ import (
 	"github.com/lemoyxk/kitty/socket/websocket/server"
 	"github.com/lemoyxk/utils"
 
+	"discover/message"
 	"discover/store"
 	"discover/structs"
 )
@@ -35,7 +36,7 @@ var Node = &node{
 type node struct {
 	Store     *store.Store
 	ServerMap *serverMap
-	Addr      *structs.Address
+	Addr      *message.Address
 	Config    *Config
 	Client    *client2.Client
 	Server    *server.Server
@@ -49,11 +50,24 @@ type node struct {
 	lock sync.Mutex
 }
 
-func (n *node) GetMaster() structs.Address {
+func (n *node) GetMaster() *message.Address {
+	if n.Store.Raft().Leader() == "" {
+		return nil
+	}
 	return RaftAddr2Addr(string(n.Store.Raft().Leader()))
 }
 
 func (n *node) IsReady() bool {
+
+	var cfg = n.Store.Raft().GetConfiguration()
+	if cfg.Error() != nil {
+		return false
+	}
+
+	if len(cfg.Configuration().Servers) == 0 {
+		return false
+	}
+
 	return n.Store.Raft().State() == raft.Leader || n.Store.Raft().State() == raft.Follower
 }
 
@@ -66,7 +80,7 @@ func (n *node) InitRegister() {
 }
 
 func (n *node) InitAlive() {
-	n.Alive = &alive{data: make(map[string][]structs.ServerInfo), conn: make(map[string][]*server.Conn)}
+	n.Alive = &alive{data: make(map[string][]*message.ServerInfo), conn: make(map[string][]*server.Conn)}
 }
 
 func (n *node) InitListen() {
@@ -83,7 +97,7 @@ func (n *node) InitStore() {
 
 func (n *node) InitServerMap() {
 	n.ServerMap = &serverMap{
-		servers: make(map[string]structs.WhoIsMaster),
+		servers: make(map[string]*message.WhoIsMaster),
 	}
 }
 
@@ -92,7 +106,7 @@ func (n *node) InitAddr() {
 	addr, err := net.ResolveTCPAddr("tcp", n.Config.Addr)
 	exception.AssertError(err)
 
-	n.Addr = &structs.Address{
+	n.Addr = &message.Address{
 		Addr: addr.String(),
 		Http: addr.String(),
 		Raft: fmt.Sprintf("%s:%d", addr.IP, addr.Port+1000),
@@ -143,11 +157,11 @@ func (n *node) Join(masterAddr string, addr string) {
 	}
 }
 
-func (n *node) GetServerList() []structs.WhoIsMaster {
+func (n *node) GetServerList() []*message.WhoIsMaster {
 	var servers = n.Store.Raft().GetConfiguration().Configuration().Servers
-	var list []structs.WhoIsMaster
+	var list []*message.WhoIsMaster
 	for _, s := range servers {
-		list = append(list, structs.WhoIsMaster{
+		list = append(list, &message.WhoIsMaster{
 			Addr:      RaftAddr2Addr(string(s.Address)),
 			Timestamp: 0,
 			IsMaster:  s.Address == n.Store.Raft().Leader(),
@@ -156,18 +170,18 @@ func (n *node) GetServerList() []structs.WhoIsMaster {
 	return list
 }
 
-func (n *node) GetMasterAddr() structs.WhoIsMaster {
+func (n *node) GetMasterAddr() *message.WhoIsMaster {
 	var servers = n.Store.Raft().GetConfiguration().Configuration().Servers
 	for _, s := range servers {
 		if s.Address == n.Store.Raft().Leader() {
-			return structs.WhoIsMaster{
+			return &message.WhoIsMaster{
 				Addr:      RaftAddr2Addr(string(s.Address)),
 				Timestamp: 0,
 				IsMaster:  s.Address == n.Store.Raft().Leader(),
 			}
 		}
 	}
-	return structs.WhoIsMaster{}
+	return nil
 }
 
 func (n *node) Lock() {

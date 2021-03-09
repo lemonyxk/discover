@@ -14,19 +14,19 @@ import (
 	"fmt"
 	"net"
 
-	"discover/structs"
+	"discover/message"
 )
 
 const udpAddress = "224.0.0.250:11000"
 
-func ParseAddr(ad string) structs.Address {
+func ParseAddr(ad string) *message.Address {
 
 	addr, err := net.ResolveTCPAddr("tcp", ad)
 	if err != nil {
 		panic(err)
 	}
 
-	return structs.Address{
+	return &message.Address{
 		Addr: addr.String(),
 		Http: addr.String(),
 		Raft: fmt.Sprintf("%s:%d", addr.IP, addr.Port+1000),
@@ -35,7 +35,7 @@ func ParseAddr(ad string) structs.Address {
 	}
 }
 
-func RaftAddr2Addr(raftAddr string) structs.Address {
+func RaftAddr2Addr(raftAddr string) *message.Address {
 	var addr, err = net.ResolveTCPAddr("tcp", raftAddr)
 	if err != nil {
 		panic(err)

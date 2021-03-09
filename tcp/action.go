@@ -13,11 +13,12 @@ package tcp
 import (
 	"errors"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/lemoyxk/kitty/socket"
 	"github.com/lemoyxk/kitty/socket/websocket/server"
-	"github.com/lemoyxk/utils"
 
 	"discover/app"
+	"discover/message"
 	"discover/structs"
 )
 
@@ -27,9 +28,9 @@ func Register(conn *server.Conn, stream *socket.Stream) error {
 
 	defer app.Node.Unlock()
 
-	var data structs.ServerInfo
+	var data message.ServerInfo
 
-	var err = utils.Json.Decode(stream.Data, &data)
+	var err = proto.Unmarshal(stream.Data, &data)
 	if err != nil {
 		return err
 	}
@@ -52,15 +53,15 @@ func Register(conn *server.Conn, stream *socket.Stream) error {
 
 	var connections = app.Node.Alive.GetConn(data.ServerName)
 	for i := 0; i < len(connections); i++ {
-		_ = connections[i].JsonEmit(socket.JsonPack{
+		_ = connections[i].ProtoBufEmit(socket.ProtoBufPack{
 			Event: "/OnRegister",
-			Data:  list,
+			Data:  &message.ServerInfoList{List: list},
 		})
 	}
 
-	return conn.JsonEmit(socket.JsonPack{
+	return conn.Emit(socket.Pack{
 		Event: stream.Event,
-		Data:  "OK",
+		Data:  []byte("OK"),
 	})
 }
 
@@ -70,14 +71,14 @@ func OnRegister(conn *server.Conn, stream *socket.Stream) error {
 
 	defer app.Node.Unlock()
 
-	var data []string
+	var data message.ServerList
 
-	var err = utils.Json.Decode(stream.Data, &data)
+	var err = proto.Unmarshal(stream.Data, &data)
 	if err != nil {
 		return err
 	}
 
-	if len(data) == 0 {
+	if len(data.List) == 0 {
 		return errors.New("server list is empty")
 	}
 
@@ -85,25 +86,25 @@ func OnRegister(conn *server.Conn, stream *socket.Stream) error {
 	if register == nil {
 		register = &structs.Register{}
 	}
-	register.ServerList = data
+	register.ServerList = data.List
 
 	app.Node.Register.Set(conn.FD, register)
 
 	// add to notify queue
-	for i := 0; i < len(data); i++ {
-		app.Node.Alive.AddConn(data[i], conn)
+	for i := 0; i < len(data.List); i++ {
+		app.Node.Alive.AddConn(data.List[i], conn)
 	}
 
 	// notify what you are watching
-	for i := 0; i < len(data); i++ {
-		var list = app.Node.Alive.GetData(data[i])
+	for i := 0; i < len(data.List); i++ {
+		var list = app.Node.Alive.GetData(data.List[i])
 		if len(list) == 0 {
 			continue
 		}
 
-		_ = conn.JsonEmit(socket.JsonPack{
+		_ = conn.ProtoBufEmit(socket.ProtoBufPack{
 			Event: "/OnRegister",
-			Data:  list,
+			Data:  &message.ServerInfoList{List: list},
 		})
 	}
 
@@ -116,14 +117,14 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 
 	defer app.Node.Unlock()
 
-	var data []string
+	var data message.KeyList
 
-	var err = utils.Json.Decode(stream.Data, &data)
+	var err = proto.Unmarshal(stream.Data, &data)
 	if err != nil {
 		return err
 	}
 
-	if len(data) == 0 {
+	if len(data.List) == 0 {
 		return errors.New("listen list is empty")
 	}
 
@@ -131,15 +132,15 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 	if register == nil {
 		register = &structs.Register{}
 	}
-	register.KeyList = data
+	register.KeyList = data.List
 
 	app.Node.Register.Set(conn.FD, register)
 
 	// add to watch queue
-	for i := 0; i < len(data); i++ {
-		app.Node.Listen.Add(data[i], conn)
+	for i := 0; i < len(data.List); i++ {
+		app.Node.Listen.Add(data.List[i], conn)
 
-		var value, err = app.Node.Store.Get(data[i])
+		var value, err = app.Node.Store.Get(data.List[i])
 		if err != nil {
 			continue
 		}
@@ -154,8 +155,8 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 		})
 	}
 
-	return conn.JsonEmit(socket.JsonPack{
+	return conn.Emit(socket.Pack{
 		Event: stream.Event,
-		Data:  "OK",
+		Data:  []byte("OK"),
 	})
 }

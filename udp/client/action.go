@@ -13,22 +13,22 @@ package client
 import (
 	"time"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/kitty/socket"
 	"github.com/lemoyxk/kitty/socket/udp/client"
-	"github.com/lemoyxk/utils"
 
 	"discover/app"
-	"discover/structs"
+	"discover/message"
 )
 
 func SendWhoIsMaster() {
 	for i := 0; i < 10; i++ {
 		console.AssertError(
-			app.Node.Client.JsonEmit(socket.JsonPack{
+			app.Node.Client.ProtoBufEmit(socket.ProtoBufPack{
 				Event: "/WhoIsMaster",
-				Data: structs.WhoIsMaster{
-					Addr:      *app.Node.Addr,
+				Data: &message.WhoIsMaster{
+					Addr:      app.Node.Addr,
 					Timestamp: app.Node.StartTime.UnixNano(),
 					IsMaster:  app.Node.IsMaster(),
 				},
@@ -40,13 +40,13 @@ func SendWhoIsMaster() {
 }
 
 func WhoIsMaster(c *client.Client, stream *socket.Stream) error {
-	var data structs.WhoIsMaster
-	var err = utils.Json.Decode(stream.Data, &data)
+	var data message.WhoIsMaster
+	var err = proto.Unmarshal(stream.Data, &data)
 	if err != nil {
 		return err
 	}
 
-	app.Node.ServerMap.Set(data.Addr.Addr, data)
+	app.Node.ServerMap.Set(data.Addr.Addr, &data)
 
 	return nil
 }

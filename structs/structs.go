@@ -10,27 +10,10 @@
 
 package structs
 
-type WhoIsMaster struct {
-	Addr      Address
-	Timestamp int64
-	IsMaster  bool
-}
-
-type Address struct {
-	Addr string
-	Http string
-	Raft string
-	Tcp  string
-	Udp  string
-}
-
-type ServerInfo struct {
-	ServerName string
-	Addr       string
-}
+import "discover/message"
 
 type Register struct {
 	ServerList []string
 	KeyList    []string
-	ServerInfo *ServerInfo
+	ServerInfo *message.ServerInfo
 }

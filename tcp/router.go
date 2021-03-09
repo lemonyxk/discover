@@ -31,9 +31,9 @@ func Router(router *server.Router) {
 func isReady(conn *server.Conn, stream *socket.Stream) error {
 	if !app.Node.IsReady() {
 		var msg = "NO\nNOT READY"
-		return conn.JsonEmit(socket.JsonPack{
+		return conn.Emit(socket.Pack{
 			Event: stream.Event,
-			Data:  msg,
+			Data:  []byte(msg),
 		})
 	}
 	return nil
@@ -42,9 +42,9 @@ func isReady(conn *server.Conn, stream *socket.Stream) error {
 func isMaster(conn *server.Conn, stream *socket.Stream) error {
 	if !app.Node.IsMaster() {
 		var msg = "NO\nNOT MASTER"
-		return conn.JsonEmit(socket.JsonPack{
+		return conn.Emit(socket.Pack{
 			Event: stream.Event,
-			Data:  msg,
+			Data:  []byte(msg),
 		})
 	}
 	return nil

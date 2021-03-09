@@ -26,6 +26,8 @@ discover*
 #          ./test*: echo test
 #
 
+# auto general
+protoc -I=./protobuf --go_out=./message protobuf/message.proto
 curl http://127.0.0.1:12365/reload
 curl http://127.0.0.1:12366/reload
 curl http://127.0.0.1:12367/reload
