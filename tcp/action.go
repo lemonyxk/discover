@@ -156,7 +156,7 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 			continue
 		}
 
-		var err = conn.Emit(socket.Pack{
+		err = conn.Emit(socket.Pack{
 			Event: "/OnListen",
 			Data:  []byte(value),
 		})
