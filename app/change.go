@@ -41,7 +41,10 @@ func LoseLeader(leader raft.LeaderObservation) {
 	}
 
 	for conn := range Node.Server.GetConnections() {
-		_ = conn.Close()
+		var err = conn.Close()
+		if err != nil {
+			console.Error(err)
+		}
 	}
 
 	Node.Alive.DestroyConn()
@@ -80,10 +83,13 @@ func (n *node) OnKeyChange(op *store.Command) {
 
 	var connections = Node.Listen.Get(op.Key)
 	for i := 0; i < len(connections); i++ {
-		_ = connections[i].Emit(socket.Pack{
+		var err = connections[i].Emit(socket.Pack{
 			Event: "/OnListen",
 			Data:  []byte(value),
 		})
+		if err != nil {
+			console.Error(err)
+		}
 	}
 
 	console.Info(op.Op, op.Key, op.Value)

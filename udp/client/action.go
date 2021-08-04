@@ -24,16 +24,18 @@ import (
 
 func SendWhoIsMaster() {
 	for i := 0; i < 10; i++ {
-		console.AssertError(
-			app.Node.Client.ProtoBufEmit(socket.ProtoBufPack{
-				Event: "/WhoIsMaster",
-				Data: &message.WhoIsMaster{
-					Addr:      app.Node.Addr,
-					Timestamp: app.Node.StartTime.UnixNano(),
-					IsMaster:  app.Node.IsMaster(),
-				},
-			}),
-		)
+		var err = app.Node.Client.ProtoBufEmit(socket.ProtoBufPack{
+			Event: "/WhoIsMaster",
+			Data: &message.WhoIsMaster{
+				Addr:      app.Node.Addr,
+				Timestamp: app.Node.StartTime.UnixNano(),
+				IsMaster:  app.Node.IsMaster(),
+			},
+		})
+
+		if err != nil {
+			console.Error(err)
+		}
 
 		time.Sleep(time.Millisecond * 100)
 	}

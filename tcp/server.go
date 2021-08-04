@@ -23,7 +23,7 @@ import (
 
 func Start(host string, fn func()) {
 
-	var tcpServer = server.Server{Name: host, Host: host, HeartBeatTimeout: 3 * time.Second}
+	var tcpServer = server.Server{Name: host, Addr: host, HeartBeatTimeout: 3 * time.Second}
 
 	tcpServer.OnClose = func(conn *server.Conn) {
 
@@ -53,10 +53,13 @@ func Start(host string, fn func()) {
 			var list = app.Node.Alive.GetData(data.ServerInfo.ServerName)
 			var connections = app.Node.Alive.GetConn(data.ServerInfo.ServerName)
 			for i := 0; i < len(connections); i++ {
-				_ = connections[i].ProtoBufEmit(socket.ProtoBufPack{
+				var err = connections[i].ProtoBufEmit(socket.ProtoBufPack{
 					Event: "/OnRegister",
 					Data:  &message.ServerInfoList{List: list},
 				})
+				if err != nil {
+					console.Error(err)
+				}
 			}
 		}
 

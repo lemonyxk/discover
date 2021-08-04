@@ -55,17 +55,16 @@ func initRegister(dis *discover, wait *sync.WaitGroup) {
 
 	var client = &client2.Client{
 		Scheme:            "ws",
-		Host:              dis.master.Tcp,
-		Reconnect:         true,
-		AutoHeartBeat:     true,
+		Addr:              dis.master.Tcp,
 		HeartBeatTimeout:  3 * time.Second,
-		HeartBeatInterval: time.Second,
+		HeartBeatInterval: 1 * time.Second,
+		ReconnectInterval: 1 * time.Second,
 	}
 
 	dis.register = client
 
 	dis.register.OnOpen = func(c *client2.Client) {
-		console.Info("register client open at:", dis.register.Host)
+		console.Info("register client open at:", dis.register.Addr)
 	}
 
 	dis.register.OnClose = func(c *client2.Client) {
@@ -105,17 +104,16 @@ func initLister(dis *discover, wait *sync.WaitGroup) {
 
 	var client = &client2.Client{
 		Scheme:            "ws",
-		Host:              dis.randomAddr().Tcp,
-		Reconnect:         true,
-		AutoHeartBeat:     true,
+		Addr:              dis.randomAddr().Tcp,
 		HeartBeatTimeout:  3 * time.Second,
-		HeartBeatInterval: time.Second,
+		HeartBeatInterval: 1 * time.Second,
+		ReconnectInterval: 1 * time.Second,
 	}
 
 	dis.listen = client
 
 	dis.listen.OnOpen = func(c *client2.Client) {
-		console.Info("listen client open at:", dis.listen.Host)
+		console.Info("listen client open at:", dis.listen.Addr)
 	}
 
 	dis.listen.OnClose = func(c *client2.Client) {

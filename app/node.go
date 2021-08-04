@@ -16,17 +16,16 @@ import (
 	"sync"
 	"time"
 
+	"discover/message"
+	"discover/store"
+	"discover/structs"
 	"github.com/hashicorp/raft"
 	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/exception"
 	"github.com/lemoyxk/kitty"
+	"github.com/lemoyxk/kitty/http/client"
 	client2 "github.com/lemoyxk/kitty/socket/udp/client"
 	"github.com/lemoyxk/kitty/socket/websocket/server"
-	"github.com/lemoyxk/utils"
-
-	"discover/message"
-	"discover/store"
-	"discover/structs"
 )
 
 var Node = &node{
@@ -92,7 +91,7 @@ func (n *node) InitStore() {
 	n.Store.OnKeyChange = n.OnKeyChange
 	n.Store.OnLeaderChange = n.OnLeaderChange
 	n.Store.OnPeerChange = n.OnPeerChange
-	exception.AssertError(n.Store.Open())
+	exception.Assert.LastNil(n.Store.Open())
 }
 
 func (n *node) InitServerMap() {
@@ -104,7 +103,7 @@ func (n *node) InitServerMap() {
 func (n *node) InitAddr() {
 
 	addr, err := net.ResolveTCPAddr("tcp", n.Config.Addr)
-	exception.AssertError(err)
+	exception.Assert.LastNil(err)
 
 	n.Addr = &message.Address{
 		Addr: addr.String(),
@@ -136,8 +135,8 @@ func (n *node) Join(masterAddr string, addr string) {
 
 	if masterAddr != Node.Config.Addr {
 
-		var isMasterRes = utils.HttpClient.Get(fmt.Sprintf("http://%s/IsMaster", masterAddr)).Query(kitty.M{"addr": addr}).Send()
-		console.AssertError(isMasterRes.LastError())
+		var isMasterRes = client.Get(fmt.Sprintf("http://%s/IsMaster", masterAddr)).Query(kitty.M{"addr": addr}).Send()
+		exception.Assert.LastNil(isMasterRes.LastError())
 		if isMasterRes.String() != "OK" {
 			console.Warning(masterAddr, "is master:", isMasterRes.String())
 			time.Sleep(time.Millisecond * 100)
@@ -145,11 +144,8 @@ func (n *node) Join(masterAddr string, addr string) {
 			return
 		}
 
-		var joinRes = utils.HttpClient.
-			Post(fmt.Sprintf("http://%s/Join", masterAddr)).
-			Form(kitty.M{"addr": addr}).
-			Send()
-		console.AssertError(joinRes.LastError())
+		var joinRes = client.Post(fmt.Sprintf("http://%s/Join", masterAddr)).Form(kitty.M{"addr": addr}).Send()
+		exception.Assert.LastNil(joinRes.LastError())
 		if joinRes.String() != "OK" {
 			console.Error(joinRes.String())
 			return

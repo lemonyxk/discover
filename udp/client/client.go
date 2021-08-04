@@ -21,7 +21,12 @@ import (
 
 func Start(host string, fn func()) {
 
-	var client = &client2.Client{Host: host, Reconnect: true, AutoHeartBeat: true, HeartBeatInterval: time.Second}
+	var client = &client2.Client{
+		Addr:              host,
+		HeartBeatTimeout:  3 * time.Second,
+		HeartBeatInterval: 1 * time.Second,
+		ReconnectInterval: 1 * time.Second,
+	}
 
 	client.OnClose = func(c *client2.Client) {
 		console.Info("udp client close")

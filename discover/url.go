@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/kitty/http/client"
 	"github.com/lemoyxk/utils"
 
 	"discover/message"
@@ -30,7 +31,7 @@ func (dis *discover) getServerList() []*message.WhoIsMaster {
 
 	console.Warning("get server list from", url)
 
-	var res = utils.HttpClient.Get(url).Query(nil).Send()
+	var res = client.Get(url).Query(nil).Send()
 
 	if !strings.HasPrefix(res.String(), "OK") {
 		if res.LastError() != nil {
@@ -44,7 +45,10 @@ func (dis *discover) getServerList() []*message.WhoIsMaster {
 
 	var serverList []*message.WhoIsMaster
 
-	_ = utils.Json.Decode(res.Bytes()[3:], &serverList)
+	var err = utils.Json.Decode(res.Bytes()[3:], &serverList)
+	if err != nil {
+		console.Error(err)
+	}
 
 	return serverList
 }

@@ -14,6 +14,7 @@ import (
 	"errors"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/kitty/socket"
 	"github.com/lemoyxk/kitty/socket/websocket/server"
 
@@ -53,10 +54,13 @@ func Register(conn *server.Conn, stream *socket.Stream) error {
 
 	var connections = app.Node.Alive.GetConn(data.ServerName)
 	for i := 0; i < len(connections); i++ {
-		_ = connections[i].ProtoBufEmit(socket.ProtoBufPack{
+		var err = connections[i].ProtoBufEmit(socket.ProtoBufPack{
 			Event: "/OnRegister",
 			Data:  &message.ServerInfoList{List: list},
 		})
+		if err != nil {
+			console.Error(err)
+		}
 	}
 
 	return conn.Emit(socket.Pack{
@@ -102,10 +106,13 @@ func OnRegister(conn *server.Conn, stream *socket.Stream) error {
 			continue
 		}
 
-		_ = conn.ProtoBufEmit(socket.ProtoBufPack{
+		var err = conn.ProtoBufEmit(socket.ProtoBufPack{
 			Event: "/OnRegister",
 			Data:  &message.ServerInfoList{List: list},
 		})
+		if err != nil {
+			console.Error(err)
+		}
 	}
 
 	return nil
@@ -149,10 +156,13 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 			continue
 		}
 
-		_ = conn.Emit(socket.Pack{
+		var err = conn.Emit(socket.Pack{
 			Event: "/OnListen",
 			Data:  []byte(value),
 		})
+		if err != nil {
+			console.Error(err)
+		}
 	}
 
 	return conn.Emit(socket.Pack{

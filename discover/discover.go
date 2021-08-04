@@ -174,12 +174,12 @@ func (k *key) Watch(fn func(data string)) {
 
 func (dis *discover) refreshMaster() {
 	var register = dis.getMasterServer()
-	dis.register.Host = register.Tcp
+	dis.register.Addr = register.Tcp
 	console.Info("new register addr:", register.Addr)
 }
 
 func (dis *discover) refreshCluster() {
 	var listen = dis.randomAddr()
-	dis.listen.Host = listen.Tcp
+	dis.listen.Addr = listen.Tcp
 	console.Info("new listen addr:", listen.Addr)
 }

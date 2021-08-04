@@ -22,7 +22,7 @@ import (
 
 func Start(host string, fn func()) {
 	// create server
-	var udpServer = &server.Server{Name: host, Host: host, HeartBeatTimeout: 3 * time.Second}
+	var udpServer = &server.Server{Name: host, Addr: host, HeartBeatTimeout: 3 * time.Second}
 
 	// event
 	udpServer.OnClose = func(conn *server.Conn) {
@@ -43,7 +43,10 @@ func Start(host string, fn func()) {
 				continue
 			}
 			// tell others you are ready
-			_ = app.Node.Client.Push(udp.OpenMessage)
+			var err = app.Node.Client.Push(udp.OpenMessage)
+			if err != nil {
+				console.Error(err)
+			}
 			break
 		}
 	}

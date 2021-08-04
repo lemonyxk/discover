@@ -15,11 +15,11 @@ import (
 	"strings"
 
 	"github.com/lemoyxk/kitty"
-	"github.com/lemoyxk/utils"
+	"github.com/lemoyxk/kitty/http/client"
 )
 
 func (dis *discover) Get(key string) (string, error) {
-	var res = utils.HttpClient.Get(dis.url("/Get", false)).Query(kitty.M{"key": key}).Send()
+	var res = client.Get(dis.url("/Get", false)).Query(kitty.M{"key": key}).Send()
 	if res.LastError() != nil {
 		return "", res.LastError()
 	}
@@ -30,7 +30,7 @@ func (dis *discover) Get(key string) (string, error) {
 }
 
 func (dis *discover) Set(key, value string) (string, error) {
-	var res = utils.HttpClient.Post(dis.url("/Set", true)).Form(kitty.M{"key": key, "value": value}).Send()
+	var res = client.Post(dis.url("/Set", true)).Form(kitty.M{"key": key, "value": value}).Send()
 	if res.LastError() != nil {
 		return "", res.LastError()
 	}
@@ -41,7 +41,7 @@ func (dis *discover) Set(key, value string) (string, error) {
 }
 
 func (dis *discover) Delete(key string) (string, error) {
-	var res = utils.HttpClient.Post(dis.url("/Delete", true)).Form(kitty.M{"key": key}).Send()
+	var res = client.Post(dis.url("/Delete", true)).Form(kitty.M{"key": key}).Send()
 	if res.LastError() != nil {
 		return "", res.LastError()
 	}

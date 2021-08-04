@@ -36,7 +36,7 @@ import (
 
 func Start(host string, fn func()) {
 
-	var httpServer = server.Server{Host: host}
+	var httpServer = server.Server{Addr: host}
 
 	var router = server.Router{IgnoreCase: true}
 
