@@ -29,8 +29,8 @@ func main() {
 
 	dis.Register("test", "127.0.0.1:1191poo1ii")
 
-	dis.Key("test", "test1").Watch(func(data string) {
-		console.Info(data)
+	dis.Key("test", "test1").Watch(func(key, value string) {
+		console.Info(key, value)
 	})
 
 	time.AfterFunc(time.Second, func() {

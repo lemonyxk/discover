@@ -145,9 +145,11 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 
 	// add to watch queue
 	for i := 0; i < len(data.List); i++ {
-		app.Node.Listen.Add(data.List[i], conn)
 
-		var value, err = app.Node.Store.Get(data.List[i])
+		var key = data.List[i]
+		app.Node.Listen.Add(key, conn)
+
+		var value, err = app.Node.Store.Get(key)
 		if err != nil {
 			continue
 		}
@@ -158,7 +160,7 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 
 		err = conn.Emit(socket.Pack{
 			Event: "/OnListen",
-			Data:  []byte(value),
+			Data:  []byte(key + "\n" + value),
 		})
 		if err != nil {
 			console.Error(err)

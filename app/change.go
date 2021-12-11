@@ -18,7 +18,7 @@ import (
 	"discover/store"
 )
 
-// YOU GOT LEADER
+// OnLeaderChange YOU GOT LEADER
 // when lose leader, the addr is empty until there is new master
 func (n *node) OnLeaderChange(leader raft.LeaderObservation) {
 
@@ -65,12 +65,12 @@ func NewLeader(leader raft.LeaderObservation) {
 	console.Warning("local addr:", Node.Addr.Raft, "leader addr:", leader.Leader, Node.IsMaster())
 }
 
-// YOU GOT PEER CHANGE
+// OnPeerChange YOU GOT PEER CHANGE
 func (n *node) OnPeerChange(peer raft.PeerObservation) {
 	console.Warning("peer:", peer.Peer, "remove:", peer.Removed)
 }
 
-// YOU GOT KEY CHANGE
+// OnKeyChange YOU GOT KEY CHANGE
 func (n *node) OnKeyChange(op *store.Command) {
 	Node.Lock()
 	defer Node.Unlock()
@@ -85,7 +85,7 @@ func (n *node) OnKeyChange(op *store.Command) {
 	for i := 0; i < len(connections); i++ {
 		var err = connections[i].Emit(socket.Pack{
 			Event: "/OnListen",
-			Data:  []byte(value),
+			Data:  []byte(op.Key + "\n" + value),
 		})
 		if err != nil {
 			console.Error(err)

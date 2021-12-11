@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/kitty"
 	"github.com/lemoyxk/kitty/socket/udp"
 	"github.com/lemoyxk/kitty/socket/udp/server"
 
@@ -52,15 +53,15 @@ func Start(host string, fn func()) {
 	}
 
 	// create router
-	var router = server.Router{IgnoreCase: true}
+	var router = kitty.NewUdpServerRouter()
 
-	Router(&router)
+	Router(router)
 
 	udpServer.OnSuccess = func() {
 		console.Info("udp server start success", udpServer.LocalAddr())
 		fn()
 	}
 
-	go udpServer.SetRouter(&router).Start()
+	go udpServer.SetRouter(router).Start()
 
 }

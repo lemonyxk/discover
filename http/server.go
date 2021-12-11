@@ -12,6 +12,7 @@ package http
 
 import (
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/kitty"
 	"github.com/lemoyxk/kitty/http"
 	"github.com/lemoyxk/kitty/http/server"
 )
@@ -38,9 +39,9 @@ func Start(host string, fn func()) {
 
 	var httpServer = server.Server{Addr: host}
 
-	var router = server.Router{IgnoreCase: true}
+	var router = kitty.NewHttpServerRouter()
 
-	Router(&router)
+	Router(router)
 
 	httpServer.Use(func(next server.Middle) server.Middle {
 		return func(stream *http.Stream) {
@@ -61,6 +62,6 @@ func Start(host string, fn func()) {
 		fn()
 	}
 
-	go httpServer.SetRouter(&router).Start()
+	go httpServer.SetRouter(router).Start()
 
 }

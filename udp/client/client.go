@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/kitty"
 	client2 "github.com/lemoyxk/kitty/socket/udp/client"
 
 	"discover/app"
@@ -41,7 +42,7 @@ func Start(host string, fn func()) {
 	}
 
 	// create router
-	var router = &client2.Router{IgnoreCase: true}
+	var router = kitty.NewUdpClientRouter()
 
 	Router(router)
 

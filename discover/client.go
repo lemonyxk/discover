@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/kitty"
 	client2 "github.com/lemoyxk/kitty/socket/websocket/client"
 
 	"discover/app"
@@ -54,8 +55,7 @@ func initRegister(dis *discover, wait *sync.WaitGroup) {
 	var isStart int32 = 0
 
 	var client = &client2.Client{
-		Scheme:            "ws",
-		Addr:              dis.master.Tcp,
+		Addr:              "ws://" + dis.master.Tcp,
 		HeartBeatTimeout:  3 * time.Second,
 		HeartBeatInterval: 1 * time.Second,
 		ReconnectInterval: 1 * time.Second,
@@ -91,7 +91,7 @@ func initRegister(dis *discover, wait *sync.WaitGroup) {
 		}
 	}
 
-	var r = &client2.Router{IgnoreCase: true}
+	var r = kitty.NewWebSocketClientRouter()
 
 	dis.register.SetRouter(r)
 
@@ -103,8 +103,7 @@ func initLister(dis *discover, wait *sync.WaitGroup) {
 	var isStart int32 = 0
 
 	var client = &client2.Client{
-		Scheme:            "ws",
-		Addr:              dis.randomAddr().Tcp,
+		Addr:              "ws://" + dis.randomAddr().Tcp,
 		HeartBeatTimeout:  3 * time.Second,
 		HeartBeatInterval: 1 * time.Second,
 		ReconnectInterval: 1 * time.Second,
@@ -137,7 +136,7 @@ func initLister(dis *discover, wait *sync.WaitGroup) {
 		}
 	}
 
-	var r = &client2.Router{IgnoreCase: true}
+	var r = kitty.NewWebSocketClientRouter()
 
 	dis.listen.SetRouter(r)
 

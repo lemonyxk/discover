@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/kitty"
 	"github.com/lemoyxk/kitty/socket"
 	"github.com/lemoyxk/kitty/socket/websocket/server"
 
@@ -73,9 +74,9 @@ func Start(host string, fn func()) {
 		console.Info("tcp server", conn.FD, "open")
 	}
 
-	var router = server.Router{IgnoreCase: true}
+	var router = kitty.NewWebSocketServerRouter()
 
-	Router(&router)
+	Router(router)
 
 	tcpServer.OnSuccess = func() {
 		console.Info("tcp server start success", tcpServer.LocalAddr())
@@ -84,6 +85,6 @@ func Start(host string, fn func()) {
 
 	app.Node.Server = &tcpServer
 
-	go tcpServer.SetRouter(&router).Start()
+	go tcpServer.SetRouter(router).Start()
 
 }

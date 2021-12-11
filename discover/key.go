@@ -14,8 +14,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/lemoyxk/kitty"
 	"github.com/lemoyxk/kitty/http/client"
+	"github.com/lemoyxk/kitty/kitty"
 )
 
 func (dis *discover) Get(key string) (string, error) {

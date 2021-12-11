@@ -22,8 +22,8 @@ import (
 	"github.com/hashicorp/raft"
 	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/exception"
-	"github.com/lemoyxk/kitty"
 	"github.com/lemoyxk/kitty/http/client"
+	"github.com/lemoyxk/kitty/kitty"
 	client2 "github.com/lemoyxk/kitty/socket/udp/client"
 	"github.com/lemoyxk/kitty/socket/websocket/server"
 )

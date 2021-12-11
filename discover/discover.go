@@ -12,6 +12,7 @@ package discover
 
 import (
 	"errors"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -136,7 +137,7 @@ func (dis *discover) Key(keyList ...string) *key {
 	}
 }
 
-func (k *key) Watch(fn func(data string)) {
+func (k *key) Watch(fn func(key, value string)) {
 
 	if len(k.keyList) == 0 {
 		return
@@ -146,7 +147,9 @@ func (k *key) Watch(fn func(data string)) {
 
 		k.dis.listen.GetRouter().Remove("/OnListen")
 		k.dis.listen.GetRouter().Route("/OnListen").Handler(func(client *client2.Client, stream *socket.Stream) error {
-			fn(string(stream.Data))
+			var data = string(stream.Data)
+			var index = strings.Index(data, "\n")
+			fn(data[:index], data[index+1:])
 			return nil
 		})
 
@@ -174,12 +177,12 @@ func (k *key) Watch(fn func(data string)) {
 
 func (dis *discover) refreshMaster() {
 	var register = dis.getMasterServer()
-	dis.register.Addr = register.Tcp
+	dis.register.Addr = "ws://" + register.Tcp
 	console.Info("new register addr:", register.Addr)
 }
 
 func (dis *discover) refreshCluster() {
 	var listen = dis.randomAddr()
-	dis.listen.Addr = listen.Tcp
+	dis.listen.Addr = "ws://" + listen.Tcp
 	console.Info("new listen addr:", listen.Addr)
 }

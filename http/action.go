@@ -62,7 +62,7 @@ func WhoIsMaster(stream *http.Stream) error {
 	return stream.EndString("OK\n" + string(utils.Json.Encode(app.Node.GetMaster())))
 }
 
-// NOTICE
+// ServerList NOTICE
 // inaccurate
 // because it need time to notify
 func ServerList(stream *http.Stream) error {
