@@ -11,10 +11,9 @@
 package tcp
 
 import (
+	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/kitty/socket"
 	"github.com/lemoyxk/kitty/socket/websocket/server"
-
-	"discover/app"
 )
 
 func Router(router *server.Router) {

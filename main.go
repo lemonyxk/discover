@@ -15,14 +15,13 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/discover/app"
+	"github.com/lemoyxk/discover/http"
+	"github.com/lemoyxk/discover/tcp"
+	"github.com/lemoyxk/discover/udp/client"
+	"github.com/lemoyxk/discover/udp/server"
 	"github.com/lemoyxk/promise"
 	"github.com/lemoyxk/utils"
-
-	"discover/app"
-	"discover/http"
-	"discover/tcp"
-	"discover/udp/client"
-	"discover/udp/server"
 )
 
 func Start(config *app.Config) {

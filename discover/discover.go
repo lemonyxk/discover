@@ -18,10 +18,9 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/kitty/socket"
 	client2 "github.com/lemoyxk/kitty/socket/websocket/client"
-
-	"discover/message"
 )
 
 var hasAlive int32 = 0

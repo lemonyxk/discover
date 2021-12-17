@@ -14,9 +14,8 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
-
-	"discover/discover"
-	"discover/message"
+	"github.com/lemoyxk/discover/discover"
+	"github.com/lemoyxk/discover/message"
 )
 
 func main() {

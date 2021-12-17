@@ -14,10 +14,9 @@ import (
 	"flag"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/discover"
+	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/utils"
-
-	"discover"
-	"discover/app"
 )
 
 func main() {

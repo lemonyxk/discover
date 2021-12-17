@@ -13,7 +13,7 @@ package app
 import (
 	"sync"
 
-	"discover/structs"
+	"github.com/lemoyxk/discover/structs"
 )
 
 type register struct {

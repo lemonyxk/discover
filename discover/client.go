@@ -16,11 +16,10 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/discover/app"
+	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/kitty"
 	client2 "github.com/lemoyxk/kitty/socket/websocket/client"
-
-	"discover/app"
-	"discover/message"
 )
 
 func New(serverList []string) *discover {

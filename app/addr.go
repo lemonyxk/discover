@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"net"
 
-	"discover/message"
+	"github.com/lemoyxk/discover/message"
 )
 
 const udpAddress = "224.0.0.250:11000"

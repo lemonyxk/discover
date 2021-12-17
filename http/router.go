@@ -13,11 +13,10 @@ package http
 import (
 	"errors"
 
+	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/kitty/http"
 	"github.com/lemoyxk/kitty/http/server"
 	"github.com/lemoyxk/utils"
-
-	"discover/app"
 )
 
 func Router(router *server.Router) {

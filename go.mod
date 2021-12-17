@@ -1,4 +1,4 @@
-module discover
+module github.com/lemoyxk/discover
 
 go 1.17
 

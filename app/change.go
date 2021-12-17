@@ -13,9 +13,8 @@ package app
 import (
 	"github.com/hashicorp/raft"
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/discover/store"
 	"github.com/lemoyxk/kitty/socket"
-
-	"discover/store"
 )
 
 // OnLeaderChange YOU GOT LEADER

@@ -13,10 +13,9 @@ package http
 import (
 	"log"
 
+	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/kitty/http"
 	"github.com/lemoyxk/utils"
-
-	"discover/app"
 )
 
 // if response text is start with "OK"

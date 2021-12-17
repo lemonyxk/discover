@@ -14,11 +14,10 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/kitty"
 	"github.com/lemoyxk/kitty/socket/udp"
 	"github.com/lemoyxk/kitty/socket/udp/server"
-
-	"discover/app"
 )
 
 func Start(host string, fn func()) {

@@ -13,9 +13,8 @@ package app
 import (
 	"sync"
 
+	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/kitty/socket/websocket/server"
-
-	"discover/message"
 )
 
 type alive struct {

@@ -16,10 +16,9 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/kitty/http/client"
 	"github.com/lemoyxk/utils"
-
-	"discover/message"
 )
 
 // will never be nil

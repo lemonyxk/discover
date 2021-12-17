@@ -14,7 +14,7 @@ import (
 	"math"
 	"sync"
 
-	"discover/message"
+	"github.com/lemoyxk/discover/message"
 )
 
 // NOTICE

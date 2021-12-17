@@ -15,11 +15,10 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/discover/app"
+	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/kitty/socket"
 	"github.com/lemoyxk/kitty/socket/udp/client"
-
-	"discover/app"
-	"discover/message"
 )
 
 func SendWhoIsMaster() {

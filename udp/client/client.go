@@ -14,10 +14,9 @@ import (
 	"time"
 
 	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/kitty"
 	client2 "github.com/lemoyxk/kitty/socket/udp/client"
-
-	"discover/app"
 )
 
 func Start(host string, fn func()) {
