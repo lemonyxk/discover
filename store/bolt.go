@@ -29,6 +29,7 @@ var (
 	dbLogs = []byte("logs")
 	dbConf = []byte("conf")
 
+	// ErrKeyNotFound
 	// An error indicating a given key does not exist
 	ErrKeyNotFound = errors.New("not found")
 )
@@ -71,6 +72,7 @@ func NewBoltStore(path string) (*BoltStore, error) {
 	return NewBolt(Options{Path: path})
 }
 
+// NewBolt
 // New uses the supplied options to open the BoltDB and prepare it for use as a raft backend.
 func NewBolt(options Options) (*BoltStore, error) {
 	// Try to connect
@@ -121,6 +123,7 @@ func (b *BoltStore) Close() error {
 	return b.conn.Close()
 }
 
+// Count
 // Close is used to gracefully close the DB connection.
 func (b *BoltStore) Count() uint64 {
 

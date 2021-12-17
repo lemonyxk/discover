@@ -27,6 +27,10 @@ import (
 
 func Start(config *app.Config) {
 
+	console.Colorful(false)
+
+	console.SetFlags(console.TIME | console.LEVEL)
+
 	app.Node.InitConfig(config)
 
 	app.Node.InitRegister()
@@ -87,7 +91,7 @@ func Start(config *app.Config) {
 		}
 
 		// one second to decide
-		// if it's first tome, that this is very important
+		// if it's first time, that this is very important
 		// or that is unnecessary
 		client.SendWhoIsMaster()
 		var master = app.Node.ServerMap.GetMaster()

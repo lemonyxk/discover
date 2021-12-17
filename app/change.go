@@ -52,7 +52,7 @@ func LoseLeader(leader raft.LeaderObservation) {
 	Node.Register.Destroy()
 	Node.Listen.Destroy()
 
-	console.Error("local addr:", Node.Addr.Raft, "leader addr:", leader.Leader, Node.IsMaster())
+	console.Warning("local addr:", Node.Addr.Raft, "leader addr:", leader.Leader, Node.IsMaster())
 }
 
 func NewLeader(leader raft.LeaderObservation) {

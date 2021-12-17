@@ -11,7 +11,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net"
 	"os"
 	"path/filepath"
@@ -19,6 +18,8 @@ import (
 	"time"
 
 	"github.com/hashicorp/raft"
+	"github.com/lemoyxk/console"
+	"github.com/lemoyxk/kitty/kitty"
 )
 
 const (
@@ -44,7 +45,7 @@ type Store struct {
 
 	raft *raft.Raft // The consensus mechanism
 
-	logger *log.Logger
+	logger kitty.Logger
 
 	onKeyChange func(op *Command)
 	isFMSReady  bool
@@ -65,13 +66,14 @@ func (s *Store) Shutdown() raft.Future {
 
 // New returns a new Store.
 func New(dataDir, raftAddr string) *Store {
+
 	return &Store{
 		RaftDir:  dataDir,
 		RaftAddr: raftAddr,
 		Ready:    make(chan bool, 1),
 		m:        make(map[string]string),
 		inMem:    false, // not support inMem
-		logger:   log.New(os.Stderr, "[store] ", log.LstdFlags),
+		logger:   console.NewLogger(),
 	}
 }
 
@@ -175,7 +177,7 @@ func (s *Store) Open() error {
 	return nil
 }
 
-// MUST SET ONE
+// BootstrapCluster MUST SET ONE
 func (s *Store) BootstrapCluster(ok bool) {
 	if !ok {
 		return
@@ -288,13 +290,13 @@ func (s *Store) Join(addr string) error {
 
 	configFuture := s.raft.GetConfiguration()
 	if err := configFuture.Error(); err != nil {
-		s.logger.Printf("failed to get raft configuration: %v", err)
+		s.logger.Infof("failed to get raft configuration: %v", err)
 		return err
 	}
 
 	for _, srv := range configFuture.Configuration().Servers {
 		if srv.Address == raft.ServerAddress(addr) {
-			s.logger.Printf("node at %s already member of cluster, ignoring join request", addr)
+			s.logger.Infof("node at %s already member of cluster, ignoring join request", addr)
 			return nil
 		}
 	}
@@ -304,7 +306,7 @@ func (s *Store) Join(addr string) error {
 		return f.Error()
 	}
 
-	s.logger.Printf("node at %s joined successfully", addr)
+	s.logger.Infof("node at %s joined successfully", addr)
 	return nil
 }
 
@@ -312,7 +314,7 @@ func (s *Store) Leave(addr string) error {
 
 	configFuture := s.raft.GetConfiguration()
 	if err := configFuture.Error(); err != nil {
-		s.logger.Printf("failed to get raft configuration: %v", err)
+		s.logger.Infof("failed to get raft configuration: %v", err)
 		return err
 	}
 
@@ -323,12 +325,12 @@ func (s *Store) Leave(addr string) error {
 				return fmt.Errorf("error removing existing node at %s: %s", addr, err)
 			}
 
-			s.logger.Printf("node at %s removed successfully", addr)
+			s.logger.Infof("node at %s removed successfully", addr)
 			return nil
 		}
 	}
 
-	s.logger.Printf("node at %s not found", addr)
+	s.logger.Infof("node at %s not found", addr)
 	return nil
 }
 
