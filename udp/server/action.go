@@ -11,11 +11,11 @@
 package server
 
 import (
-	"github.com/golang/protobuf/proto"
 	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/kitty/socket"
 	"github.com/lemoyxk/kitty/socket/udp/server"
+	"google.golang.org/protobuf/proto"
 )
 
 func WhoIsMaster(conn *server.Conn, stream *socket.Stream) error {

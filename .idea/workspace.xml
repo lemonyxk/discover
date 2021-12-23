@@ -6,29 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="1b9bbf93-090f-4100-b063-0a9288e65d86" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/addr.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/addr.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/alive.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/alive.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/change.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/change.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/map.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/map.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/node.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/node.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/regster.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/regster.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/discover/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/discover/discover.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/discover.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/discover/url.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/url.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example_client/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example_client/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/action.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/structs/structs.go" beforeDir="false" afterPath="$PROJECT_DIR$/structs/structs.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tcp/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/action.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tcp/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tcp/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/server.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/udp/client/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/udp/client/action.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/udp/client/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/udp/client/client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/udp/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/udp/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/udp/server/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/udp/server/action.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +88,7 @@
       <recent name="$PROJECT_DIR$/store" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build main.go (1)">
+  <component name="RunManager" selected="Go Build.go build github.com/lemoyxk/discover/example_client">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="discover" />
       <working_directory value="$PROJECT_DIR$" />
@@ -171,8 +154,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build main.go (1)" />
         <item itemvalue="Go Build.go build github.com/lemoyxk/discover/example_client" />
+        <item itemvalue="Go Build.go build main.go (1)" />
         <item itemvalue="Go Build.go build discover/example_client" />
         <item itemvalue="Go Build.go build discover/example" />
         <item itemvalue="Go Build.go build main.go" />

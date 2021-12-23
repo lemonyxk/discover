@@ -13,13 +13,13 @@ package tcp
 import (
 	"errors"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/discover/structs"
 	"github.com/lemoyxk/kitty/socket"
 	"github.com/lemoyxk/kitty/socket/websocket/server"
+	"google.golang.org/protobuf/proto"
 )
 
 func Register(conn *server.Conn, stream *socket.Stream) error {

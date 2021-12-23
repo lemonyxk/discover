@@ -16,11 +16,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/kitty/socket"
 	client2 "github.com/lemoyxk/kitty/socket/websocket/client"
+	"google.golang.org/protobuf/proto"
 )
 
 var hasAlive int32 = 0
@@ -97,7 +97,7 @@ func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
 		w.dis.register.GetRouter().Remove("/OnRegister")
 		w.dis.register.GetRouter().Route("/OnRegister").Handler(func(client *client2.Client, stream *socket.Stream) error {
 			var data message.ServerInfoList
-			var err = proto.UnmarshalMerge(stream.Data, &data)
+			var err = proto.Unmarshal(stream.Data, &data)
 			if err != nil {
 				return err
 			}

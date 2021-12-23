@@ -13,12 +13,12 @@ package client
 import (
 	"time"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/kitty/socket"
 	"github.com/lemoyxk/kitty/socket/udp/client"
+	"google.golang.org/protobuf/proto"
 )
 
 func SendWhoIsMaster() {
