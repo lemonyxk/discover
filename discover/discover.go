@@ -11,7 +11,6 @@
 package discover
 
 import (
-	"errors"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -49,8 +48,7 @@ func (dis *discover) Register(serverName, addr string) {
 	}
 
 	dis.registerFn = func() {
-
-		var stream, err = dis.register.Async().ProtoBufEmit(socket.ProtoBufPack{
+		var err = dis.register.ProtoBufEmit(socket.ProtoBufPack{
 			Event: "/Register",
 			Data: &message.ServerInfo{
 				ServerName: serverName,
@@ -59,13 +57,6 @@ func (dis *discover) Register(serverName, addr string) {
 		})
 		if err != nil {
 			console.Info(err)
-			time.Sleep(time.Second)
-			dis.registerFn()
-			return
-		}
-
-		if string(stream.Data) != "OK" {
-			console.Info(errors.New(string(stream.Data)))
 			time.Sleep(time.Second)
 			dis.registerFn()
 			return
@@ -94,8 +85,8 @@ func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
 	}
 
 	w.dis.aliveFn = func() {
-		w.dis.register.GetRouter().Remove("/OnRegister")
-		w.dis.register.GetRouter().Route("/OnRegister").Handler(func(client *client2.Client, stream *socket.Stream) error {
+		w.dis.register.GetRouter().Remove("/Alive")
+		w.dis.register.GetRouter().Route("/Alive").Handler(func(client *client2.Client, stream *socket.Stream) error {
 			var data message.ServerInfoList
 			var err = proto.Unmarshal(stream.Data, &data)
 			if err != nil {
@@ -106,7 +97,7 @@ func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
 		})
 
 		var err = w.dis.register.ProtoBufEmit(socket.ProtoBufPack{
-			Event: "/OnRegister",
+			Event: "/Alive",
 			Data:  &message.ServerList{List: w.serverList},
 		})
 		if err != nil {
@@ -143,28 +134,20 @@ func (k *key) Watch(fn func(key, value string)) {
 	}
 
 	k.dis.listenFn = func() {
-
-		k.dis.listen.GetRouter().Remove("/OnListen")
-		k.dis.listen.GetRouter().Route("/OnListen").Handler(func(client *client2.Client, stream *socket.Stream) error {
+		k.dis.listen.GetRouter().Remove("/Key")
+		k.dis.listen.GetRouter().Route("/Key").Handler(func(client *client2.Client, stream *socket.Stream) error {
 			var data = string(stream.Data)
 			var index = strings.Index(data, "\n")
 			fn(data[:index], data[index+1:])
 			return nil
 		})
 
-		var stream, err = k.dis.listen.Async().ProtoBufEmit(socket.ProtoBufPack{
-			Event: "/Listen",
+		var err = k.dis.listen.ProtoBufEmit(socket.ProtoBufPack{
+			Event: "/Key",
 			Data:  &message.KeyList{List: k.keyList},
 		})
 		if err != nil {
 			console.Info(err)
-			time.Sleep(time.Second)
-			k.dis.listenFn()
-			return
-		}
-
-		if string(stream.Data) != "OK" {
-			console.Info(errors.New(string(stream.Data)))
 			time.Sleep(time.Second)
 			k.dis.listenFn()
 			return

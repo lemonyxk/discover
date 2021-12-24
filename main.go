@@ -26,7 +26,7 @@ import (
 
 func Start(config *app.Config) {
 
-	console.Colorful(false)
+	console.Colorful(config.Debug)
 
 	console.SetFlags(console.TIME | console.LEVEL)
 
@@ -125,7 +125,7 @@ func Start(config *app.Config) {
 	// 		log.Println(app.Node.Alive.AllConn())
 	// 		log.Println(app.Node.Alive.AllData())
 	// 		log.Println(app.Node.Register.All())
-	// 		log.Println(app.Node.Listen.All())
+	// 		log.Println(app.Node.Key.All())
 	// 	}
 	// }()
 

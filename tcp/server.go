@@ -45,7 +45,7 @@ func Start(host string, fn func()) {
 		}
 
 		for i := 0; i < len(data.KeyList); i++ {
-			app.Node.Listen.Delete(data.KeyList[i], conn)
+			app.Node.Key.Delete(data.KeyList[i], conn)
 		}
 
 		if data.ServerInfo != nil {
@@ -54,7 +54,7 @@ func Start(host string, fn func()) {
 			var connections = app.Node.Alive.GetConn(data.ServerInfo.ServerName)
 			for i := 0; i < len(connections); i++ {
 				var err = connections[i].ProtoBufEmit(socket.ProtoBufPack{
-					Event: "/OnRegister",
+					Event: "/Alive",
 					Data:  &message.ServerInfoList{List: list},
 				})
 				if err != nil {

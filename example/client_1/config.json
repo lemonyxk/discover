@@ -1,4 +1,5 @@
 {
   "addr": "127.0.0.1:11001",
-  "dir": "data"
+  "dir": "data",
+  "debug": true
 }

@@ -49,7 +49,7 @@ func LoseLeader(leader raft.LeaderObservation) {
 	Node.Alive.DestroyConn()
 	Node.Alive.DestroyData()
 	Node.Register.Destroy()
-	Node.Listen.Destroy()
+	Node.Key.Destroy()
 
 	console.Warning("local addr:", Node.Addr.Raft, "leader addr:", leader.Leader, Node.IsMaster())
 }
@@ -80,10 +80,10 @@ func (n *node) OnKeyChange(op *store.Command) {
 		return
 	}
 
-	var connections = Node.Listen.Get(op.Key)
+	var connections = Node.Key.Get(op.Key)
 	for i := 0; i < len(connections); i++ {
 		var err = connections[i].Emit(socket.Pack{
-			Event: "/OnListen",
+			Event: "/Key",
 			Data:  []byte(op.Key + "\n" + value),
 		})
 		if err != nil {

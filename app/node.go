@@ -41,7 +41,7 @@ type node struct {
 	Server    *server.Server
 	Register  *register
 	Alive     *alive
-	Listen    *listen
+	Key       *key
 
 	// start time
 	StartTime time.Time
@@ -83,7 +83,7 @@ func (n *node) InitAlive() {
 }
 
 func (n *node) InitListen() {
-	n.Listen = &listen{conn: make(map[string][]*server.Conn)}
+	n.Key = &key{conn: make(map[string][]*server.Conn)}
 }
 
 func (n *node) InitStore() {

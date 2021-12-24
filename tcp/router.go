@@ -19,11 +19,11 @@ import (
 func Router(router *server.Router) {
 	router.Group().Before(isMaster).Handler(func(handler *server.RouteHandler) {
 		handler.Route("/Register").Handler(Register)
-		handler.Route("/OnRegister").Handler(OnRegister)
+		handler.Route("/Alive").Handler(Alive)
 	})
 
 	router.Group().Before(isReady).Handler(func(handler *server.RouteHandler) {
-		handler.Route("/Listen").Handler(Listen)
+		handler.Route("/Key").Handler(Key)
 	})
 }
 

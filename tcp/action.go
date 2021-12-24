@@ -54,7 +54,7 @@ func Register(conn *server.Conn, stream *socket.Stream) error {
 	var connections = app.Node.Alive.GetConn(data.ServerName)
 	for i := 0; i < len(connections); i++ {
 		var err = connections[i].ProtoBufEmit(socket.ProtoBufPack{
-			Event: "/OnRegister",
+			Event: "/Alive",
 			Data:  &message.ServerInfoList{List: list},
 		})
 		if err != nil {
@@ -62,13 +62,10 @@ func Register(conn *server.Conn, stream *socket.Stream) error {
 		}
 	}
 
-	return conn.Emit(socket.Pack{
-		Event: stream.Event,
-		Data:  []byte("OK"),
-	})
+	return nil
 }
 
-func OnRegister(conn *server.Conn, stream *socket.Stream) error {
+func Alive(conn *server.Conn, stream *socket.Stream) error {
 
 	app.Node.Lock()
 
@@ -106,7 +103,7 @@ func OnRegister(conn *server.Conn, stream *socket.Stream) error {
 		}
 
 		var err = conn.ProtoBufEmit(socket.ProtoBufPack{
-			Event: "/OnRegister",
+			Event: "/Alive",
 			Data:  &message.ServerInfoList{List: list},
 		})
 		if err != nil {
@@ -117,7 +114,7 @@ func OnRegister(conn *server.Conn, stream *socket.Stream) error {
 	return nil
 }
 
-func Listen(conn *server.Conn, stream *socket.Stream) error {
+func Key(conn *server.Conn, stream *socket.Stream) error {
 
 	app.Node.Lock()
 
@@ -146,7 +143,7 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 	for i := 0; i < len(data.List); i++ {
 
 		var key = data.List[i]
-		app.Node.Listen.Add(key, conn)
+		app.Node.Key.Add(key, conn)
 
 		var value, err = app.Node.Store.Get(key)
 		if err != nil {
@@ -158,7 +155,7 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 		}
 
 		err = conn.Emit(socket.Pack{
-			Event: "/OnListen",
+			Event: "/Key",
 			Data:  []byte(key + "\n" + value),
 		})
 		if err != nil {
@@ -166,8 +163,5 @@ func Listen(conn *server.Conn, stream *socket.Stream) error {
 		}
 	}
 
-	return conn.Emit(socket.Pack{
-		Event: stream.Event,
-		Data:  []byte("OK"),
-	})
+	return nil
 }

@@ -14,4 +14,5 @@ type Config struct {
 	Addr   string `json:"addr"`
 	Secret string `json:"secret"`
 	Dir    string `json:"dir"`
+	Debug  bool   `json:"debug"`
 }
