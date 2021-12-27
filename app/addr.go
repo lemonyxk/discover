@@ -17,8 +17,6 @@ import (
 	"github.com/lemoyxk/discover/message"
 )
 
-const udpAddress = "224.0.0.250:11000"
-
 func ParseAddr(ad string) *message.Address {
 
 	addr, err := net.ResolveTCPAddr("tcp", ad)
@@ -31,7 +29,6 @@ func ParseAddr(ad string) *message.Address {
 		Http: addr.String(),
 		Raft: fmt.Sprintf("%s:%d", addr.IP, addr.Port+1000),
 		Tcp:  fmt.Sprintf("%s:%d", addr.IP, addr.Port+2000),
-		Udp:  udpAddress,
 	}
 }
 

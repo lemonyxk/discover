@@ -11,7 +11,7 @@
 package http
 
 import (
-	"log"
+	"net"
 
 	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/kitty/http"
@@ -26,9 +26,14 @@ func Join(stream *http.Stream) error {
 
 	var ad = stream.Form.First("addr").String()
 
+	_, err := net.ResolveTCPAddr("tcp", ad)
+	if err != nil {
+		return stream.EndString("NO\n" + err.Error())
+	}
+
 	var addr = app.ParseAddr(ad)
 
-	var err = app.Node.Store.Join(addr.Raft)
+	err = app.Node.Store.Join(addr.Raft)
 	if err != nil {
 		return stream.EndString("NO\n" + err.Error())
 	}
@@ -40,9 +45,14 @@ func Leave(stream *http.Stream) error {
 
 	var ad = stream.Form.First("addr").String()
 
+	_, err := net.ResolveTCPAddr("tcp", ad)
+	if err != nil {
+		return stream.EndString("NO\n" + err.Error())
+	}
+
 	var addr = app.ParseAddr(ad)
-	log.Println(addr)
-	var err = app.Node.Store.Leave(addr.Raft)
+
+	err = app.Node.Store.Leave(addr.Raft)
 	if err != nil {
 		return stream.EndString("NO\n" + err.Error())
 	}
@@ -57,8 +67,12 @@ func IsMaster(stream *http.Stream) error {
 	return stream.EndString("NO")
 }
 
-func WhoIsMaster(stream *http.Stream) error {
-	return stream.EndString("OK\n" + string(utils.Json.Encode(app.Node.GetMaster())))
+func BeMaster(stream *http.Stream) error {
+	if !app.Node.IsReady() {
+		app.Node.Store.BootstrapCluster(true)
+		return stream.EndString("OK")
+	}
+	return stream.EndString("NO")
 }
 
 // ServerList NOTICE

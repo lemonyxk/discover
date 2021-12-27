@@ -19,7 +19,6 @@ import (
 
 	"github.com/hashicorp/raft"
 	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/kitty/kitty"
 )
 
 const (
@@ -44,8 +43,6 @@ type Store struct {
 	m  map[string]string // The key-value store for the system.
 
 	raft *raft.Raft // The consensus mechanism
-
-	logger kitty.Logger
 
 	onKeyChange func(op *Command)
 	isFMSReady  bool
@@ -73,7 +70,6 @@ func New(dataDir, raftAddr string) *Store {
 		Ready:    make(chan bool, 1),
 		m:        make(map[string]string),
 		inMem:    false, // not support inMem
-		logger:   console.NewLogger(),
 	}
 }
 
@@ -173,6 +169,8 @@ func (s *Store) Open() error {
 			}
 		}
 	}()
+
+	console.Info("udp server start success", s.RaftAddr)
 
 	return nil
 }
@@ -290,13 +288,13 @@ func (s *Store) Join(addr string) error {
 
 	configFuture := s.raft.GetConfiguration()
 	if err := configFuture.Error(); err != nil {
-		s.logger.Infof("failed to get raft configuration: %v\n", err)
+		console.Info("failed to get raft configuration:", err)
 		return err
 	}
 
 	for _, srv := range configFuture.Configuration().Servers {
 		if srv.Address == raft.ServerAddress(addr) {
-			s.logger.Infof("node at %s already member of cluster, ignoring join request\n", addr)
+			console.Info("node at", addr, "already member of cluster, ignoring join request")
 			return nil
 		}
 	}
@@ -306,7 +304,8 @@ func (s *Store) Join(addr string) error {
 		return f.Error()
 	}
 
-	s.logger.Infof("node at %s joined successfully\n", addr)
+	console.Info("node at", addr, "joined successfully")
+
 	return nil
 }
 
@@ -314,7 +313,7 @@ func (s *Store) Leave(addr string) error {
 
 	configFuture := s.raft.GetConfiguration()
 	if err := configFuture.Error(); err != nil {
-		s.logger.Infof("failed to get raft configuration: %v\n", err)
+		console.Info("failed to get raft configuration:", err)
 		return err
 	}
 
@@ -325,12 +324,13 @@ func (s *Store) Leave(addr string) error {
 				return fmt.Errorf("error removing existing node at %s: %s", addr, err)
 			}
 
-			s.logger.Infof("node at %s removed successfully\n", addr)
+			console.Info("node at", addr, "removed successfully")
 			return nil
 		}
 	}
 
-	s.logger.Infof("node at %s not found\n", addr)
+	console.Info("node at", addr, "not found")
+
 	return nil
 }
 

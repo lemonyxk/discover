@@ -18,8 +18,6 @@ import (
 	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/discover/http"
 	"github.com/lemoyxk/discover/tcp"
-	"github.com/lemoyxk/discover/udp/client"
-	"github.com/lemoyxk/discover/udp/server"
 	"github.com/lemoyxk/promise"
 	"github.com/lemoyxk/utils"
 )
@@ -38,8 +36,6 @@ func Start(config *app.Config) {
 
 	app.Node.InitListen()
 
-	app.Node.InitServerMap()
-
 	app.Node.InitAddr()
 
 	app.Node.InitStore()
@@ -55,26 +51,10 @@ func Start(config *app.Config) {
 	// or the whole system will FUCK UP
 	<-app.Node.Store.Ready
 
-	// start udp server
-	// for find others
-	var p1 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
-		server.Start(app.Node.Addr.Udp, func() {
-			resolve(nil)
-		})
-	})
-
 	// http server
 	// for set get and delete
 	var p2 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
 		http.Start(app.Node.Addr.Http, func() {
-			resolve(nil)
-		})
-	})
-
-	// udp client
-	// send message to others
-	var p3 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
-		client.Start(app.Node.Addr.Udp, func() {
 			resolve(nil)
 		})
 	})
@@ -92,10 +72,10 @@ func Start(config *app.Config) {
 		// one second to decide
 		// if it's first time, that this is very important
 		// or that is unnecessary
-		client.SendWhoIsMaster()
-		var master = app.Node.ServerMap.GetMaster()
-		app.Node.Store.BootstrapCluster(master.Addr.Addr == app.Node.Addr.Addr)
-		app.Node.Join(master.Addr.Http, app.Node.Addr.Http)
+		// client.SendWhoIsMaster()
+		// var master = app.Node.ServerMap.GetMaster()
+		// app.Node.Store.BootstrapCluster(master.Addr.Addr == app.Node.Addr.Addr)
+		// app.Node.Join(master.Addr.Http, app.Node.Addr.Http)
 
 		resolve(nil)
 	})
@@ -129,7 +109,7 @@ func Start(config *app.Config) {
 	// 	}
 	// }()
 
-	promise.Fall(p1, p2, p3, p4, p5, p6).Then(func(result promise.Result) {
+	promise.Fall(p2, p4, p5, p6).Then(func(result promise.Result) {
 		console.Debug("raft server start success")
 	})
 

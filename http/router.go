@@ -24,10 +24,10 @@ func Router(router *server.Router) {
 		handler.Post("/Join").Handler(Join)
 		handler.Post("/Leave").Handler(Leave)
 		handler.Get("/IsMaster").Handler(IsMaster)
+		handler.Get("/BeMaster").Handler(BeMaster)
 	})
 
 	router.Group().Before(localIP, ready).Handler(func(handler *server.RouteHandler) {
-		handler.Get("/WhoIsMaster").Handler(WhoIsMaster)
 		handler.Get("/ServerList").Handler(ServerList)
 		handler.Get("/Get").Handler(Get)
 	})

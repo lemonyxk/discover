@@ -33,15 +33,14 @@ var Node = &node{
 }
 
 type node struct {
-	Store     *store.Store
-	ServerMap *serverMap
-	Addr      *message.Address
-	Config    *Config
-	Client    *client2.Client
-	Server    *server.Server
-	Register  *register
-	Alive     *alive
-	Key       *key
+	Store    *store.Store
+	Addr     *message.Address
+	Config   *Config
+	Client   *client2.Client
+	Server   *server.Server
+	Register *register
+	Alive    *alive
+	Key      *key
 
 	// start time
 	StartTime time.Time
@@ -94,12 +93,6 @@ func (n *node) InitStore() {
 	exception.Assert.LastNil(n.Store.Open())
 }
 
-func (n *node) InitServerMap() {
-	n.ServerMap = &serverMap{
-		servers: make(map[string]*message.WhoIsMaster),
-	}
-}
-
 func (n *node) InitAddr() {
 
 	addr, err := net.ResolveTCPAddr("tcp", n.Config.Addr)
@@ -110,7 +103,6 @@ func (n *node) InitAddr() {
 		Http: addr.String(),
 		Raft: fmt.Sprintf("%s:%d", addr.IP, addr.Port+1000),
 		Tcp:  fmt.Sprintf("%s:%d", addr.IP, addr.Port+2000),
-		Udp:  udpAddress,
 	}
 }
 
