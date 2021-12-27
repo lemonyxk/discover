@@ -290,13 +290,13 @@ func (s *Store) Join(addr string) error {
 
 	configFuture := s.raft.GetConfiguration()
 	if err := configFuture.Error(); err != nil {
-		s.logger.Infof("failed to get raft configuration: %v", err)
+		s.logger.Infof("failed to get raft configuration: %v\n", err)
 		return err
 	}
 
 	for _, srv := range configFuture.Configuration().Servers {
 		if srv.Address == raft.ServerAddress(addr) {
-			s.logger.Infof("node at %s already member of cluster, ignoring join request", addr)
+			s.logger.Infof("node at %s already member of cluster, ignoring join request\n", addr)
 			return nil
 		}
 	}
@@ -306,7 +306,7 @@ func (s *Store) Join(addr string) error {
 		return f.Error()
 	}
 
-	s.logger.Infof("node at %s joined successfully", addr)
+	s.logger.Infof("node at %s joined successfully\n", addr)
 	return nil
 }
 
@@ -314,7 +314,7 @@ func (s *Store) Leave(addr string) error {
 
 	configFuture := s.raft.GetConfiguration()
 	if err := configFuture.Error(); err != nil {
-		s.logger.Infof("failed to get raft configuration: %v", err)
+		s.logger.Infof("failed to get raft configuration: %v\n", err)
 		return err
 	}
 
@@ -325,12 +325,12 @@ func (s *Store) Leave(addr string) error {
 				return fmt.Errorf("error removing existing node at %s: %s", addr, err)
 			}
 
-			s.logger.Infof("node at %s removed successfully", addr)
+			s.logger.Infof("node at %s removed successfully\n", addr)
 			return nil
 		}
 	}
 
-	s.logger.Infof("node at %s not found", addr)
+	s.logger.Infof("node at %s not found\n", addr)
 	return nil
 }
 
