@@ -1,5 +1,6 @@
 {
   "addr": "www.k8s.com:11001",
+  "admin": "www.k8s.com:14000",
   "dir": "data",
   "debug": true
 }

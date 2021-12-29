@@ -17,13 +17,10 @@ import (
 	"time"
 
 	"github.com/hashicorp/raft"
-	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/discover/message"
 	"github.com/lemoyxk/discover/store"
 	"github.com/lemoyxk/discover/structs"
 	"github.com/lemoyxk/exception"
-	"github.com/lemoyxk/kitty/http/client"
-	"github.com/lemoyxk/kitty/kitty"
 	client2 "github.com/lemoyxk/kitty/socket/udp/client"
 	"github.com/lemoyxk/kitty/socket/websocket/server"
 )
@@ -121,28 +118,6 @@ func (n *node) InitConfig(config *Config) {
 	}
 
 	n.Config = config
-}
-
-func (n *node) Join(masterAddr string, addr string) {
-
-	if masterAddr != Node.Config.Addr {
-
-		var isMasterRes = client.Get(fmt.Sprintf("http://%s/IsMaster", masterAddr)).Query(kitty.M{"addr": addr}).Send()
-		exception.Assert.LastNil(isMasterRes.LastError())
-		if isMasterRes.String() != "OK" {
-			console.Warning(masterAddr, "is master:", isMasterRes.String())
-			time.Sleep(time.Millisecond * 100)
-			n.Join(masterAddr, addr)
-			return
-		}
-
-		var joinRes = client.Post(fmt.Sprintf("http://%s/Join", masterAddr)).Form(kitty.M{"addr": addr}).Send()
-		exception.Assert.LastNil(joinRes.LastError())
-		if joinRes.String() != "OK" {
-			console.Error(joinRes.String())
-			return
-		}
-	}
 }
 
 func (n *node) GetServerList() []*message.WhoIsMaster {

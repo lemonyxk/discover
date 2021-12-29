@@ -12,8 +12,11 @@ package main
 
 import (
 	"flag"
+	"os"
 
+	"github.com/lemoyxk/console"
 	"github.com/lemoyxk/discover-admin/http"
+	"github.com/lemoyxk/utils"
 )
 
 func main() {
@@ -23,7 +26,9 @@ func main() {
 	flag.StringVar(&addr, "addr", "", "server address")
 	flag.Parse()
 
-	http.Start(addr, func() {
+	http.Start(addr, func() {})
 
+	utils.Signal.ListenKill().Done(func(sig os.Signal) {
+		console.Info("exit with code", sig)
 	})
 }

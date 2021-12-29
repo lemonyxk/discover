@@ -62,7 +62,6 @@ func Start(config *app.Config) {
 	var p4 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
 
 		var serverList = app.Node.GetServerList()
-
 		// already finish vote
 		if len(serverList) > 0 {
 			resolve(nil)
@@ -72,10 +71,6 @@ func Start(config *app.Config) {
 		// one second to decide
 		// if it's first time, that this is very important
 		// or that is unnecessary
-		// client.SendWhoIsMaster()
-		// var master = app.Node.ServerMap.GetMaster()
-		// app.Node.Store.BootstrapCluster(master.Addr.Addr == app.Node.Addr.Addr)
-		// app.Node.Join(master.Addr.Http, app.Node.Addr.Http)
 
 		resolve(nil)
 	})
@@ -98,16 +93,6 @@ func Start(config *app.Config) {
 			resolve(nil)
 		})
 	})
-
-	// go func() {
-	// 	for {
-	// 		time.Sleep(time.Second)
-	// 		log.Println(app.Node.Alive.AllConn())
-	// 		log.Println(app.Node.Alive.AllData())
-	// 		log.Println(app.Node.Register.All())
-	// 		log.Println(app.Node.Key.All())
-	// 	}
-	// }()
 
 	promise.Fall(p2, p4, p5, p6).Then(func(result promise.Result) {
 		console.Debug("raft server start success")

@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/raft v1.3.2
 	github.com/lemoyxk/console v0.0.0-20211114041123-e7bf1b8e0f15
 	github.com/lemoyxk/exception v0.0.0-20211111155944-c02b6bf8725f
-	github.com/lemoyxk/kitty v0.0.0-20211221163410-2187f087f2ac
+	github.com/lemoyxk/kitty v0.0.0-20211229153102-4f03eff181fb
 	github.com/lemoyxk/promise v0.0.0-20200717113451-92f75a5150a2
 	github.com/lemoyxk/utils v0.0.0-20211216082042-c1962cf83a69
 	google.golang.org/protobuf v1.27.1

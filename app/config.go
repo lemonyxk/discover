@@ -11,7 +11,6 @@
 package app
 
 type Config struct {
-	Admin  string `json:"admin"`
 	Addr   string `json:"addr"`
 	Secret string `json:"secret"`
 	Dir    string `json:"dir"`

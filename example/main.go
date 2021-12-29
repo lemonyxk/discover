@@ -23,14 +23,12 @@ func main() {
 
 	var configPath string
 	var dir string
-	var admin string
 	var addr string
 	var secret string
 	var debug bool
 
 	flag.StringVar(&configPath, "config", "", "config path")
 	flag.StringVar(&dir, "dir", "", "data dir")
-	flag.StringVar(&admin, "admin", "", "admin address")
 	flag.StringVar(&addr, "addr", "", "server address")
 	flag.StringVar(&secret, "secret", "", "secret key")
 	flag.BoolVar(&debug, "debug", false, "debug mode")
@@ -50,7 +48,6 @@ func main() {
 	} else {
 		config.Dir = dir
 		config.Addr = addr
-		config.Admin = admin
 		config.Secret = secret
 		config.Debug = debug
 	}

@@ -16,7 +16,6 @@ import (
 
 func Router(router *server.Router) {
 	router.Group().Before().Handler(func(handler *server.RouteHandler) {
-		handler.Post("/UpdateStatus").Handler(UpdateStatus)
-		handler.Get("/WhoIsMaster").Handler(WhoIsMaster)
+		handler.Get("/ServerList").Handler(ServerList)
 	})
 }

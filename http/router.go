@@ -21,10 +21,13 @@ import (
 
 func Router(router *server.Router) {
 	router.Group().Before(localIP, secret).Handler(func(handler *server.RouteHandler) {
+		handler.Get("/IsMaster").Handler(IsMaster)
+		handler.Post("/BeMaster").Handler(BeMaster)
+	})
+
+	router.Group().Before(localIP, secret, ready, isMaster).Handler(func(handler *server.RouteHandler) {
 		handler.Post("/Join").Handler(Join)
 		handler.Post("/Leave").Handler(Leave)
-		handler.Get("/IsMaster").Handler(IsMaster)
-		handler.Get("/BeMaster").Handler(BeMaster)
 	})
 
 	router.Group().Before(localIP, ready).Handler(func(handler *server.RouteHandler) {

@@ -170,7 +170,7 @@ func (s *Store) Open() error {
 		}
 	}()
 
-	console.Info("udp server start success", s.RaftAddr)
+	console.Info("raft server start success", s.RaftAddr)
 
 	return nil
 }
