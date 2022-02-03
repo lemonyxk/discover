@@ -4,25 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b9bbf93-090f-4100-b063-0a9288e65d86" name="Default Changelist" comment="1.update lib.">
+    <list default="true" id="1b9bbf93-090f-4100-b063-0a9288e65d86" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/admin/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/admin/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/http/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/http/action.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/http/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/http/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/node.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/node.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/client_1/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_1/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/client_2/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_2/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/client_3/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_3/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/client_4/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_4/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/store/store.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/action.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,17 +39,17 @@
     <option name="indexEntireGoPath" value="false" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/app/node.go" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file:///usr/local/opt/go/libexec/src/net/http/server.go" root0="SKIP_INSPECTION" />
-    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/golang/protobuf@v1.5.2/proto/proto.go" root0="SKIP_INSPECTION" />
-    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/lemoyxk/kitty@v0.0.0-20211229153102-4f03eff181fb/http/http_stream.go" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/admin/app/map.go" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/message/message.pb.go" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/main.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file:///usr/local/opt/go/libexec/src/runtime/panic.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/main.go" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/golang/protobuf@v1.5.2/proto/proto.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/app/node.go" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/message/message.pb.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/admin/http/action.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/go/pkg/mod/github.com/lemoyxk/kitty@v0.0.0-20211229153102-4f03eff181fb/http/client/info.go" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/admin/http/server.go" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file:///usr/local/opt/go/libexec/src/net/http/server.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/lemoyxk/kitty@v0.0.0-20211229153102-4f03eff181fb/http/http_stream.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/admin/app/map.go" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />

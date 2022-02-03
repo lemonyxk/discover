@@ -26,6 +26,10 @@ func Join(stream *http.Stream) error {
 
 	var ad = stream.Form.First("addr").String()
 
+	if ad == "" {
+		return stream.EndString("NO\n" + "addr is empty")
+	}
+
 	_, err := net.ResolveTCPAddr("tcp", ad)
 	if err != nil {
 		return stream.EndString("NO\n" + err.Error())
@@ -44,6 +48,10 @@ func Join(stream *http.Stream) error {
 func Leave(stream *http.Stream) error {
 
 	var ad = stream.Form.First("addr").String()
+
+	if ad == "" {
+		return stream.EndString("NO\n" + "addr is empty")
+	}
 
 	_, err := net.ResolveTCPAddr("tcp", ad)
 	if err != nil {
