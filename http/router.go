@@ -23,6 +23,7 @@ func Router(router *server.Router) {
 	router.Group().Before(localIP, secret).Handler(func(handler *server.RouteHandler) {
 		handler.Get("/IsMaster").Handler(IsMaster)
 		handler.Post("/BeMaster").Handler(BeMaster)
+		handler.Post("/Test").Handler(Test)
 	})
 
 	router.Group().Before(localIP, secret, ready, isMaster).Handler(func(handler *server.RouteHandler) {

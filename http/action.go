@@ -15,6 +15,7 @@ import (
 
 	"github.com/lemoyxk/discover/app"
 	"github.com/lemoyxk/kitty/http"
+	"github.com/lemoyxk/kitty/http/client"
 	"github.com/lemoyxk/utils"
 )
 
@@ -36,6 +37,11 @@ func Join(stream *http.Stream) error {
 	}
 
 	var addr = app.ParseAddr(ad)
+
+	var res = client.Get("http://" + addr.Http + "/Test").Query().Send().String()
+	if res != "OK\n" {
+		return stream.EndString("NO\n" + "addr no response")
+	}
 
 	err = app.Node.Store.Join(addr.Raft)
 	if err != nil {
@@ -88,6 +94,10 @@ func BeMaster(stream *http.Stream) error {
 // because it need time to notify
 func ServerList(stream *http.Stream) error {
 	return stream.EndString("OK\n" + string(utils.Json.Encode(app.Node.GetServerList())))
+}
+
+func Test(stream *http.Stream) error {
+	return stream.EndString("OK\n")
 }
 
 func Get(stream *http.Stream) error {
