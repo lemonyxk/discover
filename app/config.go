@@ -12,6 +12,9 @@ package app
 
 type Config struct {
 	Addr   string `json:"addr"`
+	Http   string `json:"http"`
+	Tcp    string `json:"tcp"`
+	Raft   string `json:"raft"`
 	Secret string `json:"secret"`
 	Dir    string `json:"dir"`
 	Debug  bool   `json:"debug"`

@@ -95,11 +95,26 @@ func (n *node) InitAddr() {
 	addr, err := net.ResolveTCPAddr("tcp", n.Config.Addr)
 	exception.Assert.LastNil(err)
 
+	var http = n.Config.Http
+	if http == "" {
+		http = fmt.Sprintf("%s:%d", "0.0.0.0", addr.Port)
+	}
+
+	var rf = n.Config.Raft
+	if rf == "" {
+		rf = fmt.Sprintf("%s:%d", addr.IP, addr.Port+1000)
+	}
+
+	var tcp = n.Config.Tcp
+	if tcp == "" {
+		tcp = fmt.Sprintf("%s:%d", "0.0.0.0", addr.Port+2000)
+	}
+
 	n.Addr = &message.Address{
 		Addr: addr.String(),
-		Http: addr.String(),
-		Raft: fmt.Sprintf("%s:%d", addr.IP, addr.Port+1000),
-		Tcp:  fmt.Sprintf("%s:%d", addr.IP, addr.Port+2000),
+		Http: http,
+		Raft: rf,
+		Tcp:  tcp,
 	}
 }
 
