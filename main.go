@@ -11,6 +11,7 @@
 package discover
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -54,7 +55,10 @@ func Start(config *app.Config) {
 	// http server
 	// for set get and delete
 	var p2 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
-		http.Start(app.Node.Addr.Http, func() {
+		// http.Start(app.Node.Addr.Http, func() {
+		// 	resolve(nil)
+		// })
+		http.Start(fmt.Sprintf("0.0.0.0:%d", app.GetAddr(app.Node.Addr.Http).Port), func() {
 			resolve(nil)
 		})
 	})
@@ -89,7 +93,10 @@ func Start(config *app.Config) {
 	// tcp server
 	// for consumers and users
 	var p6 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
-		tcp.Start(app.Node.Addr.Tcp, func() {
+		// tcp.Start(app.Node.Addr.Tcp, func() {
+		// 	resolve(nil)
+		// })
+		tcp.Start(fmt.Sprintf("0.0.0.0:%d", app.GetAddr(app.Node.Addr.Tcp).Port), func() {
 			resolve(nil)
 		})
 	})

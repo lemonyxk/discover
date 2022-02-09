@@ -40,3 +40,13 @@ func RaftAddr2Addr(raftAddr string) *message.Address {
 
 	return ParseAddr(fmt.Sprintf("%s:%d", addr.IP, addr.Port-1000))
 }
+
+func GetAddr(addr string) *net.TCPAddr {
+
+	var ad, err = net.ResolveTCPAddr("tcp", addr)
+	if err != nil {
+		return nil
+	}
+
+	return ad
+}
