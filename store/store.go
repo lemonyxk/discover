@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/raft"
-	"github.com/lemoyxk/console"
+	"github.com/lemonyxk/console"
 )
 
 const (

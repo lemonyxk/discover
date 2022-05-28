@@ -13,30 +13,30 @@ package http
 import (
 	"errors"
 
-	"github.com/lemoyxk/discover/app"
-	"github.com/lemoyxk/kitty/http"
-	"github.com/lemoyxk/kitty/http/server"
-	"github.com/lemoyxk/utils"
+	"github.com/lemonyxk/discover/app"
+	"github.com/lemonyxk/kitty/v2/router"
+	"github.com/lemonyxk/kitty/v2/socket/http"
+	"github.com/lemonyxk/utils/v3"
 )
 
-func Router(router *server.Router) {
-	router.Group().Before(localIP, secret).Handler(func(handler *server.RouteHandler) {
+func Router(s *router.Router[*http.Stream]) {
+	s.Group().Before(localIP, secret).Handler(func(handler *router.Handler[*http.Stream]) {
 		handler.Get("/IsMaster").Handler(IsMaster)
 		handler.Post("/BeMaster").Handler(BeMaster)
 		handler.Get("/Test").Handler(Test)
 	})
 
-	router.Group().Before(localIP, secret, ready, isMaster).Handler(func(handler *server.RouteHandler) {
+	s.Group().Before(localIP, secret, ready, isMaster).Handler(func(handler *router.Handler[*http.Stream]) {
 		handler.Post("/Join").Handler(Join)
 		handler.Post("/Leave").Handler(Leave)
 	})
 
-	router.Group().Before(localIP, ready).Handler(func(handler *server.RouteHandler) {
+	s.Group().Before(localIP, ready).Handler(func(handler *router.Handler[*http.Stream]) {
 		handler.Get("/ServerList").Handler(ServerList)
 		handler.Get("/Get").Handler(Get)
 	})
 
-	router.Group().Before(localIP, ready, isMaster).Handler(func(handler *server.RouteHandler) {
+	s.Group().Before(localIP, ready, isMaster).Handler(func(handler *router.Handler[*http.Stream]) {
 		handler.Post("/Set").Handler(Set)
 		handler.Post("/Delete").Handler(Delete)
 	})

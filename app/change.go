@@ -12,9 +12,9 @@ package app
 
 import (
 	"github.com/hashicorp/raft"
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/discover/store"
-	"github.com/lemoyxk/kitty/socket"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover/store"
+	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
 )
 
 // OnLeaderChange YOU GOT LEADER
@@ -39,12 +39,12 @@ func LoseLeader(leader raft.LeaderObservation) {
 		return
 	}
 
-	for conn := range Node.Server.GetConnections() {
+	Node.Server.GetConnections(func(conn server.Conn) {
 		var err = conn.Close()
 		if err != nil {
 			console.Error(err)
 		}
-	}
+	})
 
 	Node.Alive.DestroyConn()
 	Node.Alive.DestroyData()
@@ -82,10 +82,7 @@ func (n *node) OnKeyChange(op *store.Command) {
 
 	var connections = Node.Key.Get(op.Key)
 	for i := 0; i < len(connections); i++ {
-		var err = connections[i].Emit(socket.Pack{
-			Event: "/Key",
-			Data:  []byte(op.Key + "\n" + value),
-		})
+		var err = connections[i].Emit("/Key", []byte(op.Key+"\n"+value))
 		if err != nil {
 			console.Error(err)
 		}

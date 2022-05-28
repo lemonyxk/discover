@@ -13,32 +13,31 @@ package tcp
 import (
 	"time"
 
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/discover/app"
-	"github.com/lemoyxk/discover/message"
-	"github.com/lemoyxk/kitty"
-	"github.com/lemoyxk/kitty/socket"
-	"github.com/lemoyxk/kitty/socket/websocket/server"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover/app"
+	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/kitty/v2"
+	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
 )
 
 func Start(host string, fn func()) {
 
 	var tcpServer = server.Server{Name: host, Addr: host, HeartBeatTimeout: 3 * time.Second}
 
-	tcpServer.OnClose = func(conn *server.Conn) {
+	tcpServer.OnClose = func(conn server.Conn) {
 
 		app.Node.Lock()
 
 		defer app.Node.Unlock()
 
-		console.Info("tcp server", conn.FD, "close")
+		console.Info("tcp server", conn.FD(), "close")
 
-		var data = app.Node.Register.Get(conn.FD)
+		var data = app.Node.Register.Get(conn.FD())
 		if data == nil {
 			return
 		}
 
-		app.Node.Register.Delete(conn.FD)
+		app.Node.Register.Delete(conn.FD())
 
 		for i := 0; i < len(data.ServerList); i++ {
 			app.Node.Alive.DeleteConn(data.ServerList[i], conn)
@@ -53,10 +52,7 @@ func Start(host string, fn func()) {
 			var list = app.Node.Alive.GetData(data.ServerInfo.ServerName)
 			var connections = app.Node.Alive.GetConn(data.ServerInfo.ServerName)
 			for i := 0; i < len(connections); i++ {
-				var err = connections[i].ProtoBufEmit(socket.ProtoBufPack{
-					Event: "/Alive",
-					Data:  &message.ServerInfoList{List: list},
-				})
+				var err = connections[i].ProtoBufEmit("/Alive", &message.ServerInfoList{List: list})
 				if err != nil {
 					console.Error(err)
 				}
@@ -69,8 +65,8 @@ func Start(host string, fn func()) {
 		console.Error("tcp server", err)
 	}
 
-	tcpServer.OnOpen = func(conn *server.Conn) {
-		console.Info("tcp server", conn.FD, "open")
+	tcpServer.OnOpen = func(conn server.Conn) {
+		console.Info("tcp server", conn.FD(), "open")
 	}
 
 	var router = kitty.NewWebSocketServerRouter()

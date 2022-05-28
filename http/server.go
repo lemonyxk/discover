@@ -11,10 +11,10 @@
 package http
 
 import (
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/kitty"
-	"github.com/lemoyxk/kitty/http"
-	"github.com/lemoyxk/kitty/http/server"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/kitty/v2"
+	"github.com/lemonyxk/kitty/v2/socket/http"
+	"github.com/lemonyxk/kitty/v2/socket/http/server"
 )
 
 // var transport = http2.Transport{

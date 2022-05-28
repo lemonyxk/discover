@@ -15,10 +15,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/discover/message"
-	"github.com/lemoyxk/kitty/http/client"
-	"github.com/lemoyxk/utils"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/kitty/v2/socket/http/client"
+	"github.com/lemonyxk/utils/v3"
 )
 
 // will never be nil

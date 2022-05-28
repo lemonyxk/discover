@@ -15,11 +15,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/discover/app"
-	"github.com/lemoyxk/discover/message"
-	"github.com/lemoyxk/kitty"
-	client2 "github.com/lemoyxk/kitty/socket/websocket/client"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover/app"
+	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/kitty/v2"
+	client2 "github.com/lemonyxk/kitty/v2/socket/websocket/client"
 )
 
 func New(serverList []string) *discover {
@@ -62,11 +62,11 @@ func initRegister(dis *discover, wait *sync.WaitGroup) {
 
 	dis.register = client
 
-	dis.register.OnOpen = func(c *client2.Client) {
+	dis.register.OnOpen = func(conn client2.Conn) {
 		console.Info("register client open at:", dis.register.Addr)
 	}
 
-	dis.register.OnClose = func(c *client2.Client) {
+	dis.register.OnClose = func(conn client2.Conn) {
 		console.Info("register client close")
 	}
 
@@ -110,11 +110,11 @@ func initLister(dis *discover, wait *sync.WaitGroup) {
 
 	dis.listen = client
 
-	dis.listen.OnOpen = func(c *client2.Client) {
+	dis.listen.OnOpen = func(conn client2.Conn) {
 		console.Info("listen client open at:", dis.listen.Addr)
 	}
 
-	dis.listen.OnClose = func(c *client2.Client) {
+	dis.listen.OnClose = func(conn client2.Conn) {
 		console.Info("listen client close")
 	}
 

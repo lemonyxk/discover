@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/lemoyxk/discover/message"
+	"github.com/lemonyxk/discover/message"
 )
 
 func ParseAddr(ad string) *message.Address {

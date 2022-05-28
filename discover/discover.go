@@ -15,10 +15,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/discover/message"
-	"github.com/lemoyxk/kitty/socket"
-	client2 "github.com/lemoyxk/kitty/socket/websocket/client"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/kitty/v2/socket"
+	client2 "github.com/lemonyxk/kitty/v2/socket/websocket/client"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -48,12 +48,9 @@ func (dis *discover) Register(serverName, addr string) {
 	}
 
 	dis.registerFn = func() {
-		var err = dis.register.ProtoBufEmit(socket.ProtoBufPack{
-			Event: "/Register",
-			Data: &message.ServerInfo{
-				ServerName: serverName,
-				Addr:       addr,
-			},
+		var err = dis.register.ProtoBufEmit("/Register", &message.ServerInfo{
+			ServerName: serverName,
+			Addr:       addr,
 		})
 		if err != nil {
 			console.Info(err)
@@ -86,7 +83,7 @@ func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
 
 	w.dis.aliveFn = func() {
 		w.dis.register.GetRouter().Remove("/Alive")
-		w.dis.register.GetRouter().Route("/Alive").Handler(func(client *client2.Client, stream *socket.Stream) error {
+		w.dis.register.GetRouter().Route("/Alive").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			var data message.ServerInfoList
 			var err = proto.Unmarshal(stream.Data, &data)
 			if err != nil {
@@ -96,10 +93,7 @@ func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
 			return nil
 		})
 
-		var err = w.dis.register.ProtoBufEmit(socket.ProtoBufPack{
-			Event: "/Alive",
-			Data:  &message.ServerList{List: w.serverList},
-		})
+		var err = w.dis.register.ProtoBufEmit("/Alive", &message.ServerList{List: w.serverList})
 		if err != nil {
 			time.Sleep(time.Second)
 			w.dis.aliveFn()
@@ -135,17 +129,14 @@ func (k *key) Watch(fn func(key, value string)) {
 
 	k.dis.listenFn = func() {
 		k.dis.listen.GetRouter().Remove("/Key")
-		k.dis.listen.GetRouter().Route("/Key").Handler(func(client *client2.Client, stream *socket.Stream) error {
+		k.dis.listen.GetRouter().Route("/Key").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			var data = string(stream.Data)
 			var index = strings.Index(data, "\n")
 			fn(data[:index], data[index+1:])
 			return nil
 		})
 
-		var err = k.dis.listen.ProtoBufEmit(socket.ProtoBufPack{
-			Event: "/Key",
-			Data:  &message.KeyList{List: k.keyList},
-		})
+		var err = k.dis.listen.ProtoBufEmit("/Key", &message.KeyList{List: k.keyList})
 		if err != nil {
 			console.Info(err)
 			time.Sleep(time.Second)

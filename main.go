@@ -14,12 +14,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/discover/app"
-	"github.com/lemoyxk/discover/http"
-	"github.com/lemoyxk/discover/tcp"
-	"github.com/lemoyxk/promise"
-	"github.com/lemoyxk/utils"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover/app"
+	"github.com/lemonyxk/discover/http"
+	"github.com/lemonyxk/discover/tcp"
+	"github.com/lemonyxk/promise"
+	"github.com/lemonyxk/utils/v3"
 )
 
 func Start(config *app.Config) {
@@ -53,14 +53,13 @@ func Start(config *app.Config) {
 
 	// http server
 	// for set get and delete
-	var p2 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
+	var p2 = promise.New(func(resolve func(any), reject func(error)) {
 		http.Start(app.Node.Addr.Http, func() {
 			resolve(nil)
 		})
 	})
 
-	var p4 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
-
+	var p4 = promise.New(func(resolve func(any), reject func(error)) {
 		var serverList = app.Node.GetServerList()
 		// already finish vote
 		if len(serverList) > 0 {
@@ -76,7 +75,7 @@ func Start(config *app.Config) {
 	})
 
 	// waiting master is ready
-	var p5 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
+	var p5 = promise.New(func(resolve func(any), reject func(error)) {
 		for {
 			if !app.Node.IsReady() {
 				time.Sleep(time.Millisecond * 100)
@@ -88,13 +87,13 @@ func Start(config *app.Config) {
 
 	// tcp server
 	// for consumers and users
-	var p6 = promise.New(func(resolve promise.Resolve, reject promise.Reject) {
+	var p6 = promise.New(func(resolve func(any), reject func(error)) {
 		tcp.Start(app.Node.Addr.Tcp, func() {
 			resolve(nil)
 		})
 	})
 
-	promise.Fall(p2, p4, p5, p6).Then(func(result promise.Result) {
+	promise.Fall(p2, p4, p5, p6).Then(func(res []any) {
 		console.Debug("raft server start success")
 	})
 

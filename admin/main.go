@@ -14,9 +14,9 @@ import (
 	"flag"
 	"os"
 
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/discover-admin/http"
-	"github.com/lemoyxk/utils"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover-admin/http"
+	"github.com/lemonyxk/utils/v3"
 )
 
 func main() {

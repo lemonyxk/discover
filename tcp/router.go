@@ -11,40 +11,35 @@
 package tcp
 
 import (
-	"github.com/lemoyxk/discover/app"
-	"github.com/lemoyxk/kitty/socket"
-	"github.com/lemoyxk/kitty/socket/websocket/server"
+	"github.com/lemonyxk/discover/app"
+	"github.com/lemonyxk/kitty/v2/router"
+	"github.com/lemonyxk/kitty/v2/socket"
+	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
 )
 
-func Router(router *server.Router) {
-	router.Group().Before(isMaster).Handler(func(handler *server.RouteHandler) {
+func Router(s *router.Router[*socket.Stream[server.Conn]]) {
+	s.Group().Before(isMaster).Handler(func(handler *router.Handler[*socket.Stream[server.Conn]]) {
 		handler.Route("/Register").Handler(Register)
 		handler.Route("/Alive").Handler(Alive)
 	})
 
-	router.Group().Before(isReady).Handler(func(handler *server.RouteHandler) {
+	s.Group().Before(isReady).Handler(func(handler *router.Handler[*socket.Stream[server.Conn]]) {
 		handler.Route("/Key").Handler(Key)
 	})
 }
 
-func isReady(conn *server.Conn, stream *socket.Stream) error {
+func isReady(stream *socket.Stream[server.Conn]) error {
 	if !app.Node.IsReady() {
 		var msg = "NO\nNOT READY"
-		return conn.Emit(socket.Pack{
-			Event: stream.Event,
-			Data:  []byte(msg),
-		})
+		return stream.Conn.Emit(stream.Event, []byte(msg))
 	}
 	return nil
 }
 
-func isMaster(conn *server.Conn, stream *socket.Stream) error {
+func isMaster(stream *socket.Stream[server.Conn]) error {
 	if !app.Node.IsMaster() {
 		var msg = "NO\nNOT MASTER"
-		return conn.Emit(socket.Pack{
-			Event: stream.Event,
-			Data:  []byte(msg),
-		})
+		return stream.Conn.Emit(stream.Event, []byte(msg))
 	}
 	return nil
 }

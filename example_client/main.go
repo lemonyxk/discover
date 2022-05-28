@@ -13,9 +13,9 @@ package main
 import (
 	"time"
 
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/discover/discover"
-	"github.com/lemoyxk/discover/message"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover/discover"
+	"github.com/lemonyxk/discover/message"
 )
 
 func main() {

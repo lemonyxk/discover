@@ -13,23 +13,23 @@ package app
 import (
 	"sync"
 
-	"github.com/lemoyxk/discover/message"
-	"github.com/lemoyxk/kitty/socket/websocket/server"
+	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
 )
 
 type alive struct {
 	mux  sync.Mutex
-	conn map[string][]*server.Conn
+	conn map[string][]server.Conn
 	data map[string][]*message.ServerInfo
 }
 
-func (s *alive) AllConn() map[string][]*server.Conn {
+func (s *alive) AllConn() map[string][]server.Conn {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	return s.conn
 }
 
-func (s *alive) GetConn(serverName string) []*server.Conn {
+func (s *alive) GetConn(serverName string) []server.Conn {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	var list, ok = s.conn[serverName]
@@ -39,7 +39,7 @@ func (s *alive) GetConn(serverName string) []*server.Conn {
 	return list
 }
 
-func (s *alive) AddConn(serverName string, conn *server.Conn) bool {
+func (s *alive) AddConn(serverName string, conn server.Conn) bool {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	var list, ok = s.conn[serverName]
@@ -50,7 +50,7 @@ func (s *alive) AddConn(serverName string, conn *server.Conn) bool {
 
 	// already in here
 	for i := 0; i < len(list); i++ {
-		if list[i].FD == conn.FD {
+		if list[i].FD() == conn.FD() {
 			return false
 		}
 	}
@@ -60,9 +60,10 @@ func (s *alive) AddConn(serverName string, conn *server.Conn) bool {
 	return true
 }
 
-func (s *alive) DeleteConn(serverName string, conn *server.Conn) bool {
+func (s *alive) DeleteConn(serverName string, conn server.Conn) bool {
 	s.mux.Lock()
 	defer s.mux.Unlock()
+
 	var list, ok = s.conn[serverName]
 	if !ok {
 		return false
@@ -70,7 +71,7 @@ func (s *alive) DeleteConn(serverName string, conn *server.Conn) bool {
 
 	var index = -1
 	for i := 0; i < len(list); i++ {
-		if list[i].FD == conn.FD {
+		if list[i].FD() == conn.FD() {
 			index = i
 			break
 		}
@@ -97,7 +98,7 @@ func (s *alive) DeleteConn(serverName string, conn *server.Conn) bool {
 func (s *alive) DestroyConn() {
 	s.mux.Lock()
 	defer s.mux.Unlock()
-	s.conn = make(map[string][]*server.Conn)
+	s.conn = make(map[string][]server.Conn)
 }
 
 func (s *alive) AllData() map[string][]*message.ServerInfo {

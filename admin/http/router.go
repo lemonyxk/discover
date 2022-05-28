@@ -11,11 +11,12 @@
 package http
 
 import (
-	"github.com/lemoyxk/kitty/http/server"
+	"github.com/lemonyxk/kitty/v2/router"
+	"github.com/lemonyxk/kitty/v2/socket/http"
 )
 
-func Router(router *server.Router) {
-	router.Group().Before().Handler(func(handler *server.RouteHandler) {
+func Router(s *router.Router[*http.Stream]) {
+	s.Group().Before().Handler(func(handler *router.Handler[*http.Stream]) {
 		handler.Get("/ServerList").Handler(ServerList)
 	})
 }

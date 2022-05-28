@@ -17,12 +17,12 @@ import (
 	"time"
 
 	"github.com/hashicorp/raft"
-	"github.com/lemoyxk/discover/message"
-	"github.com/lemoyxk/discover/store"
-	"github.com/lemoyxk/discover/structs"
-	"github.com/lemoyxk/exception"
-	client2 "github.com/lemoyxk/kitty/socket/udp/client"
-	"github.com/lemoyxk/kitty/socket/websocket/server"
+	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/discover/store"
+	"github.com/lemonyxk/discover/structs"
+	"github.com/lemonyxk/exception"
+	client2 "github.com/lemonyxk/kitty/v2/socket/udp/client"
+	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
 )
 
 var Node = &node{
@@ -75,11 +75,11 @@ func (n *node) InitRegister() {
 }
 
 func (n *node) InitAlive() {
-	n.Alive = &alive{data: make(map[string][]*message.ServerInfo), conn: make(map[string][]*server.Conn)}
+	n.Alive = &alive{data: make(map[string][]*message.ServerInfo), conn: make(map[string][]server.Conn)}
 }
 
 func (n *node) InitListen() {
-	n.Key = &key{conn: make(map[string][]*server.Conn)}
+	n.Key = &key{conn: make(map[string][]server.Conn)}
 }
 
 func (n *node) InitStore() {

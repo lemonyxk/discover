@@ -11,7 +11,7 @@
 package http
 
 import (
-	"github.com/lemoyxk/kitty/http"
+	"github.com/lemonyxk/kitty/v2/socket/http"
 )
 
 func ServerList(stream *http.Stream) error {

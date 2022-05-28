@@ -13,21 +13,21 @@ package app
 import (
 	"sync"
 
-	"github.com/lemoyxk/kitty/socket/websocket/server"
+	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
 )
 
 type key struct {
 	mux  sync.Mutex
-	conn map[string][]*server.Conn
+	conn map[string][]server.Conn
 }
 
-func (l *key) All() map[string][]*server.Conn {
+func (l *key) All() map[string][]server.Conn {
 	l.mux.Lock()
 	defer l.mux.Unlock()
 	return l.conn
 }
 
-func (l *key) Get(key string) []*server.Conn {
+func (l *key) Get(key string) []server.Conn {
 	l.mux.Lock()
 	defer l.mux.Unlock()
 	var list, ok = l.conn[key]
@@ -37,7 +37,7 @@ func (l *key) Get(key string) []*server.Conn {
 	return list
 }
 
-func (l *key) Add(key string, conn *server.Conn) bool {
+func (l *key) Add(key string, conn server.Conn) bool {
 	l.mux.Lock()
 	defer l.mux.Unlock()
 	var list, ok = l.conn[key]
@@ -48,7 +48,7 @@ func (l *key) Add(key string, conn *server.Conn) bool {
 
 	// already in here
 	for i := 0; i < len(list); i++ {
-		if list[i].FD == conn.FD {
+		if list[i].FD() == conn.FD() {
 			return false
 		}
 	}
@@ -58,7 +58,7 @@ func (l *key) Add(key string, conn *server.Conn) bool {
 	return true
 }
 
-func (l *key) Delete(key string, conn *server.Conn) bool {
+func (l *key) Delete(key string, conn server.Conn) bool {
 	l.mux.Lock()
 	defer l.mux.Unlock()
 	var list, ok = l.conn[key]
@@ -68,7 +68,7 @@ func (l *key) Delete(key string, conn *server.Conn) bool {
 
 	var index = -1
 	for i := 0; i < len(list); i++ {
-		if list[i].FD == conn.FD {
+		if list[i].FD() == conn.FD() {
 			index = i
 			break
 		}
@@ -95,5 +95,5 @@ func (l *key) Delete(key string, conn *server.Conn) bool {
 func (l *key) Destroy() {
 	l.mux.Lock()
 	defer l.mux.Unlock()
-	l.conn = make(map[string][]*server.Conn)
+	l.conn = make(map[string][]server.Conn)
 }

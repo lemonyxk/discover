@@ -13,20 +13,21 @@ package tcp
 import (
 	"errors"
 
-	"github.com/lemoyxk/console"
-	"github.com/lemoyxk/discover/app"
-	"github.com/lemoyxk/discover/message"
-	"github.com/lemoyxk/discover/structs"
-	"github.com/lemoyxk/kitty/socket"
-	"github.com/lemoyxk/kitty/socket/websocket/server"
+	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover/app"
+	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/discover/structs"
+	"github.com/lemonyxk/kitty/v2/socket"
+	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
 	"google.golang.org/protobuf/proto"
 )
 
-func Register(conn *server.Conn, stream *socket.Stream) error {
+func Register(stream *socket.Stream[server.Conn]) error {
 
 	app.Node.Lock()
-
 	defer app.Node.Unlock()
+
+	var conn = stream.Conn
 
 	var data message.ServerInfo
 
@@ -39,13 +40,13 @@ func Register(conn *server.Conn, stream *socket.Stream) error {
 		return errors.New("server name or addr is empty")
 	}
 
-	var register = app.Node.Register.Get(conn.FD)
+	var register = app.Node.Register.Get(conn.FD())
 	if register == nil {
 		register = &structs.Register{}
 	}
 	register.ServerInfo = &data
 
-	app.Node.Register.Set(conn.FD, register)
+	app.Node.Register.Set(conn.FD(), register)
 
 	// add to watch queue
 	app.Node.Alive.AddData(data.ServerName, data.Addr)
@@ -53,10 +54,7 @@ func Register(conn *server.Conn, stream *socket.Stream) error {
 
 	var connections = app.Node.Alive.GetConn(data.ServerName)
 	for i := 0; i < len(connections); i++ {
-		var err = connections[i].ProtoBufEmit(socket.ProtoBufPack{
-			Event: "/Alive",
-			Data:  &message.ServerInfoList{List: list},
-		})
+		var err = connections[i].ProtoBufEmit("/Alive", &message.ServerInfoList{List: list})
 		if err != nil {
 			console.Error(err)
 		}
@@ -65,11 +63,13 @@ func Register(conn *server.Conn, stream *socket.Stream) error {
 	return nil
 }
 
-func Alive(conn *server.Conn, stream *socket.Stream) error {
+func Alive(stream *socket.Stream[server.Conn]) error {
 
 	app.Node.Lock()
 
 	defer app.Node.Unlock()
+
+	var conn = stream.Conn
 
 	var data message.ServerList
 
@@ -82,13 +82,13 @@ func Alive(conn *server.Conn, stream *socket.Stream) error {
 		return errors.New("server list is empty")
 	}
 
-	var register = app.Node.Register.Get(conn.FD)
+	var register = app.Node.Register.Get(conn.FD())
 	if register == nil {
 		register = &structs.Register{}
 	}
 	register.ServerList = data.List
 
-	app.Node.Register.Set(conn.FD, register)
+	app.Node.Register.Set(conn.FD(), register)
 
 	// add to notify queue
 	for i := 0; i < len(data.List); i++ {
@@ -102,10 +102,7 @@ func Alive(conn *server.Conn, stream *socket.Stream) error {
 			continue
 		}
 
-		var err = conn.ProtoBufEmit(socket.ProtoBufPack{
-			Event: "/Alive",
-			Data:  &message.ServerInfoList{List: list},
-		})
+		var err = conn.ProtoBufEmit("/Alive", &message.ServerInfoList{List: list})
 		if err != nil {
 			console.Error(err)
 		}
@@ -114,11 +111,12 @@ func Alive(conn *server.Conn, stream *socket.Stream) error {
 	return nil
 }
 
-func Key(conn *server.Conn, stream *socket.Stream) error {
+func Key(stream *socket.Stream[server.Conn]) error {
 
 	app.Node.Lock()
-
 	defer app.Node.Unlock()
+
+	var conn = stream.Conn
 
 	var data message.KeyList
 
@@ -131,13 +129,13 @@ func Key(conn *server.Conn, stream *socket.Stream) error {
 		return errors.New("listen list is empty")
 	}
 
-	var register = app.Node.Register.Get(conn.FD)
+	var register = app.Node.Register.Get(conn.FD())
 	if register == nil {
 		register = &structs.Register{}
 	}
 	register.KeyList = data.List
 
-	app.Node.Register.Set(conn.FD, register)
+	app.Node.Register.Set(conn.FD(), register)
 
 	// add to watch queue
 	for i := 0; i < len(data.List); i++ {
@@ -154,10 +152,7 @@ func Key(conn *server.Conn, stream *socket.Stream) error {
 			continue
 		}
 
-		err = conn.Emit(socket.Pack{
-			Event: "/Key",
-			Data:  []byte(key + "\n" + value),
-		})
+		err = conn.Emit("/Key", []byte(key+"\n"+value))
 		if err != nil {
 			console.Error(err)
 		}

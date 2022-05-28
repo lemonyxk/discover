@@ -10,7 +10,7 @@
 
 package structs
 
-import "github.com/lemoyxk/discover/message"
+import "github.com/lemonyxk/discover/message"
 
 type Register struct {
 	ServerList []string

@@ -13,10 +13,10 @@ package http
 import (
 	"net"
 
-	"github.com/lemoyxk/discover/app"
-	"github.com/lemoyxk/kitty/http"
-	"github.com/lemoyxk/kitty/http/client"
-	"github.com/lemoyxk/utils"
+	"github.com/lemonyxk/discover/app"
+	"github.com/lemonyxk/kitty/v2/socket/http"
+	"github.com/lemonyxk/kitty/v2/socket/http/client"
+	"github.com/lemonyxk/utils/v3"
 )
 
 // if response text is start with "OK"
