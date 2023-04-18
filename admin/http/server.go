@@ -27,7 +27,7 @@ func Start(host string, fn func()) {
 
 	httpServer.Use(func(next server.Middle) server.Middle {
 		return func(stream *http.Stream) {
-			stream.AutoParse()
+			stream.Parser.Auto()
 			next(stream)
 			console.Debug(stream.Request.URL.Path, stream.String())
 		}

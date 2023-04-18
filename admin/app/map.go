@@ -54,7 +54,7 @@ func (s *serverMap) GetMaster() *message.WhoIsMaster {
 	var tm = int64(math.MaxInt64)
 	for _, t := range s.servers {
 
-		if t.IsMaster {
+		if t.Master {
 			return t
 		}
 

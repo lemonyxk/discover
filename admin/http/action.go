@@ -15,5 +15,5 @@ import (
 )
 
 func ServerList(stream *http.Stream) error {
-	return stream.EndString("OK")
+	return stream.Sender.String("OK")
 }
