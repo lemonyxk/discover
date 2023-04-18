@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-04 11:04
 **/
@@ -314,4 +314,21 @@ func (b *BoltStore) GetUint64(key []byte) (uint64, error) {
 // database file to sync against the disk.
 func (b *BoltStore) Sync() error {
 	return b.conn.Sync()
+}
+
+func (b *BoltStore) RemoveAll() error {
+	tx, err := b.conn.Begin(true)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback() }()
+
+	if err := tx.DeleteBucket(dbLogs); err != nil {
+		return err
+	}
+	if _, err := tx.CreateBucket(dbLogs); err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }

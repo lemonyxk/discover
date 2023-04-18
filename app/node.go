@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-27 15:05
 **/
@@ -21,8 +21,8 @@ import (
 	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/discover/structs"
 	"github.com/lemonyxk/exception"
-	client2 "github.com/lemonyxk/kitty/v2/socket/udp/client"
-	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
+	client2 "github.com/lemonyxk/kitty/socket/udp/client"
+	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
 
 var Node = &node{
@@ -63,7 +63,7 @@ func (n *node) IsReady() bool {
 		return false
 	}
 
-	return n.Store.Raft().State() == raft.Leader || n.Store.Raft().State() == raft.Follower
+	return n.Store.IsReady
 }
 
 func (n *node) IsMaster() bool {
@@ -139,10 +139,11 @@ func (n *node) GetServerList() []*message.WhoIsMaster {
 	var servers = n.Store.Raft().GetConfiguration().Configuration().Servers
 	var list []*message.WhoIsMaster
 	for _, s := range servers {
+		var leader, _ = n.Store.Raft().LeaderWithID()
 		list = append(list, &message.WhoIsMaster{
 			Addr:      RaftAddr2Addr(string(s.Address)),
 			Timestamp: 0,
-			IsMaster:  s.Address == n.Store.Raft().Leader(),
+			Master:    s.Address == leader,
 		})
 	}
 	return list
@@ -151,11 +152,12 @@ func (n *node) GetServerList() []*message.WhoIsMaster {
 func (n *node) GetMasterAddr() *message.WhoIsMaster {
 	var servers = n.Store.Raft().GetConfiguration().Configuration().Servers
 	for _, s := range servers {
-		if s.Address == n.Store.Raft().Leader() {
+		var leader, _ = n.Store.Raft().LeaderWithID()
+		if s.Address == leader {
 			return &message.WhoIsMaster{
 				Addr:      RaftAddr2Addr(string(s.Address)),
 				Timestamp: 0,
-				IsMaster:  s.Address == n.Store.Raft().Leader(),
+				Master:    true,
 			}
 		}
 	}

@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-03-04 10:50
 **/
@@ -14,7 +14,7 @@ import (
 	"sync"
 
 	"github.com/lemonyxk/discover/message"
-	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
+	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
 
 type alive struct {

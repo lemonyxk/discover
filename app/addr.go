@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-26 16:43
 **/
@@ -18,7 +18,6 @@ import (
 )
 
 func ParseAddr(ad string) *message.Address {
-
 	addr, err := net.ResolveTCPAddr("tcp", ad)
 	if err != nil {
 		panic(err)
@@ -37,16 +36,13 @@ func RaftAddr2Addr(raftAddr string) *message.Address {
 	if err != nil {
 		panic(err)
 	}
-
 	return ParseAddr(fmt.Sprintf("%s:%d", addr.IP, addr.Port-1000))
 }
 
 func GetAddr(addr string) *net.TCPAddr {
-
 	var ad, err = net.ResolveTCPAddr("tcp", addr)
 	if err != nil {
-		return nil
+		panic(err)
 	}
-
 	return ad
 }

@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-04 19:11
 **/
@@ -12,9 +12,9 @@ package tcp
 
 import (
 	"github.com/lemonyxk/discover/app"
-	"github.com/lemonyxk/kitty/v2/router"
-	"github.com/lemonyxk/kitty/v2/socket"
-	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
+	"github.com/lemonyxk/kitty/router"
+	"github.com/lemonyxk/kitty/socket"
+	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
 
 func Router(s *router.Router[*socket.Stream[server.Conn]]) {
@@ -31,7 +31,7 @@ func Router(s *router.Router[*socket.Stream[server.Conn]]) {
 func isReady(stream *socket.Stream[server.Conn]) error {
 	if !app.Node.IsReady() {
 		var msg = "NO\nNOT READY"
-		return stream.Conn.Emit(stream.Event, []byte(msg))
+		return stream.Conn().Emit(stream.Event, []byte(msg))
 	}
 	return nil
 }
@@ -39,7 +39,7 @@ func isReady(stream *socket.Stream[server.Conn]) error {
 func isMaster(stream *socket.Stream[server.Conn]) error {
 	if !app.Node.IsMaster() {
 		var msg = "NO\nNOT MASTER"
-		return stream.Conn.Emit(stream.Event, []byte(msg))
+		return stream.Conn().Emit(stream.Event, []byte(msg))
 	}
 	return nil
 }

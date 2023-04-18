@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-02 15:21
 **/
@@ -12,9 +12,9 @@ package http
 
 import (
 	"github.com/lemonyxk/console"
-	"github.com/lemonyxk/kitty/v2"
-	"github.com/lemonyxk/kitty/v2/socket/http"
-	"github.com/lemonyxk/kitty/v2/socket/http/server"
+	"github.com/lemonyxk/kitty"
+	"github.com/lemonyxk/kitty/socket/http"
+	"github.com/lemonyxk/kitty/socket/http/server"
 )
 
 func Start(host string, fn func()) {

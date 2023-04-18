@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-02 15:13
 **/
@@ -23,10 +23,6 @@ import (
 )
 
 func Start(config *app.Config) {
-
-	console.Colorful(config.Debug)
-
-	console.SetFlags(console.TIME | console.LEVEL)
 
 	app.Node.InitConfig(config)
 
@@ -94,7 +90,7 @@ func Start(config *app.Config) {
 	})
 
 	promise.Fall(p2, p4, p5, p6).Then(func(res []any) {
-		console.Debug("raft server start success")
+		console.Debug("discover server start success")
 	})
 
 	utils.Signal.ListenKill().Done(func(sig os.Signal) {

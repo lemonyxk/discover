@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-04 19:15
 **/
@@ -17,8 +17,8 @@ import (
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/discover/structs"
-	"github.com/lemonyxk/kitty/v2/socket"
-	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
+	"github.com/lemonyxk/kitty/socket"
+	"github.com/lemonyxk/kitty/socket/websocket/server"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -27,7 +27,7 @@ func Register(stream *socket.Stream[server.Conn]) error {
 	app.Node.Lock()
 	defer app.Node.Unlock()
 
-	var conn = stream.Conn
+	var conn = stream.Conn()
 
 	var data message.ServerInfo
 
@@ -69,7 +69,7 @@ func Alive(stream *socket.Stream[server.Conn]) error {
 
 	defer app.Node.Unlock()
 
-	var conn = stream.Conn
+	var conn = stream.Conn()
 
 	var data message.ServerList
 
@@ -116,7 +116,7 @@ func Key(stream *socket.Stream[server.Conn]) error {
 	app.Node.Lock()
 	defer app.Node.Unlock()
 
-	var conn = stream.Conn
+	var conn = stream.Conn()
 
 	var data message.KeyList
 

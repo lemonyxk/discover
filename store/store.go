@@ -17,6 +17,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/raft"
 	"github.com/lemonyxk/console"
 )
@@ -24,6 +25,7 @@ import (
 const (
 	retainSnapshotCount = 2
 	raftTimeout         = 10 * time.Second
+	loseLeaderTimeout   = 15 * time.Second
 )
 
 type Command struct {
@@ -39,18 +41,18 @@ type Store struct {
 
 	inMem bool // use mem or file
 
-	mu sync.Mutex
-	m  map[string]string // The key-value store for the system.
+	mux  sync.Mutex
+	data map[string]string // The key-value store for the system.
 
 	raft *raft.Raft // The consensus mechanism
 
 	onKeyChange func(op *Command)
-	isFMSReady  bool
 
 	OnLeaderChange func(leader raft.LeaderObservation)
 	OnPeerChange   func(leader raft.PeerObservation)
 	OnKeyChange    func(op *Command)
 	Ready          chan bool
+	IsReady        bool
 }
 
 func (s *Store) Raft() *raft.Raft {
@@ -63,12 +65,11 @@ func (s *Store) Shutdown() raft.Future {
 
 // New returns a new Store.
 func New(dataDir, raftAddr string) *Store {
-
 	return &Store{
 		RaftDir:  dataDir,
 		RaftAddr: raftAddr,
 		Ready:    make(chan bool, 1),
-		m:        make(map[string]string),
+		data:     make(map[string]string),
 		inMem:    false, // not support inMem
 	}
 }
@@ -83,6 +84,15 @@ func (s *Store) Open() error {
 	// Setup Raft configuration.
 	config := raft.DefaultConfig()
 	config.LocalID = raft.ServerID(s.RaftAddr)
+
+	var log = hclog.New(&hclog.LoggerOptions{
+		Name:       "raft",
+		Level:      hclog.NoLevel,
+		Output:     config.LogOutput,
+		JSONFormat: true,
+	})
+
+	config.Logger = log
 
 	// Setup Raft communication.
 	addr, err := net.ResolveTCPAddr("tcp", s.RaftAddr)
@@ -118,7 +128,7 @@ func (s *Store) Open() error {
 		allCount = boltDB.Count()
 		// first init
 		if allCount == 0 {
-			s.isFMSReady = true
+			s.IsReady = true
 		}
 	}
 
@@ -131,14 +141,14 @@ func (s *Store) Open() error {
 	var kCount uint64
 	s.onKeyChange = func(op *Command) {
 		// change event
-		if s.OnKeyChange != nil && s.isFMSReady {
+		if s.OnKeyChange != nil && s.IsReady {
 			s.OnKeyChange(op)
 		}
 
 		// finish all key
 		kCount++
 		if kCount == allCount {
-			s.isFMSReady = true
+			s.IsReady = true
 		}
 	}
 
@@ -154,6 +164,28 @@ func (s *Store) Open() error {
 			if s.OnPeerChange != nil {
 				s.OnPeerChange(v)
 			}
+		case raft.FailedHeartbeatObservation:
+			// var sub = time.Now().Sub(v.LastContact)
+			// if sub > loseLeaderTimeout {
+			// 	// leave leader
+			// 	var err = s.Leave(string(v.PeerID))
+			// 	if err != nil {
+			// 		console.Error(err)
+			// 	} else {
+			// 		console.Info("raft leave leader", v.PeerID, time.Now().Sub(v.LastContact))
+			// 	}
+			// } else {
+			// 	console.Info("raft failed heartbeat", v.PeerID, time.Now().Sub(v.LastContact))
+			// }
+			console.Info("raft failed heartbeat", v.PeerID, time.Now().Sub(v.LastContact))
+		case raft.ResumedHeartbeatObservation:
+			console.Info("raft resumed heartbeat", v.PeerID)
+		case raft.RequestVoteRequest:
+			console.Info("raft request vote request", string(v.ID), string(v.Addr))
+		case raft.RaftState:
+			console.Info("raft state", v.String())
+		default:
+			console.Infof("raft other %+v\n", v)
 		}
 		return true
 	}))
@@ -162,8 +194,7 @@ func (s *Store) Open() error {
 	go func() {
 		for {
 			time.Sleep(time.Millisecond * 100)
-			if (ra.State() == raft.Follower || ra.State() == raft.Leader) &&
-				s.isFMSReady {
+			if ra.State() == raft.Follower || ra.State() == raft.Leader {
 				s.Ready <- true
 				break
 			}
@@ -197,15 +228,15 @@ func (s *Store) BootstrapCluster(ok bool) {
 
 // Get returns the value for the given key.
 func (s *Store) Get(key string) (string, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	return s.m[key], nil
+	s.mux.Lock()
+	defer s.mux.Unlock()
+	return s.data[key], nil
 }
 
 func (s *Store) All() map[string]string {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	return s.m
+	s.mux.Lock()
+	defer s.mux.Unlock()
+	return s.data
 }
 
 // Set sets the value for the given key.
@@ -357,12 +388,11 @@ func (f *fsm) Apply(l *raft.Log) interface{} {
 
 // Snapshot returns a snapshot of the key-value store.
 func (f *fsm) Snapshot() (raft.FSMSnapshot, error) {
-	f.mu.Lock()
-	defer f.mu.Unlock()
-
+	f.mux.Lock()
+	defer f.mux.Unlock()
 	// Clone the map.
 	o := make(map[string]string)
-	for k, v := range f.m {
+	for k, v := range f.data {
 		o[k] = v
 	}
 	return &fsmSnapshot{store: o}, nil
@@ -377,21 +407,21 @@ func (f *fsm) Restore(rc io.ReadCloser) error {
 
 	// Set the state from the snapshot, no lock required according to
 	// Hashicorp docs.
-	f.m = o
+	f.data = o
 	return nil
 }
 
 func (f *fsm) applySet(key, value string) interface{} {
-	f.mu.Lock()
-	defer f.mu.Unlock()
-	f.m[key] = value
+	f.mux.Lock()
+	defer f.mux.Unlock()
+	f.data[key] = value
 	return nil
 }
 
 func (f *fsm) applyDelete(key string) interface{} {
-	f.mu.Lock()
-	defer f.mu.Unlock()
-	delete(f.m, key)
+	f.mux.Lock()
+	defer f.mux.Unlock()
+	delete(f.data, key)
 	return nil
 }
 

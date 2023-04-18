@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-27 16:35
 **/
@@ -17,8 +17,8 @@ import (
 
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/message"
-	"github.com/lemonyxk/kitty/v2/socket"
-	client2 "github.com/lemonyxk/kitty/v2/socket/websocket/client"
+	"github.com/lemonyxk/kitty/socket"
+	client2 "github.com/lemonyxk/kitty/socket/websocket/client"
 	"google.golang.org/protobuf/proto"
 )
 

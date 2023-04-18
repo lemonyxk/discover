@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-02 18:01
 **/
@@ -11,8 +11,8 @@
 package http
 
 import (
-	"github.com/lemonyxk/kitty/v2/router"
-	"github.com/lemonyxk/kitty/v2/socket/http"
+	"github.com/lemonyxk/kitty/router"
+	"github.com/lemonyxk/kitty/socket/http"
 )
 
 func Router(s *router.Router[*http.Stream]) {

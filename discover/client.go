@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-27 15:39
 **/
@@ -18,8 +18,9 @@ import (
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/discover/message"
-	"github.com/lemonyxk/kitty/v2"
-	client2 "github.com/lemonyxk/kitty/v2/socket/websocket/client"
+	"github.com/lemonyxk/kitty"
+	"github.com/lemonyxk/kitty/socket"
+	client2 "github.com/lemonyxk/kitty/socket/websocket/client"
 )
 
 func New(serverList []string) *discover {
@@ -70,7 +71,7 @@ func initRegister(dis *discover, wait *sync.WaitGroup) {
 		console.Info("register client close")
 	}
 
-	dis.register.OnError = func(err error) {
+	dis.register.OnError = func(stream *socket.Stream[client2.Conn], err error) {
 		console.Info("register client error:", err)
 	}
 
@@ -118,7 +119,7 @@ func initLister(dis *discover, wait *sync.WaitGroup) {
 		console.Info("listen client close")
 	}
 
-	dis.listen.OnError = func(err error) {
+	dis.listen.OnError = func(stream *socket.Stream[client2.Conn], err error) {
 		console.Info("listen client error:", err)
 	}
 

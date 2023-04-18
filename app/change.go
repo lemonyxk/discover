@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-03 19:25
 **/
@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/raft"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/store"
-	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
+	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
 
 // OnLeaderChange YOU GOT LEADER
@@ -39,7 +39,7 @@ func LoseLeader(leader raft.LeaderObservation) {
 		return
 	}
 
-	Node.Server.GetConnections(func(conn server.Conn) {
+	Node.Server.Range(func(conn server.Conn) {
 		var err = conn.Close()
 		if err != nil {
 			console.Error(err)
@@ -51,7 +51,7 @@ func LoseLeader(leader raft.LeaderObservation) {
 	Node.Register.Destroy()
 	Node.Key.Destroy()
 
-	console.Warning("local addr:", Node.Addr.Raft, "leader addr:", leader.Leader, Node.IsMaster())
+	console.Warning("LoseLeader: addr:", Node.Addr.String(), "leader:", leader.Leader, "master:", Node.IsMaster())
 }
 
 func NewLeader(leader raft.LeaderObservation) {
@@ -61,12 +61,12 @@ func NewLeader(leader raft.LeaderObservation) {
 
 	}
 
-	console.Warning("local addr:", Node.Addr.Raft, "leader addr:", leader.Leader, Node.IsMaster())
+	console.Warning("NewLeader: addr:", Node.Addr.String(), "leader:", leader.Leader, "master:", Node.IsMaster())
 }
 
 // OnPeerChange YOU GOT PEER CHANGE
 func (n *node) OnPeerChange(peer raft.PeerObservation) {
-	console.Warning("peer:", peer.Peer, "remove:", peer.Removed)
+	console.Warning("OnPeerChange peer:", peer.Peer, "remove:", peer.Removed)
 }
 
 // OnKeyChange YOU GOT KEY CHANGE
@@ -88,5 +88,5 @@ func (n *node) OnKeyChange(op *store.Command) {
 		}
 	}
 
-	console.Info(op.Op, op.Key, op.Value)
+	console.Info("OnKeyChange", op.Op, op.Key, op.Value)
 }

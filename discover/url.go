@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-27 22:07
 **/
@@ -17,7 +17,7 @@ import (
 
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/message"
-	"github.com/lemonyxk/kitty/v2/socket/http/client"
+	"github.com/lemonyxk/kitty/socket/http/client"
 	"github.com/lemonyxk/utils/v3"
 )
 
@@ -33,8 +33,8 @@ func (dis *discover) getServerList() []*message.WhoIsMaster {
 	var res = client.Get(url).Query(nil).Send()
 
 	if !strings.HasPrefix(res.String(), "OK") {
-		if res.LastError() != nil {
-			console.Error(res.LastError())
+		if res.Error() != nil {
+			console.Error(res.Error())
 		} else {
 			console.Error(res.String()[3:])
 		}
@@ -60,7 +60,7 @@ func (dis *discover) getMasterServer() *message.Address {
 	var master *message.Address
 
 	for i := 0; i < len(dis.serverList); i++ {
-		if dis.serverList[i].IsMaster {
+		if dis.serverList[i].Master {
 			master = dis.serverList[i].Addr
 			break
 		}

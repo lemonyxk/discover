@@ -3,7 +3,7 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-02-04 19:07
 **/
@@ -16,8 +16,9 @@ import (
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/discover/message"
-	"github.com/lemonyxk/kitty/v2"
-	"github.com/lemonyxk/kitty/v2/socket/websocket/server"
+	"github.com/lemonyxk/kitty"
+	"github.com/lemonyxk/kitty/socket"
+	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
 
 func Start(host string, fn func()) {
@@ -61,7 +62,7 @@ func Start(host string, fn func()) {
 
 	}
 
-	tcpServer.OnError = func(err error) {
+	tcpServer.OnError = func(stream *socket.Stream[server.Conn], err error) {
 		console.Error("tcp server", err)
 	}
 
@@ -74,7 +75,7 @@ func Start(host string, fn func()) {
 	Router(router)
 
 	tcpServer.OnSuccess = func() {
-		console.Info("tcp server start success", tcpServer.LocalAddr())
+		console.Info("tcp server start success", host)
 		fn()
 	}
 

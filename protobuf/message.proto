@@ -3,8 +3,8 @@ syntax = "proto3";
 option go_package = ".;message";
 
 message ServerInfo {
-  string ServerName = 1;
-  string Addr = 2;
+  string server_name = 1;
+  string addr = 2;
 }
 
 message ServerInfoList {
@@ -20,14 +20,14 @@ message KeyList {
 }
 
 message WhoIsMaster {
-  Address Addr = 1;
-  int64 Timestamp = 2;
-  bool IsMaster = 3;
+  Address addr = 1;
+  int64 timestamp = 2;
+  bool master = 3;
 }
 
 message Address {
-  string Addr = 1;
-  string Http = 2;
-  string Raft = 3;
-  string Tcp = 4;
+  string addr = 1;
+  string http = 2;
+  string raft = 3;
+  string tcp = 4;
 }
