@@ -11,7 +11,7 @@
 package main
 
 import (
-	"flag"
+	"os"
 
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover"
@@ -21,33 +21,26 @@ import (
 
 func main() {
 
-	var configPath string
-	var dir string
-	var addr string
-	var http string
-	var tcp string
-	var raft string
-	var secret string
-	var debug bool
-
-	flag.StringVar(&configPath, "config", "", "config path")
-	flag.StringVar(&dir, "dir", "", "data dir")
-	flag.StringVar(&addr, "addr", "", "server address")
-	flag.StringVar(&http, "http", "", "http address")
-	flag.StringVar(&tcp, "tcp", "", "tcp address")
-	flag.StringVar(&raft, "raft", "", "raft address")
-	flag.StringVar(&secret, "secret", "", "secret key")
-	flag.BoolVar(&debug, "debug", false, "debug mode")
-	flag.Parse()
+	var configPath = utils.Args.Get("-f", "--config")
+	var dir = utils.Args.Get("--dir")
+	var addr = utils.Args.Get("--addr")
+	var http = utils.Args.Get("--http")
+	var tcp = utils.Args.Get("--tcp")
+	var raft = utils.Args.Get("--raft")
+	var secret = utils.Args.Get("--secret")
 
 	var config app.Config
 
 	if configPath != "" {
-		var file = utils.File.ReadFromPath(configPath)
-		if file.LastError() != nil {
-			console.Exit(file.LastError())
+		f, err := os.Open(configPath)
+		if err != nil {
+			console.Exit(err)
 		}
-		var err = utils.Json.Decode(file.Bytes(), &config)
+		var file = utils.File.ReadFromReader(f)
+		if file.Error() != nil {
+			console.Exit(file)
+		}
+		err = utils.Json.Decode(file.Bytes(), &config)
 		if err != nil {
 			console.Exit(err)
 		}
@@ -58,7 +51,6 @@ func main() {
 		config.Tcp = tcp
 		config.Raft = raft
 		config.Secret = secret
-		config.Debug = debug
 	}
 
 	discover.Start(&config)
