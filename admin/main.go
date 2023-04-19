@@ -16,7 +16,7 @@ import (
 
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover-admin/http"
-	"github.com/lemonyxk/utils/v3"
+	"github.com/lemonyxk/utils"
 )
 
 func main() {

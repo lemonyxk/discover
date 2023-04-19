@@ -15,7 +15,7 @@ import (
 
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/kitty/socket/http"
-	"github.com/lemonyxk/utils/v3"
+	"github.com/lemonyxk/utils"
 )
 
 var Middleware = &middleware{}

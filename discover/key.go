@@ -15,7 +15,7 @@ import (
 	"errors"
 
 	"github.com/lemonyxk/kitty/socket/http/client"
-	"github.com/lemonyxk/utils/v3"
+	"github.com/lemonyxk/utils"
 )
 
 func (dis *discover) Get(key string) (string, error) {

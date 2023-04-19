@@ -18,7 +18,7 @@ import (
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/kitty/socket/http/client"
-	"github.com/lemonyxk/utils/v3"
+	"github.com/lemonyxk/utils"
 )
 
 // will never be nil

@@ -19,7 +19,7 @@ import (
 	"github.com/lemonyxk/discover/http"
 	"github.com/lemonyxk/discover/tcp"
 	"github.com/lemonyxk/promise"
-	"github.com/lemonyxk/utils/v3"
+	"github.com/lemonyxk/utils"
 )
 
 func Start(config *app.Config) {

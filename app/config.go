@@ -17,5 +17,4 @@ type Config struct {
 	Raft   string `json:"raft"`
 	Secret string `json:"secret"`
 	Dir    string `json:"dir"`
-	Debug  bool   `json:"debug"`
 }
