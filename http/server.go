@@ -33,7 +33,7 @@ func Start(host string, fn func()) {
 	})
 
 	httpServer.OnSuccess = func() {
-		console.Info("http server start success", host)
+		console.Info("http server start at", host, "success")
 		fn()
 	}
 

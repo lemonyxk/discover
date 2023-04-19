@@ -46,10 +46,11 @@ type node struct {
 }
 
 func (n *node) GetMaster() *message.Server {
-	if n.Store.Raft().Leader() == "" {
+	addr, _ := n.Store.Raft().LeaderWithID()
+	if addr == "" {
 		return nil
 	}
-	return RaftAddr2Addr(string(n.Store.Raft().Leader()))
+	return RaftAddr2Addr(string(addr))
 }
 
 func (n *node) IsReady() bool {
@@ -95,23 +96,26 @@ func (n *node) InitAddr() {
 	addr, err := net.ResolveTCPAddr("tcp", n.Config.Addr)
 	exception.Assert.LastNil(err)
 
+	host, _, err := net.SplitHostPort(n.Config.Addr)
+	exception.Assert.LastNil(err)
+
 	var http = n.Config.Http
 	if http == "" {
-		http = fmt.Sprintf("%s:%d", "0.0.0.0", addr.Port)
+		http = fmt.Sprintf("%s:%d", host, addr.Port)
 	}
 
 	var rf = n.Config.Raft
 	if rf == "" {
-		rf = fmt.Sprintf("%s:%d", addr.IP, addr.Port+1000)
+		rf = fmt.Sprintf("%s:%d", host, addr.Port+1000)
 	}
 
 	var tcp = n.Config.Tcp
 	if tcp == "" {
-		tcp = fmt.Sprintf("%s:%d", "0.0.0.0", addr.Port+2000)
+		tcp = fmt.Sprintf("%s:%d", host, addr.Port+2000)
 	}
 
 	n.Addr = &message.Server{
-		Addr: addr.String(),
+		Addr: http,
 		Http: http,
 		Raft: rf,
 		Tcp:  tcp,

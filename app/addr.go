@@ -23,11 +23,16 @@ func ParseAddr(ad string) *message.Server {
 		panic(err)
 	}
 
+	host, _, err := net.SplitHostPort(ad)
+	if err != nil {
+		panic(err)
+	}
+
 	return &message.Server{
-		Addr: addr.String(),
-		Http: addr.String(),
-		Raft: fmt.Sprintf("%s:%d", addr.IP, addr.Port+1000),
-		Tcp:  fmt.Sprintf("%s:%d", addr.IP, addr.Port+2000),
+		Addr: fmt.Sprintf("%s:%d", host, addr.Port),
+		Http: fmt.Sprintf("%s:%d", host, addr.Port),
+		Raft: fmt.Sprintf("%s:%d", host, addr.Port+1000),
+		Tcp:  fmt.Sprintf("%s:%d", host, addr.Port+2000),
 	}
 }
 
@@ -36,13 +41,9 @@ func RaftAddr2Addr(raftAddr string) *message.Server {
 	if err != nil {
 		panic(err)
 	}
-	return ParseAddr(fmt.Sprintf("%s:%d", addr.IP, addr.Port-1000))
-}
-
-func GetAddr(addr string) *net.TCPAddr {
-	var ad, err = net.ResolveTCPAddr("tcp", addr)
+	host, _, err := net.SplitHostPort(raftAddr)
 	if err != nil {
 		panic(err)
 	}
-	return ad
+	return ParseAddr(fmt.Sprintf("%s:%d", host, addr.Port-1000))
 }

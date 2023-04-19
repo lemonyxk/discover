@@ -75,7 +75,7 @@ func Start(host string, fn func()) {
 	Router(router)
 
 	tcpServer.OnSuccess = func() {
-		console.Info("tcp server start success", host)
+		console.Info("tcp server start at", host, "success")
 		fn()
 	}
 

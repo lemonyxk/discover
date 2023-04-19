@@ -181,7 +181,7 @@ func (s *Store) Open() error {
 		case raft.ResumedHeartbeatObservation:
 			console.Info("raft resumed heartbeat", v.PeerID)
 		case raft.RequestVoteRequest:
-			console.Info("raft request vote request", string(v.ID), string(v.Addr))
+			console.Info("raft request vote request", string(v.ID))
 		case raft.RaftState:
 			console.Info("raft state", v.String())
 		default:
@@ -201,7 +201,7 @@ func (s *Store) Open() error {
 		}
 	}()
 
-	console.Info("raft server start success", s.RaftAddr)
+	console.Info("raft server start at", s.RaftAddr, "state", ra.State())
 
 	return nil
 }

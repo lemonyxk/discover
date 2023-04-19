@@ -52,7 +52,7 @@ func LoseLeader(leader raft.LeaderObservation) {
 	Node.Register.Destroy()
 	Node.Key.Destroy()
 
-	console.Warning("LoseLeader: addr:", Node.Addr.Addr, "leader:", leader.Leader, "master:", Node.IsMaster())
+	console.Warning("LoseLeader addr:", Node.Addr.Addr, "leader:", leader.LeaderID, "master:", Node.IsMaster())
 }
 
 func NewLeader(leader raft.LeaderObservation) {
@@ -62,7 +62,7 @@ func NewLeader(leader raft.LeaderObservation) {
 
 	}
 
-	console.Warning("NewLeader: addr:", Node.Addr.Addr, "leader:", leader.Leader, "master:", Node.IsMaster())
+	console.Warning("NewLeader addr:", Node.Addr.Addr, "leader:", leader.LeaderID, "master:", Node.IsMaster())
 }
 
 // OnPeerChange YOU GOT PEER CHANGE
