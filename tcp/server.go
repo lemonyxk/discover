@@ -49,11 +49,11 @@ func Start(host string, fn func()) {
 		}
 
 		if data.ServerInfo != nil {
-			app.Node.Alive.DeleteData(data.ServerInfo.ServerName, data.ServerInfo.Addr)
-			var list = app.Node.Alive.GetData(data.ServerInfo.ServerName)
-			var connections = app.Node.Alive.GetConn(data.ServerInfo.ServerName)
+			app.Node.Alive.DeleteData(data.ServerInfo.Name, data.ServerInfo.Addr)
+			var list = app.Node.Alive.GetData(data.ServerInfo.Name)
+			var connections = app.Node.Alive.GetConn(data.ServerInfo.Name)
 			for i := 0; i < len(connections); i++ {
-				var err = connections[i].ProtoBufEmit("/Alive", &message.ServerInfoList{List: list})
+				var err = connections[i].JsonEmit("/Alive", message.Format{Status: "Success", Code: 200, Msg: list})
 				if err != nil {
 					console.Error(err)
 				}

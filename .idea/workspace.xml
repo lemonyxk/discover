@@ -5,43 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b9bbf93-090f-4100-b063-0a9288e65d86" name="Default Changelist" comment="1.update lib.">
-      <change afterPath="$PROJECT_DIR$/admin/go.work" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/README.MD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/http/controller.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/http/middleware.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/message/message.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/message/resposne.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tcp/controller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/app/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/app/app.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/app/map.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/app/map.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/admin/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/admin/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/http/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/http/action.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/http/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/http/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/http/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/http/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/app/map.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/addr.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/addr.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/alive.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/alive.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/change.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/change.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/key.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/key.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/node.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/node.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/regster.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/regster.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/discover/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/discover/discover.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/discover.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/discover/key.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/key.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/discover/url.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/url.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/client_1/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_1/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/client_2/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_2/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/client_3/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_3/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/client_4/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/client_4/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example_client/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example_client/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/http/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/action.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/http/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/router.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/http/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/store/store.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/structs/structs.go" beforeDir="false" afterPath="$PROJECT_DIR$/structs/structs.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/message/message.pb.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/protobuf/message.proto" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tcp/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/action.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tcp/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/router.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tcp/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/server.go" afterDir="false" />
@@ -61,7 +47,7 @@
   <component name="FormatOnSaveOptions">
     <option name="myRunOnSave" value="false" />
   </component>
-  <component name="GOROOT" url="file:///usr/local/opt/go/libexec" />
+  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.20.3/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -102,28 +88,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.format.on.save.advertiser.fired": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "go.import.settings.migrated": "true",
-    "last_opened_file_path": "/Users/lemo",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.format.on.save.advertiser.fired&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/lemo/lemo-hub/discover/protobuf&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/protobuf" />
       <recent name="$PROJECT_DIR$/admin" />
       <recent name="$PROJECT_DIR$/app" />
       <recent name="$PROJECT_DIR$/example" />
       <recent name="$PROJECT_DIR$/udp/client" />
-      <recent name="$PROJECT_DIR$/example/client_3" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/admin/app" />
@@ -134,15 +124,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build github.com/lemonyxk/discover/example_client">
-    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
-      <module name="discover" />
-      <working_directory value="$PROJECT_DIR$" />
-      <go_parameters value="-i" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
     <configuration name="go build github.com/lemonyxk/discover-admin" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="discover" />
       <working_directory value="$PROJECT_DIR$/admin" />
@@ -187,29 +168,29 @@
       <filePath value="$PROJECT_DIR$/admin/main.go" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
-      <module name="discover" />
-      <working_directory value="$PROJECT_DIR$" />
-      <go_parameters value="-i" />
-      <kind value="DIRECTORY" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build github.com/lemonyxk/discover/example_client" />
-        <item itemvalue="Go Build.go build github.com/lemonyxk/discover-admin" />
         <item itemvalue="Go Build.go build main.go" />
         <item itemvalue="Go Build.go build main.go (1)" />
         <item itemvalue="Go Build.go build github.com/lemoyxk/discover-admin" />
+        <item itemvalue="Go Build.go build github.com/lemonyxk/discover-admin" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1.init." />

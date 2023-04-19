@@ -23,13 +23,15 @@ func main() {
 	var dis = discover.New([]string{"127.0.0.1:11002"})
 
 	dis.Alive("test", "test1").Watch(func(data []*message.ServerInfo) {
-		console.Info(data)
+		for i := 0; i < len(data); i++ {
+			console.Info("server:", data[i])
+		}
 	})
 
 	dis.Register("test", "127.0.0.1:1191poo1ii")
 
-	dis.Key("test", "test1").Watch(func(key, value string) {
-		console.Info("key:", key, "value:", value)
+	dis.Key("test", "test1").Watch(func(op message.Op) {
+		console.Infof("%+v\n", op)
 	})
 
 	time.AfterFunc(time.Second, func() {
@@ -46,6 +48,10 @@ func main() {
 
 	time.AfterFunc(2*time.Second, func() {
 		console.Info(dis.Set("test1", "set test1"))
+	})
+
+	time.AfterFunc(3*time.Second, func() {
+		console.Info(dis.Get("test1"))
 	})
 
 	select {}

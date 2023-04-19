@@ -12,9 +12,9 @@ package discover
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
+	jsoniter "github.com/json-iterator/go"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/kitty/socket/http/client"
@@ -22,38 +22,36 @@ import (
 )
 
 // will never be nil
-func (dis *discover) getServerList() []*message.WhoIsMaster {
-
+func (dis *discover) getServerList() []*message.Address {
 	var rAddr = dis.randomAddr()
-
 	var url = fmt.Sprintf("http://%s/%s", rAddr.Http, "ServerList")
 
-	console.Warning("get server list from", url)
-
 	var res = client.Get(url).Query(nil).Send()
-
-	if !strings.HasPrefix(res.String(), "OK") {
-		if res.Error() != nil {
-			console.Error(res.Error())
-		} else {
-			console.Error(res.String()[3:])
-		}
+	if res.Error() != nil {
+		console.Error(res.Error())
 		time.Sleep(time.Millisecond * 1000)
 		return dis.getServerList()
 	}
 
-	var serverList []*message.WhoIsMaster
-
-	var err = utils.Json.Decode(res.Bytes()[3:], &serverList)
+	var addr message.AddressResponse
+	var err = jsoniter.Unmarshal(res.Bytes(), &addr)
 	if err != nil {
 		console.Error(err)
+		time.Sleep(time.Millisecond * 1000)
+		return dis.getServerList()
 	}
 
-	return serverList
+	if addr.Code != 200 {
+		console.Error("get server list error:", addr.Code)
+		time.Sleep(time.Millisecond * 1000)
+		return dis.getServerList()
+	}
+
+	return addr.Msg
 }
 
 // will never be nil
-func (dis *discover) getMasterServer() *message.Address {
+func (dis *discover) getMasterServer() *message.Server {
 
 	dis.serverList = dis.getServerList()
 
@@ -61,7 +59,7 @@ func (dis *discover) getMasterServer() *message.Address {
 
 	for i := 0; i < len(dis.serverList); i++ {
 		if dis.serverList[i].Master {
-			master = dis.serverList[i].Addr
+			master = dis.serverList[i]
 			break
 		}
 	}
@@ -71,19 +69,19 @@ func (dis *discover) getMasterServer() *message.Address {
 		return dis.getMasterServer()
 	}
 
-	dis.master = master
+	dis.master = master.Server
 
-	return master
+	return master.Server
 }
 
 // will never be nil
-func (dis *discover) randomAddr() *message.Address {
+func (dis *discover) randomAddr() *message.Server {
 	var index = utils.Rand.RandomIntn(0, len(dis.serverList))
-	return dis.serverList[index].Addr
+	return dis.serverList[index].Server
 }
 
 func (dis *discover) url(path string, master bool) string {
-	var addr *message.Address
+	var addr *message.Server
 
 	if master {
 		addr = dis.master

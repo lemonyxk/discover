@@ -11,42 +11,49 @@
 package discover
 
 import (
+	"bytes"
 	"errors"
-	"strings"
 
-	"github.com/lemonyxk/kitty/kitty"
 	"github.com/lemonyxk/kitty/socket/http/client"
+	"github.com/lemonyxk/utils/v3"
 )
 
 func (dis *discover) Get(key string) (string, error) {
-	var res = client.Get(dis.url("/Get", false)).Query(kitty.M{"key": key}).Send()
+	var res = client.Get(dis.url("/Get/"+key, false)).Query(nil).Send()
 	if res.Error() != nil {
 		return "", res.Error()
 	}
-	if !strings.HasPrefix(res.String(), "OK") {
-		return "", errors.New(res.String())
+	var code = utils.Json.Bytes(res.Bytes()).Get("code").Int()
+	var msg = utils.Json.Bytes(res.Bytes()).Get("msg").Bytes()
+	if code != 200 {
+		return "", errors.New(string(msg))
 	}
-	return res.String(), nil
+	return string(msg), nil
 }
 
 func (dis *discover) Set(key, value string) (string, error) {
-	var res = client.Post(dis.url("/Set", true)).Form(kitty.M{"key": key, "value": value}).Send()
+	var buf = bytes.NewBuffer([]byte(value))
+	var res = client.Post(dis.url("/Set/"+key, true)).Raw(buf).Send()
 	if res.Error() != nil {
 		return "", res.Error()
 	}
-	if !strings.HasPrefix(res.String(), "OK") {
-		return "", errors.New(res.String())
+	var code = utils.Json.Bytes(res.Bytes()).Get("code").Int()
+	var msg = utils.Json.Bytes(res.Bytes()).Get("msg").Bytes()
+	if code != 200 {
+		return "", errors.New(string(msg))
 	}
-	return res.String(), nil
+	return string(msg), nil
 }
 
 func (dis *discover) Delete(key string) (string, error) {
-	var res = client.Post(dis.url("/Delete", true)).Form(kitty.M{"key": key}).Send()
+	var res = client.Post(dis.url("/Delete/"+key, true)).Form(nil).Send()
 	if res.Error() != nil {
 		return "", res.Error()
 	}
-	if !strings.HasPrefix(res.String(), "OK") {
-		return "", errors.New(res.String())
+	var code = utils.Json.Bytes(res.Bytes()).Get("code").Int()
+	var msg = utils.Json.Bytes(res.Bytes()).Get("msg").Bytes()
+	if code != 200 {
+		return "", errors.New(string(msg))
 	}
-	return res.String(), nil
+	return string(msg), nil
 }

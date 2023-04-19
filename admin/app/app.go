@@ -18,7 +18,7 @@ import (
 
 var App = &app{
 	ServerMap: &serverMap{
-		servers: make(map[string]*message.WhoIsMaster),
+		servers: make(map[string]*message.Address),
 	},
 }
 

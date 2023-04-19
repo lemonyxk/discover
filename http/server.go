@@ -17,24 +17,6 @@ import (
 	"github.com/lemonyxk/kitty/socket/http/server"
 )
 
-// var transport = http2.Transport{
-// 	TLSHandshakeTimeout:   10 * time.Second,
-// 	ResponseHeaderTimeout: 15 * time.Second,
-// 	ExpectContinueTimeout: 2 * time.Second,
-// 	MaxIdleConns:          runtime.NumCPU() * 2,
-// 	MaxIdleConnsPerHost:   runtime.NumCPU() * 2,
-// 	MaxConnsPerHost:       runtime.NumCPU() * 2,
-// }
-//
-// func proxy(stream *http.Stream) {
-// 	var ip, port, err = utils.Addr.Parse(string(node.Node.Raft().Leader()))
-// 	exception.AssertError(err)
-// 	var host = fmt.Sprintf("%s:%d", ip, port-1000)
-// 	var proxy = httputil.NewSingleHostReverseProxy(&url.URL{Scheme: "http", Host: host})
-// 	proxy.Transport = &transport
-// 	proxy.ServeHTTP(stream.Response, stream.Request)
-// }
-
 func Start(host string, fn func()) {
 
 	var httpServer = server.Server{Addr: host}
@@ -45,15 +27,8 @@ func Start(host string, fn func()) {
 
 	httpServer.Use(func(next server.Middle) server.Middle {
 		return func(stream *http.Stream) {
-			// if stream.Request.Method == "POST" {
-			// 	if node.Node.Raft().State() != raft.Leader {
-			// 		proxy(stream)
-			// 		return
-			// 	}
-			// }
-			stream.Parser.Auto()
+			// proxy websocket to another port
 			next(stream)
-			console.Debug(stream.Request.URL.Path, stream.String())
 		}
 	})
 

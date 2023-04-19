@@ -32,7 +32,9 @@ func New(serverList []string) *discover {
 	var dis = &discover{}
 
 	for i := 0; i < len(serverList); i++ {
-		dis.serverList = append(dis.serverList, &message.WhoIsMaster{Addr: app.ParseAddr(serverList[i])})
+		dis.serverList = append(dis.serverList, &message.Address{
+			Server: app.ParseAddr(serverList[i]),
+		})
 	}
 
 	dis.getMasterServer()
@@ -120,7 +122,7 @@ func initLister(dis *discover, wait *sync.WaitGroup) {
 	}
 
 	dis.listen.OnError = func(stream *socket.Stream[client2.Conn], err error) {
-		console.Info("listen client error:", err)
+		console.Errorf("%+v\n", err)
 	}
 
 	dis.listen.OnReconnecting = func() {

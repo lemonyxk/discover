@@ -17,13 +17,13 @@ import (
 	"github.com/lemonyxk/discover/message"
 )
 
-func ParseAddr(ad string) *message.Address {
+func ParseAddr(ad string) *message.Server {
 	addr, err := net.ResolveTCPAddr("tcp", ad)
 	if err != nil {
 		panic(err)
 	}
 
-	return &message.Address{
+	return &message.Server{
 		Addr: addr.String(),
 		Http: addr.String(),
 		Raft: fmt.Sprintf("%s:%d", addr.IP, addr.Port+1000),
@@ -31,7 +31,7 @@ func ParseAddr(ad string) *message.Address {
 	}
 }
 
-func RaftAddr2Addr(raftAddr string) *message.Address {
+func RaftAddr2Addr(raftAddr string) *message.Server {
 	var addr, err = net.ResolveTCPAddr("tcp", raftAddr)
 	if err != nil {
 		panic(err)

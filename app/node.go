@@ -31,7 +31,7 @@ var Node = &node{
 
 type node struct {
 	Store    *store.Store
-	Addr     *message.Address
+	Addr     *message.Server
 	Config   *Config
 	Client   *client2.Client
 	Server   *server.Server
@@ -45,7 +45,7 @@ type node struct {
 	lock sync.Mutex
 }
 
-func (n *node) GetMaster() *message.Address {
+func (n *node) GetMaster() *message.Server {
 	if n.Store.Raft().Leader() == "" {
 		return nil
 	}
@@ -110,7 +110,7 @@ func (n *node) InitAddr() {
 		tcp = fmt.Sprintf("%s:%d", "0.0.0.0", addr.Port+2000)
 	}
 
-	n.Addr = &message.Address{
+	n.Addr = &message.Server{
 		Addr: addr.String(),
 		Http: http,
 		Raft: rf,
@@ -135,29 +135,27 @@ func (n *node) InitConfig(config *Config) {
 	n.Config = config
 }
 
-func (n *node) GetServerList() []*message.WhoIsMaster {
+func (n *node) GetServerList() []*message.Address {
 	var servers = n.Store.Raft().GetConfiguration().Configuration().Servers
-	var list []*message.WhoIsMaster
+	var list []*message.Address
 	for _, s := range servers {
 		var leader, _ = n.Store.Raft().LeaderWithID()
-		list = append(list, &message.WhoIsMaster{
-			Addr:      RaftAddr2Addr(string(s.Address)),
-			Timestamp: 0,
-			Master:    s.Address == leader,
+		list = append(list, &message.Address{
+			Server: RaftAddr2Addr(string(s.Address)),
+			Master: s.Address == leader,
 		})
 	}
 	return list
 }
 
-func (n *node) GetMasterAddr() *message.WhoIsMaster {
+func (n *node) GetMasterAddr() *message.Address {
 	var servers = n.Store.Raft().GetConfiguration().Configuration().Servers
 	for _, s := range servers {
 		var leader, _ = n.Store.Raft().LeaderWithID()
 		if s.Address == leader {
-			return &message.WhoIsMaster{
-				Addr:      RaftAddr2Addr(string(s.Address)),
-				Timestamp: 0,
-				Master:    true,
+			return &message.Address{
+				Server: RaftAddr2Addr(string(s.Address)),
+				Master: true,
 			}
 		}
 	}

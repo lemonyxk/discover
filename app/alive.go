@@ -122,8 +122,8 @@ func (s *alive) AddData(serverName, addr string) bool {
 	defer s.mux.Unlock()
 
 	var info = message.ServerInfo{
-		ServerName: serverName,
-		Addr:       addr,
+		Name: serverName,
+		Addr: addr,
 	}
 
 	var list, ok = s.data[serverName]

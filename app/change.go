@@ -13,6 +13,7 @@ package app
 import (
 	"github.com/hashicorp/raft"
 	"github.com/lemonyxk/console"
+	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
@@ -51,7 +52,7 @@ func LoseLeader(leader raft.LeaderObservation) {
 	Node.Register.Destroy()
 	Node.Key.Destroy()
 
-	console.Warning("LoseLeader: addr:", Node.Addr.String(), "leader:", leader.Leader, "master:", Node.IsMaster())
+	console.Warning("LoseLeader: addr:", Node.Addr.Addr, "leader:", leader.Leader, "master:", Node.IsMaster())
 }
 
 func NewLeader(leader raft.LeaderObservation) {
@@ -61,7 +62,7 @@ func NewLeader(leader raft.LeaderObservation) {
 
 	}
 
-	console.Warning("NewLeader: addr:", Node.Addr.String(), "leader:", leader.Leader, "master:", Node.IsMaster())
+	console.Warning("NewLeader: addr:", Node.Addr.Addr, "leader:", leader.Leader, "master:", Node.IsMaster())
 }
 
 // OnPeerChange YOU GOT PEER CHANGE
@@ -82,7 +83,11 @@ func (n *node) OnKeyChange(op *store.Command) {
 
 	var connections = Node.Key.Get(op.Key)
 	for i := 0; i < len(connections); i++ {
-		var err = connections[i].Emit("/Key", []byte(op.Key+"\n"+value))
+		var err = connections[i].JsonEmit("/Key", message.Format{
+			Status: "SUCCESS", Code: 200, Msg: message.Op{
+				Key: op.Key, Value: value, Op: op.Op,
+			},
+		})
 		if err != nil {
 			console.Error(err)
 		}

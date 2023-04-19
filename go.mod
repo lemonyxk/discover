@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/boltdb/bolt v1.3.1
+	github.com/hashicorp/go-hclog v1.5.0
 	github.com/hashicorp/go-msgpack v0.5.5
 	github.com/hashicorp/raft v1.4.0
 	github.com/lemonyxk/console v0.0.0-20230321235617-598744e268b7
@@ -22,7 +23,6 @@ require (
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/go-openapi/errors v0.20.3 // indirect
 	github.com/go-openapi/strfmt v0.21.7 // indirect
-	github.com/hashicorp/go-hclog v1.5.0 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/golang-lru v0.5.0 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible // indirect
