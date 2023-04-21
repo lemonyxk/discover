@@ -46,11 +46,11 @@ type node struct {
 }
 
 func (n *node) GetMaster() *message.Server {
-	addr, _ := n.Store.Raft().LeaderWithID()
-	if addr == "" {
+	_, leader := n.Store.Raft().LeaderWithID()
+	if leader == "" {
 		return nil
 	}
-	return RaftAddr2Addr(string(addr))
+	return RaftAddr2Addr(string(leader))
 }
 
 func (n *node) IsReady() bool {
@@ -143,10 +143,10 @@ func (n *node) GetServerList() []*message.Address {
 	var servers = n.Store.Raft().GetConfiguration().Configuration().Servers
 	var list []*message.Address
 	for _, s := range servers {
-		var leader, _ = n.Store.Raft().LeaderWithID()
+		var _, leader = n.Store.Raft().LeaderWithID()
 		list = append(list, &message.Address{
 			Server: RaftAddr2Addr(string(s.Address)),
-			Master: s.Address == leader,
+			Master: string(s.Address) == string(leader),
 		})
 	}
 	return list
@@ -155,8 +155,8 @@ func (n *node) GetServerList() []*message.Address {
 func (n *node) GetMasterAddr() *message.Address {
 	var servers = n.Store.Raft().GetConfiguration().Configuration().Servers
 	for _, s := range servers {
-		var leader, _ = n.Store.Raft().LeaderWithID()
-		if s.Address == leader {
+		var _, leader = n.Store.Raft().LeaderWithID()
+		if string(s.Address) == string(leader) {
 			return &message.Address{
 				Server: RaftAddr2Addr(string(s.Address)),
 				Master: true,

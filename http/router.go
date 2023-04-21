@@ -19,6 +19,7 @@ func Router(s *router.Router[*http.Stream]) {
 	s.Group().Before(Middleware.localIP, Middleware.secret).Handler(func(handler *router.Handler[*http.Stream]) {
 		handler.Get("/IsMaster").Handler(Action.IsMaster)
 		handler.Post("/BeMaster").Handler(Action.BeMaster)
+		handler.Post("/WhoIsMaster").Handler(Action.WhoIsMaster)
 		handler.Get("/Test").Handler(Action.Test)
 	})
 

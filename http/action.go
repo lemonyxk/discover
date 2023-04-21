@@ -132,6 +132,11 @@ func (api *action) IsMaster(stream *http.Stream) error {
 	return api.Success(stream, "NO")
 }
 
+func (api *action) WhoIsMaster(stream *http.Stream) error {
+	var master = app.Node.GetMaster()
+	return api.Success(stream, master)
+}
+
 func (api *action) BeMaster(stream *http.Stream) error {
 	if !app.Node.IsReady() {
 		app.Node.Store.BootstrapCluster(true)
