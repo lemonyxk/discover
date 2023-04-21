@@ -12,7 +12,6 @@ package app
 
 import (
 	"fmt"
-	"net"
 	"sync"
 	"time"
 
@@ -20,6 +19,7 @@ import (
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/discover/structs"
+	"github.com/lemonyxk/discover/utils"
 	"github.com/lemonyxk/exception"
 	client2 "github.com/lemonyxk/kitty/socket/udp/client"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
@@ -93,25 +93,22 @@ func (n *node) InitStore() {
 
 func (n *node) InitAddr() {
 
-	addr, err := net.ResolveTCPAddr("tcp", n.Config.Addr)
-	exception.Assert.LastNil(err)
-
-	host, _, err := net.SplitHostPort(n.Config.Addr)
+	host, port, err := utils.SplitHostPort(n.Config.Addr)
 	exception.Assert.LastNil(err)
 
 	var http = n.Config.Http
 	if http == "" {
-		http = fmt.Sprintf("%s:%d", host, addr.Port)
+		http = fmt.Sprintf("%s:%d", host, port)
 	}
 
 	var rf = n.Config.Raft
 	if rf == "" {
-		rf = fmt.Sprintf("%s:%d", host, addr.Port+1000)
+		rf = fmt.Sprintf("%s:%d", host, port+1000)
 	}
 
 	var tcp = n.Config.Tcp
 	if tcp == "" {
-		tcp = fmt.Sprintf("%s:%d", host, addr.Port+2000)
+		tcp = fmt.Sprintf("%s:%d", host, port+2000)
 	}
 
 	n.Addr = &message.Server{

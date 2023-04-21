@@ -12,38 +12,29 @@ package app
 
 import (
 	"fmt"
-	"net"
 
 	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/discover/utils"
 )
 
 func ParseAddr(ad string) *message.Server {
-	addr, err := net.ResolveTCPAddr("tcp", ad)
-	if err != nil {
-		panic(err)
-	}
-
-	host, _, err := net.SplitHostPort(ad)
+	host, port, err := utils.SplitHostPort(ad)
 	if err != nil {
 		panic(err)
 	}
 
 	return &message.Server{
-		Addr: fmt.Sprintf("%s:%d", host, addr.Port),
-		Http: fmt.Sprintf("%s:%d", host, addr.Port),
-		Raft: fmt.Sprintf("%s:%d", host, addr.Port+1000),
-		Tcp:  fmt.Sprintf("%s:%d", host, addr.Port+2000),
+		Addr: fmt.Sprintf("%s:%d", host, port),
+		Http: fmt.Sprintf("%s:%d", host, port),
+		Raft: fmt.Sprintf("%s:%d", host, port+1000),
+		Tcp:  fmt.Sprintf("%s:%d", host, port+2000),
 	}
 }
 
 func RaftAddr2Addr(raftAddr string) *message.Server {
-	var addr, err = net.ResolveTCPAddr("tcp", raftAddr)
+	host, port, err := utils.SplitHostPort(raftAddr)
 	if err != nil {
 		panic(err)
 	}
-	host, _, err := net.SplitHostPort(raftAddr)
-	if err != nil {
-		panic(err)
-	}
-	return ParseAddr(fmt.Sprintf("%s:%d", host, addr.Port-1000))
+	return ParseAddr(fmt.Sprintf("%s:%d", host, port-1000))
 }
