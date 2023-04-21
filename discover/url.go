@@ -22,7 +22,7 @@ import (
 )
 
 // will never be nil
-func (dis *discover) getServerList() []*message.Address {
+func (dis *Client) getServerList() []*message.Address {
 	var rAddr = dis.randomAddr()
 	var url = fmt.Sprintf("http://%s/%s", rAddr.Http, "ServerList")
 
@@ -51,7 +51,7 @@ func (dis *discover) getServerList() []*message.Address {
 }
 
 // will never be nil
-func (dis *discover) getMasterServer() *message.Server {
+func (dis *Client) getMasterServer() *message.Server {
 
 	dis.serverList = dis.getServerList()
 
@@ -75,12 +75,12 @@ func (dis *discover) getMasterServer() *message.Server {
 }
 
 // will never be nil
-func (dis *discover) randomAddr() *message.Server {
+func (dis *Client) randomAddr() *message.Server {
 	var index = utils.Rand.RandomIntn(0, len(dis.serverList))
 	return dis.serverList[index].Server
 }
 
-func (dis *discover) url(path string, master bool) string {
+func (dis *Client) url(path string, master bool) string {
 	var addr *message.Server
 
 	if master {

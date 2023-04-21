@@ -25,7 +25,7 @@ import (
 var hasAlive int32 = 0
 var hasKey int32 = 0
 
-type discover struct {
+type Client struct {
 	serverList []*message.Address
 	master     *message.Server
 	register   *client2.Client
@@ -37,11 +37,11 @@ type discover struct {
 }
 
 type alive struct {
-	dis        *discover
+	client     *Client
 	serverList []string
 }
 
-func (dis *discover) Register(serverName, addr string) {
+func (dis *Client) Register(serverName, addr string) {
 
 	if serverName == "" || addr == "" {
 		panic("server name or addr is empty")
@@ -63,14 +63,14 @@ func (dis *discover) Register(serverName, addr string) {
 	dis.registerFn()
 }
 
-func (dis *discover) Alive(serverList ...string) *alive {
+func (dis *Client) Alive(serverList ...string) *alive {
 
 	if atomic.AddInt32(&hasAlive, 1) > 1 {
 		panic("repeat monitoring")
 	}
 
 	return &alive{
-		dis:        dis,
+		client:     dis,
 		serverList: serverList,
 	}
 }
@@ -81,9 +81,9 @@ func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
 		return
 	}
 
-	w.dis.aliveFn = func() {
-		w.dis.register.GetRouter().Remove("/Alive")
-		w.dis.register.GetRouter().Route("/Alive").Handler(func(stream *socket.Stream[client2.Conn]) error {
+	w.client.aliveFn = func() {
+		w.client.register.GetRouter().Remove("/Alive")
+		w.client.register.GetRouter().Route("/Alive").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			var res message.ServerInfoResponse
 			var err = jsoniter.Unmarshal(stream.Data, &res)
 			if err != nil {
@@ -96,23 +96,23 @@ func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
 			return nil
 		})
 
-		var err = w.dis.register.JsonEmit("/Alive", w.serverList)
+		var err = w.client.register.JsonEmit("/Alive", w.serverList)
 		if err != nil {
 			time.Sleep(time.Second)
-			w.dis.aliveFn()
+			w.client.aliveFn()
 			return
 		}
 	}
 
-	w.dis.aliveFn()
+	w.client.aliveFn()
 }
 
 type key struct {
-	dis     *discover
+	dis     *Client
 	keyList []string
 }
 
-func (dis *discover) Key(keyList ...string) *key {
+func (dis *Client) Key(keyList ...string) *key {
 
 	if atomic.AddInt32(&hasKey, 1) > 1 {
 		panic("repeat monitoring")
@@ -157,13 +157,13 @@ func (k *key) Watch(fn func(op message.Op)) {
 	k.dis.listenFn()
 }
 
-func (dis *discover) refreshMaster() {
+func (dis *Client) refreshMaster() {
 	var register = dis.getMasterServer()
 	dis.register.Addr = "ws://" + register.Tcp
 	console.Info("new register addr:", register.Addr)
 }
 
-func (dis *discover) refreshCluster() {
+func (dis *Client) refreshCluster() {
 	var listen = dis.randomAddr()
 	dis.listen.Addr = "ws://" + listen.Tcp
 	console.Info("new listen addr:", listen.Addr)

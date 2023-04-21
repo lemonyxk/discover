@@ -23,13 +23,13 @@ import (
 	client2 "github.com/lemonyxk/kitty/socket/websocket/client"
 )
 
-func New(serverList []string) *discover {
+func New(serverList ...string) *Client {
 
 	if len(serverList) == 0 {
 		panic("server list is empty")
 	}
 
-	var dis = &discover{}
+	var dis = &Client{}
 
 	for i := 0; i < len(serverList); i++ {
 		dis.serverList = append(dis.serverList, &message.Address{
@@ -52,7 +52,7 @@ func New(serverList []string) *discover {
 	return dis
 }
 
-func initRegister(dis *discover, wait *sync.WaitGroup) {
+func initRegister(dis *Client, wait *sync.WaitGroup) {
 
 	var isStart int32 = 0
 
@@ -100,7 +100,7 @@ func initRegister(dis *discover, wait *sync.WaitGroup) {
 	go dis.register.Connect()
 }
 
-func initLister(dis *discover, wait *sync.WaitGroup) {
+func initLister(dis *Client, wait *sync.WaitGroup) {
 
 	var isStart int32 = 0
 

@@ -18,7 +18,7 @@ import (
 	"github.com/lemonyxk/utils"
 )
 
-func (dis *discover) Get(key string) (string, error) {
+func (dis *Client) Get(key string) (string, error) {
 	var res = client.Get(dis.url("/Get/"+key, false)).Query(nil).Send()
 	if res.Error() != nil {
 		return "", res.Error()
@@ -31,7 +31,7 @@ func (dis *discover) Get(key string) (string, error) {
 	return string(msg), nil
 }
 
-func (dis *discover) Set(key, value string) (string, error) {
+func (dis *Client) Set(key, value string) (string, error) {
 	var buf = bytes.NewBuffer([]byte(value))
 	var res = client.Post(dis.url("/Set/"+key, true)).Raw(buf).Send()
 	if res.Error() != nil {
@@ -45,7 +45,7 @@ func (dis *discover) Set(key, value string) (string, error) {
 	return string(msg), nil
 }
 
-func (dis *discover) Delete(key string) (string, error) {
+func (dis *Client) Delete(key string) (string, error) {
 	var res = client.Post(dis.url("/Delete/"+key, true)).Form(nil).Send()
 	if res.Error() != nil {
 		return "", res.Error()
