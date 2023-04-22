@@ -85,8 +85,6 @@ github.com/lemonyxk/console v0.0.0-20230421193518-6bbd31c2cb37 h1:SvXdK0K5Ne9+tp
 github.com/lemonyxk/console v0.0.0-20230421193518-6bbd31c2cb37/go.mod h1:EwCJo8pl6wjo2Mgx8lUjxJ43fd+UVUlDWpO9Vhyt254=
 github.com/lemonyxk/exception v0.0.0-20220526113322-a27eb8cdffce h1:P6oXKCu6S0LpkkfbdsGnJrKnHkonyT6AI83GbJ91FDE=
 github.com/lemonyxk/exception v0.0.0-20220526113322-a27eb8cdffce/go.mod h1:HEUeCbZDtPCKnGGS/tyQOfCHaJsoTG3p+36/zs7sIN4=
-github.com/lemonyxk/kitty v0.0.0-20230422120716-ad931aa7cdf0 h1:euUUPE+RzDQg1bOD09SUDsX/EinPAXwJO9mv5qdGpKg=
-github.com/lemonyxk/kitty v0.0.0-20230422120716-ad931aa7cdf0/go.mod h1:oI8oKxfDd+fgxe5ZpNzMPt8/e1CuO6Vbq9uPLjhYFYM=
 github.com/lemonyxk/kitty v0.0.0-20230422141026-06d832b0738f h1:+Ue75yYjnsUs+I+nNZ7J+Sdg1mkHjC3kleqDRwif7KA=
 github.com/lemonyxk/kitty v0.0.0-20230422141026-06d832b0738f/go.mod h1:oI8oKxfDd+fgxe5ZpNzMPt8/e1CuO6Vbq9uPLjhYFYM=
 github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095 h1:n5yDdLyfqpFgq52ilpEg7iXN3yQik44xMLBt+wYLxMQ=
