@@ -8,9 +8,9 @@ require (
 	github.com/hashicorp/go-msgpack v0.5.5
 	github.com/hashicorp/raft v1.5.0
 	github.com/json-iterator/go v1.1.12
-	github.com/lemonyxk/console v0.0.0-20230422213638-357156064477
+	github.com/lemonyxk/console v0.0.0-20230422215249-53af1e36b7d6
 	github.com/lemonyxk/exception v0.0.0-20220526113322-a27eb8cdffce
-	github.com/lemonyxk/kitty v0.0.0-20230422141026-06d832b0738f
+	github.com/lemonyxk/kitty v0.0.0-20230422215348-817f2cd507ec
 	github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095
 	github.com/lemonyxk/utils v1.0.1-0.20230419093615-083fd78afcca
 )
@@ -27,7 +27,7 @@ require (
 	github.com/hashicorp/golang-lru v0.5.0 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible // indirect
 	github.com/klauspost/compress v1.16.5 // indirect
-	github.com/lemonyxk/caller v0.0.0-20230421192926-63c1c2ca895e // indirect
+	github.com/lemonyxk/caller v0.0.0-20230422215037-d0c69a1c05aa // indirect
 	github.com/lemonyxk/structure v0.0.0-20230322000315-cef25fa7c154 // indirect
 	github.com/lemoyxk/caller v0.0.0-20210923041650-ed223e41b72c // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
