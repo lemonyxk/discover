@@ -13,7 +13,6 @@ package app
 import (
 	"github.com/hashicorp/raft"
 	"github.com/lemonyxk/console"
-	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
@@ -71,23 +70,13 @@ func (n *node) OnPeerChange(peer raft.PeerObservation) {
 }
 
 // OnKeyChange YOU GOT KEY CHANGE
-func (n *node) OnKeyChange(op *store.Command) {
+func (n *node) OnKeyChange(op *store.Message) {
 	Node.Lock()
 	defer Node.Unlock()
 
-	var value, err = Node.Store.Get(op.Key)
-	if err != nil {
-		console.Error(err)
-		return
-	}
-
 	var connections = Node.Key.Get(op.Key)
 	for i := 0; i < len(connections); i++ {
-		var err = connections[i].JsonEmit("/Key", message.Format{
-			Status: "SUCCESS", Code: 200, Msg: message.Op{
-				Key: op.Key, Value: value, Op: op.Op,
-			},
-		})
+		var err = connections[i].Emit("/Key", store.Build(op))
 		if err != nil {
 			console.Error(err)
 		}

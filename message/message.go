@@ -26,9 +26,3 @@ type Server struct {
 	Raft string `json:"raft"`
 	Tcp  string `json:"tcp"`
 }
-
-type Op struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
-	Op    string `json:"op"`
-}

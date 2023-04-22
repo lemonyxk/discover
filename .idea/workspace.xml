@@ -5,11 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b9bbf93-090f-4100-b063-0a9288e65d86" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/store/message.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tcp/middleware.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/alive.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/alive.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/change.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/change.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/key.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/key.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/node.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/node.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/discover/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/discover/discover.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/discover.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/discover/key.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/key.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/discover/url.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/url.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example_client/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example_client/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/action.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/message/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/message/message.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/message/resposne.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/store/bolt.go" beforeDir="false" afterPath="$PROJECT_DIR$/store/bolt.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/store/pack.go" beforeDir="false" afterPath="$PROJECT_DIR$/store/pack.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/store/store.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tcp/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/action.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tcp/controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tcp/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tcp/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/server.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +46,7 @@
   <component name="FormatOnSaveOptions">
     <option name="myRunOnSave" value="false" />
   </component>
-  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.20.3/libexec" />
+  <component name="GOROOT" url="file:///usr/local/Cellar/go/1.20.3/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -43,14 +63,13 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/go/pkg/mod/github.com/golang/protobuf@v1.5.2/proto/proto.go" root0="SKIP_INSPECTION" />
-    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/lemoyxk/kitty@v0.0.0-20211229153102-4f03eff181fb/http/client/info.go" root0="SKIP_INSPECTION" />
-    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/lemoyxk/kitty@v0.0.0-20211229153102-4f03eff181fb/http/http_stream.go" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/admin/app/map.go" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/hashicorp/raft@v1.4.0/config.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/hashicorp/raft@v1.4.0/raft.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/lemonyxk/caller@v0.0.0-20220509170816-21e0d3de952f/main.go" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/admin/http/action.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/admin/http/server.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/app/node.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main.go" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/message/message.pb.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file:///usr/local/opt/go/libexec/src/net/http/server.go" root0="SKIP_INSPECTION" />
     <setting file="file:///usr/local/opt/go/libexec/src/runtime/panic.go" root0="SKIP_INSPECTION" />
   </component>
@@ -103,6 +122,15 @@
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build github.com/lemonyxk/discover/example_client">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="discover" />
+      <working_directory value="$PROJECT_DIR$" />
+      <go_parameters value="-i" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build github.com/lemonyxk/discover-admin" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="discover" />
       <working_directory value="$PROJECT_DIR$/admin" />
@@ -147,11 +175,21 @@
       <filePath value="$PROJECT_DIR$/admin/main.go" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="discover" />
+      <working_directory value="$PROJECT_DIR$" />
+      <go_parameters value="-i" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build github.com/lemonyxk/discover/example_client" />
-        <item itemvalue="Go Build.go build main.go" />
         <item itemvalue="Go Build.go build main.go (1)" />
+        <item itemvalue="Go Build.go build main.go" />
         <item itemvalue="Go Build.go build github.com/lemoyxk/discover-admin" />
         <item itemvalue="Go Build.go build github.com/lemonyxk/discover-admin" />
       </list>
@@ -169,6 +207,42 @@
         <option value="Default.Date" />
         <option value="Default.Subject" />
       </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="f57b4b6f-0450-437a-8352-3a14ae16f7a0" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="f57b4b6f-0450-437a-8352-3a14ae16f7a0">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
+      </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">

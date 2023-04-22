@@ -11,6 +11,7 @@
 package http
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"net"
@@ -150,11 +151,11 @@ func (api *action) BeMaster(stream *http.Stream) error {
 // because it need time to notify
 func (api *action) ServerList(stream *http.Stream) error {
 	var list = app.Node.GetServerList()
-	return api.JsonPretty(stream, list)
+	return api.Success(stream, list)
 }
 
 func (api *action) Test(stream *http.Stream) error {
-	return stream.Sender.String("OK")
+	return api.Success(stream, "OK")
 }
 
 func (api *action) Get(stream *http.Stream) error {
@@ -169,11 +170,16 @@ func (api *action) Get(stream *http.Stream) error {
 		return api.Failed(stream, err.Error())
 	}
 
-	if value == "" {
+	if len(value) == 0 {
 		return api.Failed(stream, "VALUE IS EMPTY")
 	}
 
 	return api.Success(stream, value)
+}
+
+func (api *action) All(stream *http.Stream) error {
+	var list = app.Node.Store.All()
+	return api.Success(stream, list)
 }
 
 func (api *action) Set(stream *http.Stream) error {
@@ -183,14 +189,12 @@ func (api *action) Set(stream *http.Stream) error {
 		return api.Failed(stream, "PARAMS ERROR")
 	}
 
-	var all, err = io.ReadAll(stream.Request.Body)
+	var value, err = io.ReadAll(stream.Request.Body)
 	if err != nil {
 		return api.Failed(stream, err.Error())
 	}
 
-	var value = string(all)
-
-	if value == "" {
+	if len(value) == 0 {
 		return api.Failed(stream, "VALUE IS EMPTY")
 	}
 
@@ -199,7 +203,8 @@ func (api *action) Set(stream *http.Stream) error {
 		return api.Failed(stream, err.Error())
 	}
 
-	if v == value {
+	// if value is same, return
+	if bytes.Equal(v, value) {
 		return api.Success(stream, "OK")
 	}
 
@@ -223,9 +228,4 @@ func (api *action) Delete(stream *http.Stream) error {
 	}
 
 	return api.Success(stream, "OK")
-}
-
-func (api *action) All(stream *http.Stream) error {
-	var list = app.Node.Store.All()
-	return api.JsonPretty(stream, list)
 }

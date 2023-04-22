@@ -33,7 +33,13 @@ func (dis *Client) getServerList() []*message.Address {
 		return dis.getServerList()
 	}
 
-	var addr message.AddressResponse
+	if res.Code() != 200 {
+		console.Error("get server list error:", res.String())
+		time.Sleep(time.Millisecond * 1000)
+		return dis.getServerList()
+	}
+
+	var addr []*message.Address
 	var err = jsoniter.Unmarshal(res.Bytes(), &addr)
 	if err != nil {
 		console.Error(err)
@@ -41,13 +47,7 @@ func (dis *Client) getServerList() []*message.Address {
 		return dis.getServerList()
 	}
 
-	if addr.Code != 200 {
-		console.Error("get server list error:", addr.Code)
-		time.Sleep(time.Millisecond * 1000)
-		return dis.getServerList()
-	}
-
-	return addr.Msg
+	return addr
 }
 
 // will never be nil

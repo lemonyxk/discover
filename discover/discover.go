@@ -11,12 +11,14 @@
 package discover
 
 import (
+	"fmt"
 	"sync/atomic"
 	"time"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/kitty/errors"
 	"github.com/lemonyxk/kitty/socket"
 	client2 "github.com/lemonyxk/kitty/socket/websocket/client"
@@ -36,9 +38,9 @@ type Client struct {
 	listenFn   func()
 }
 
-type alive struct {
-	client     *Client
-	serverList []string
+type Alive struct {
+	client *Client
+	list   []string
 }
 
 func (dis *Client) Register(serverName, addr string) {
@@ -48,10 +50,17 @@ func (dis *Client) Register(serverName, addr string) {
 	}
 
 	dis.registerFn = func() {
-		var err = dis.register.JsonEmit("/Register", &message.ServerInfo{
+		var bts, err = jsoniter.Marshal(&message.ServerInfo{
 			Name: serverName,
 			Addr: addr,
 		})
+		if err != nil {
+			console.Info(err)
+			time.Sleep(time.Second)
+			dis.registerFn()
+			return
+		}
+		err = dis.register.Sender().Emit("/Register", bts)
 		if err != nil {
 			console.Info(err)
 			time.Sleep(time.Second)
@@ -63,40 +72,48 @@ func (dis *Client) Register(serverName, addr string) {
 	dis.registerFn()
 }
 
-func (dis *Client) Alive(serverList ...string) *alive {
+func (dis *Client) Alive(serverList ...string) *Alive {
 
 	if atomic.AddInt32(&hasAlive, 1) > 1 {
 		panic("repeat monitoring")
 	}
 
-	return &alive{
-		client:     dis,
-		serverList: serverList,
+	return &Alive{
+		client: dis,
+		list:   serverList,
 	}
 }
 
-func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
+func (w *Alive) Watch(fn func(data []*message.ServerInfo)) {
 
-	if len(w.serverList) == 0 {
+	if len(w.list) == 0 {
 		return
 	}
 
 	w.client.aliveFn = func() {
 		w.client.register.GetRouter().Remove("/Alive")
 		w.client.register.GetRouter().Route("/Alive").Handler(func(stream *socket.Stream[client2.Conn]) error {
-			var res message.ServerInfoResponse
+			if stream.Code() != 200 {
+				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data))
+			}
+			var res []*message.ServerInfo
 			var err = jsoniter.Unmarshal(stream.Data, &res)
 			if err != nil {
 				return errors.New(err)
 			}
-			if res.Code != 200 {
-				return errors.New(res.Code)
-			}
-			fn(res.Msg)
+			fn(res)
 			return nil
 		})
 
-		var err = w.client.register.JsonEmit("/Alive", w.serverList)
+		var bts, err = jsoniter.Marshal(w.list)
+		if err != nil {
+			console.Info(err)
+			time.Sleep(time.Second)
+			w.client.aliveFn()
+			return
+		}
+
+		err = w.client.register.Sender().Emit("/Alive", bts)
 		if err != nil {
 			time.Sleep(time.Second)
 			w.client.aliveFn()
@@ -107,45 +124,52 @@ func (w *alive) Watch(fn func(data []*message.ServerInfo)) {
 	w.client.aliveFn()
 }
 
-type key struct {
-	dis     *Client
-	keyList []string
+type KeyList struct {
+	dis  *Client
+	list []string
 }
 
-func (dis *Client) Key(keyList ...string) *key {
+func (dis *Client) Key(keyList ...string) *KeyList {
 
 	if atomic.AddInt32(&hasKey, 1) > 1 {
 		panic("repeat monitoring")
 	}
 
-	return &key{
-		dis:     dis,
-		keyList: keyList,
+	return &KeyList{
+		dis:  dis,
+		list: keyList,
 	}
 }
 
-func (k *key) Watch(fn func(op message.Op)) {
+func (k *KeyList) Watch(fn func(op *store.Message)) {
 
-	if len(k.keyList) == 0 {
+	if len(k.list) == 0 {
 		return
 	}
 
 	k.dis.listenFn = func() {
 		k.dis.listen.GetRouter().Remove("/Key")
 		k.dis.listen.GetRouter().Route("/Key").Handler(func(stream *socket.Stream[client2.Conn]) error {
-			var res message.OpResponse
-			var err = jsoniter.Unmarshal(stream.Data, &res)
+			if stream.Code() != 200 {
+				return errors.New(stream.Code())
+			}
+			msg, err := store.Parse(stream.Data)
 			if err != nil {
 				return errors.New(err)
 			}
-			if res.Code != 200 {
-				return errors.New(res.Code)
-			}
-			fn(res.Msg)
+			fn(msg)
 			return nil
 		})
 
-		var err = k.dis.listen.JsonEmit("/Key", k.keyList)
+		var bts, err = jsoniter.Marshal(k.list)
+		if err != nil {
+			console.Info(err)
+			time.Sleep(time.Second)
+			k.dis.listenFn()
+			return
+		}
+
+		err = k.dis.listen.Sender().Emit("/Key", bts)
 		if err != nil {
 			console.Info(err)
 			time.Sleep(time.Second)

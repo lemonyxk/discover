@@ -15,6 +15,7 @@ import (
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/discover/structs"
 	"github.com/lemonyxk/kitty/socket"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
@@ -31,26 +32,26 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 	app.Node.Lock()
 	defer app.Node.Unlock()
 
-	var conn = stream.Conn()
+	var sender = stream.Sender()
 
 	var data message.ServerInfo
 
 	var err = jsoniter.Unmarshal(stream.Data, &data)
 	if err != nil {
-		return api.Failed(conn, stream.Event, err.Error())
+		return api.Failed(sender, stream.Event, err.Error())
 	}
 
 	if data.Name == "" || data.Addr == "" {
-		return api.Failed(conn, stream.Event, "server name or address is empty")
+		return api.Failed(sender, stream.Event, "server name or address is empty")
 	}
 
-	var register = app.Node.Register.Get(conn.FD())
+	var register = app.Node.Register.Get(sender.Conn().FD())
 	if register == nil {
 		register = &structs.Register{}
 	}
 	register.ServerInfo = &data
 
-	app.Node.Register.Set(conn.FD(), register)
+	app.Node.Register.Set(sender.Conn().FD(), register)
 
 	// add to watch queue
 	app.Node.Alive.AddData(data.Name, data.Addr)
@@ -73,31 +74,31 @@ func (api *action) Alive(stream *socket.Stream[server.Conn]) error {
 
 	defer app.Node.Unlock()
 
-	var conn = stream.Conn()
+	var sender = stream.Sender()
 
 	var list []string
 
 	var err = jsoniter.Unmarshal(stream.Data, &list)
 	if err != nil {
-		return api.Failed(conn, stream.Event, err.Error())
+		return api.Failed(sender, stream.Event, err.Error())
 	}
 
 	if len(list) == 0 {
-		return api.Failed(conn, stream.Event, "server list is empty")
+		return api.Failed(sender, stream.Event, "server list is empty")
 	}
 
-	var register = app.Node.Register.Get(conn.FD())
+	var register = app.Node.Register.Get(sender.Conn().FD())
 	if register == nil {
 		register = &structs.Register{}
 	}
 
 	register.ServerList = list
 
-	app.Node.Register.Set(conn.FD(), register)
+	app.Node.Register.Set(sender.Conn().FD(), register)
 
 	// add to notify queue
 	for i := 0; i < len(list); i++ {
-		app.Node.Alive.AddConn(list[i], conn)
+		app.Node.Alive.AddConn(list[i], sender)
 	}
 
 	// notify what you are watching
@@ -106,7 +107,7 @@ func (api *action) Alive(stream *socket.Stream[server.Conn]) error {
 		if len(list) == 0 {
 			continue
 		}
-		var err = api.Success(conn, "/Alive", list)
+		var err = api.Success(sender, "/Alive", list)
 		if err != nil {
 			console.Error(err)
 		}
@@ -120,44 +121,45 @@ func (api *action) Key(stream *socket.Stream[server.Conn]) error {
 	app.Node.Lock()
 	defer app.Node.Unlock()
 
-	var conn = stream.Conn()
+	var sender = stream.Sender()
 
 	var list []string
 
 	var err = jsoniter.Unmarshal(stream.Data, &list)
 	if err != nil {
-		return api.Failed(conn, stream.Event, err.Error())
+		return api.Failed(sender, stream.Event, err.Error())
 	}
 
 	if len(list) == 0 {
-		return api.Failed(conn, stream.Event, "key list is empty")
+		return api.Failed(sender, stream.Event, "key list is empty")
 	}
 
-	var register = app.Node.Register.Get(conn.FD())
+	var register = app.Node.Register.Get(sender.Conn().FD())
 	if register == nil {
 		register = &structs.Register{}
 	}
 
 	register.KeyList = list
 
-	app.Node.Register.Set(conn.FD(), register)
+	app.Node.Register.Set(sender.Conn().FD(), register)
 
 	// add to watch queue
 	for i := 0; i < len(list); i++ {
 
 		var key = list[i]
-		app.Node.Key.Add(key, conn)
+		app.Node.Key.Add(key, sender)
 
 		var value, err = app.Node.Store.Get(key)
 		if err != nil {
 			continue
 		}
 
-		if value == "" {
+		if len(value) == 0 {
 			continue
 		}
 
-		err = api.Success(conn, stream.Event, &message.Op{Key: key, Value: value, Op: "set"})
+		msg := store.Build(&store.Message{Op: store.Set, Key: key, Value: value})
+		err = api.Success(sender, stream.Event, msg)
 		if err != nil {
 			console.Error(err)
 		}

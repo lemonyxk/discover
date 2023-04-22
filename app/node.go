@@ -21,6 +21,7 @@ import (
 	"github.com/lemonyxk/discover/structs"
 	"github.com/lemonyxk/discover/utils"
 	"github.com/lemonyxk/exception"
+	"github.com/lemonyxk/kitty/socket"
 	client2 "github.com/lemonyxk/kitty/socket/udp/client"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
@@ -76,11 +77,11 @@ func (n *node) InitRegister() {
 }
 
 func (n *node) InitAlive() {
-	n.Alive = &alive{data: make(map[string][]*message.ServerInfo), conn: make(map[string][]server.Conn)}
+	n.Alive = &alive{data: make(map[string][]*message.ServerInfo), senders: make(map[string][]socket.Emitter[server.Conn])}
 }
 
 func (n *node) InitListen() {
-	n.Key = &key{conn: make(map[string][]server.Conn)}
+	n.Key = &key{senders: make(map[string][]socket.Emitter[server.Conn])}
 }
 
 func (n *node) InitStore() {

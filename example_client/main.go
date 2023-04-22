@@ -16,11 +16,20 @@ import (
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/discover"
 	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/discover/store"
 )
 
 func main() {
 
-	var dis = discover.New([]string{"127.0.0.1:11002"})
+	// c := store.Message{
+	// 	Op:  store.Delete,
+	// 	Key: "test1",
+	// 	Value: []byte("test1 value"),
+	// }
+	//
+	// console.Info(store.Parse(store.Build(c)))
+
+	var dis = discover.New("127.0.0.1:11002")
 
 	dis.Alive("test", "test1").Watch(func(data []*message.ServerInfo) {
 		for i := 0; i < len(data); i++ {
@@ -30,8 +39,8 @@ func main() {
 
 	dis.Register("test", "127.0.0.1:1191poo1ii")
 
-	dis.Key("test", "test1").Watch(func(op message.Op) {
-		console.Infof("%+v\n", op)
+	dis.Key("test", "test1").Watch(func(message *store.Message) {
+		console.Infof("%+v\n", message)
 	})
 
 	time.AfterFunc(time.Second, func() {
@@ -39,7 +48,7 @@ func main() {
 	})
 
 	time.AfterFunc(2*time.Second, func() {
-		console.Info(dis.Set("test", "set test"))
+		console.Info(dis.Set("test1", []byte("set test1")))
 	})
 
 	time.AfterFunc(time.Second, func() {
@@ -47,11 +56,23 @@ func main() {
 	})
 
 	time.AfterFunc(2*time.Second, func() {
-		console.Info(dis.Set("test1", "set test1"))
+		console.Info(dis.Set("test2", []byte("set test2")))
 	})
 
 	time.AfterFunc(3*time.Second, func() {
 		console.Info(dis.Get("test1"))
+	})
+
+	time.AfterFunc(2*time.Second, func() {
+		var all, err = dis.All()
+		if err != nil {
+			console.Error(err)
+			return
+		}
+
+		for i := 0; i < len(all); i++ {
+			console.Infof("%+v\n", all[i])
+		}
 	})
 
 	select {}

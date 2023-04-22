@@ -13,9 +13,9 @@ package tcp
 import (
 	"time"
 
+	jsoniter "github.com/json-iterator/go"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/app"
-	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/kitty"
 	"github.com/lemonyxk/kitty/socket"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
@@ -41,11 +41,11 @@ func Start(host string, fn func()) {
 		app.Node.Register.Delete(conn.FD())
 
 		for i := 0; i < len(data.ServerList); i++ {
-			app.Node.Alive.DeleteConn(data.ServerList[i], conn)
+			app.Node.Alive.DeleteConn(data.ServerList[i], conn.FD())
 		}
 
 		for i := 0; i < len(data.KeyList); i++ {
-			app.Node.Key.Delete(data.KeyList[i], conn)
+			app.Node.Key.Delete(data.KeyList[i], conn.FD())
 		}
 
 		if data.ServerInfo != nil {
@@ -53,13 +53,19 @@ func Start(host string, fn func()) {
 			var list = app.Node.Alive.GetData(data.ServerInfo.Name)
 			var connections = app.Node.Alive.GetConn(data.ServerInfo.Name)
 			for i := 0; i < len(connections); i++ {
-				var err = connections[i].JsonEmit("/Alive", message.Format{Status: "Success", Code: 200, Msg: list})
+				connections[i].SetCode(200)
+				var bts, err = jsoniter.Marshal(list)
 				if err != nil {
 					console.Error(err)
+					continue
+				}
+				err = connections[i].Emit("/Alive", bts)
+				if err != nil {
+					console.Error(err)
+					continue
 				}
 			}
 		}
-
 	}
 
 	tcpServer.OnError = func(stream *socket.Stream[server.Conn], err error) {

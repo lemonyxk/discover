@@ -13,6 +13,7 @@ package store
 import (
 	"bytes"
 	"encoding/binary"
+	"unsafe"
 
 	"github.com/hashicorp/go-msgpack/codec"
 )
@@ -44,4 +45,14 @@ func uint64ToBytes(u uint64) []byte {
 	buf := make([]byte, 8)
 	binary.BigEndian.PutUint64(buf, u)
 	return buf
+}
+
+func StringToBytes(s string) []byte {
+	x := (*[2]uintptr)(unsafe.Pointer(&s))
+	h := [3]uintptr{x[0], x[1], x[1]}
+	return *(*[]byte)(unsafe.Pointer(&h))
+}
+
+func BytesToString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
 }

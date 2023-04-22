@@ -14,64 +14,65 @@ import (
 	"sync"
 
 	"github.com/lemonyxk/discover/message"
+	"github.com/lemonyxk/kitty/socket"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
 
 type alive struct {
-	mux  sync.Mutex
-	conn map[string][]server.Conn
-	data map[string][]*message.ServerInfo
+	mux     sync.Mutex
+	senders map[string][]socket.Emitter[server.Conn]
+	data    map[string][]*message.ServerInfo
 }
 
-func (s *alive) AllConn() map[string][]server.Conn {
+func (s *alive) AllConn() map[string][]socket.Emitter[server.Conn] {
 	s.mux.Lock()
 	defer s.mux.Unlock()
-	return s.conn
+	return s.senders
 }
 
-func (s *alive) GetConn(serverName string) []server.Conn {
+func (s *alive) GetConn(serverName string) []socket.Emitter[server.Conn] {
 	s.mux.Lock()
 	defer s.mux.Unlock()
-	var list, ok = s.conn[serverName]
+	var list, ok = s.senders[serverName]
 	if !ok {
 		return nil
 	}
 	return list
 }
 
-func (s *alive) AddConn(serverName string, conn server.Conn) bool {
+func (s *alive) AddConn(serverName string, sender socket.Emitter[server.Conn]) bool {
 	s.mux.Lock()
 	defer s.mux.Unlock()
-	var list, ok = s.conn[serverName]
+	var list, ok = s.senders[serverName]
 	if !ok {
-		s.conn[serverName] = append(s.conn[serverName], conn)
+		s.senders[serverName] = append(s.senders[serverName], sender)
 		return true
 	}
 
 	// already in here
 	for i := 0; i < len(list); i++ {
-		if list[i].FD() == conn.FD() {
+		if list[i].Conn().FD() == sender.Conn().FD() {
 			return false
 		}
 	}
 
-	s.conn[serverName] = append(s.conn[serverName], conn)
+	s.senders[serverName] = append(s.senders[serverName], sender)
 
 	return true
 }
 
-func (s *alive) DeleteConn(serverName string, conn server.Conn) bool {
+func (s *alive) DeleteConn(serverName string, fd int64) bool {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 
-	var list, ok = s.conn[serverName]
+	var list, ok = s.senders[serverName]
 	if !ok {
 		return false
 	}
 
 	var index = -1
 	for i := 0; i < len(list); i++ {
-		if list[i].FD() == conn.FD() {
+		if list[i].Conn().FD() == fd {
 			index = i
 			break
 		}
@@ -84,13 +85,13 @@ func (s *alive) DeleteConn(serverName string, conn server.Conn) bool {
 	list = append(list[0:index], list[index+1:]...)
 
 	if len(list) == 0 {
-		delete(s.conn, serverName)
+		delete(s.senders, serverName)
 		return true
 	}
 
 	// put back
 	// notice
-	s.conn[serverName] = list
+	s.senders[serverName] = list
 
 	return true
 }
@@ -98,7 +99,7 @@ func (s *alive) DeleteConn(serverName string, conn server.Conn) bool {
 func (s *alive) DestroyConn() {
 	s.mux.Lock()
 	defer s.mux.Unlock()
-	s.conn = make(map[string][]server.Conn)
+	s.senders = make(map[string][]socket.Emitter[server.Conn])
 }
 
 func (s *alive) AllData() map[string][]*message.ServerInfo {

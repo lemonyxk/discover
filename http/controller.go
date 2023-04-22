@@ -12,40 +12,37 @@ package http
 
 import (
 	jsoniter "github.com/json-iterator/go"
-	"github.com/lemonyxk/discover/message"
-	"github.com/lemonyxk/kitty/kitty/header"
 	"github.com/lemonyxk/kitty/socket/http"
 )
 
 type Controller struct{}
 
 func (c *Controller) WithCode(stream *http.Stream, code int, msg any) error {
-	return stream.Sender.Json(message.Format{Status: "SUCCESS", Code: code, Msg: msg})
-}
-
-func (c *Controller) JsonPretty(stream *http.Stream, msg any) error {
-	var format = message.Format{Status: "SUCCESS", Code: 200, Msg: msg}
-	stream.Response.Header().Set(header.ContentType, header.ApplicationJson)
-	bts, err := jsoniter.MarshalIndent(format, "", "    ")
+	stream.Response.WriteHeader(code)
+	switch v := msg.(type) {
+	case []byte:
+		return stream.Sender.Bytes(v)
+	case string:
+		return stream.Sender.String(v)
+	}
+	var bts, err = jsoniter.Marshal(msg)
 	if err != nil {
 		return err
 	}
-	_, err = stream.Response.Write(bts)
-	return err
+	return stream.Sender.Bytes(bts)
 }
-
 func (c *Controller) Failed(stream *http.Stream, msg any) error {
-	return stream.Sender.Json(message.Format{Status: "FAILED", Code: 400, Msg: msg})
+	return c.WithCode(stream, 400, msg)
 }
 
 func (c *Controller) Error(stream *http.Stream, msg any) error {
-	return stream.Sender.Json(message.Format{Status: "ERROR", Code: 500, Msg: msg})
+	return c.WithCode(stream, 500, msg)
 }
 
 func (c *Controller) Forbidden(stream *http.Stream, msg any) error {
-	return stream.Sender.Json(message.Format{Status: "FORBIDDEN", Code: 403, Msg: msg})
+	return c.WithCode(stream, 403, msg)
 }
 
 func (c *Controller) Success(stream *http.Stream, msg any) error {
-	return stream.Sender.Json(message.Format{Status: "SUCCESS", Code: 200, Msg: msg})
+	return c.WithCode(stream, 200, msg)
 }

@@ -11,7 +11,6 @@
 package store
 
 import (
-	"encoding/json"
 	"errors"
 
 	"github.com/boltdb/bolt"
@@ -144,8 +143,7 @@ func (b *BoltStore) Count() uint64 {
 				continue
 			}
 
-			var c Command
-			err = json.Unmarshal(l.Data, &c)
+			_, err = Parse(l.Data)
 			if err != nil {
 				continue
 			}
