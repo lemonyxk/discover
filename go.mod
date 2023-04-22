@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/go-msgpack v0.5.5
 	github.com/hashicorp/raft v1.5.0
 	github.com/json-iterator/go v1.1.12
-	github.com/lemonyxk/console v0.0.0-20230421193518-6bbd31c2cb37
+	github.com/lemonyxk/console v0.0.0-20230422213638-357156064477
 	github.com/lemonyxk/exception v0.0.0-20220526113322-a27eb8cdffce
 	github.com/lemonyxk/kitty v0.0.0-20230422141026-06d832b0738f
 	github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095
