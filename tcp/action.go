@@ -59,7 +59,13 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 
 	var connections = app.Node.Alive.GetConn(data.Name)
 	for i := 0; i < len(connections); i++ {
-		var err = api.Success(connections[i], "/Alive", message.AliveResponse{Name: data.Name, ServerInfoList: list})
+		connections[i].SetCode(200)
+		var bts, err = jsoniter.Marshal(message.AliveResponse{Name: data.Name, ServerInfoList: list})
+		if err != nil {
+			console.Error(err)
+			continue
+		}
+		err = connections[i].Emit("/Alive", bts)
 		if err != nil {
 			console.Error(err)
 		}
@@ -103,11 +109,18 @@ func (api *action) Alive(stream *socket.Stream[server.Conn]) error {
 
 	// notify what you are watching
 	for i := 0; i < len(list); i++ {
-		var list = app.Node.Alive.GetData(list[i])
-		if len(list) == 0 {
+		var info = app.Node.Alive.GetData(list[i])
+		if len(info) == 0 {
 			continue
 		}
-		var err = api.Success(sender, "/Alive", list)
+
+		sender.SetCode(200)
+		var bts, err = jsoniter.Marshal(message.AliveResponse{Name: list[i], ServerInfoList: info})
+		if err != nil {
+			console.Error(err)
+			continue
+		}
+		err = api.Success(sender, "/Alive", bts)
 		if err != nil {
 			console.Error(err)
 		}
