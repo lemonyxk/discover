@@ -59,7 +59,7 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 
 	var connections = app.Node.Alive.GetConn(data.Name)
 	for i := 0; i < len(connections); i++ {
-		var err = api.Success(connections[i], "/Alive", list)
+		var err = api.Success(connections[i], "/Alive", message.AliveResponse{Name: data.Name, ServerInfoList: list})
 		if err != nil {
 			console.Error(err)
 		}
