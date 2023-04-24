@@ -84,7 +84,7 @@ func (dis *Client) Alive(serverList ...string) *Alive {
 	}
 }
 
-func (w *Alive) Watch(fn func(data []*message.ServerInfo)) {
+func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 
 	if len(w.list) == 0 {
 		return
@@ -96,12 +96,12 @@ func (w *Alive) Watch(fn func(data []*message.ServerInfo)) {
 			if stream.Code() != 200 {
 				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data))
 			}
-			var res []*message.ServerInfo
+			var res message.AliveResponse
 			var err = jsoniter.Unmarshal(stream.Data, &res)
 			if err != nil {
 				return errors.New(err)
 			}
-			fn(res)
+			fn(res.Name, res.ServerInfoList)
 			return nil
 		})
 

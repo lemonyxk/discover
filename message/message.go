@@ -15,6 +15,11 @@ type ServerInfo struct {
 	Addr string `json:"addr"`
 }
 
+type AliveResponse struct {
+	Name           string        `json:"name"`
+	ServerInfoList []*ServerInfo `json:"server_info_list"`
+}
+
 type Address struct {
 	*Server `json:",inline"`
 	Master  bool `json:"master"`

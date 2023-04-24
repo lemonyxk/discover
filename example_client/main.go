@@ -31,9 +31,9 @@ func main() {
 
 	var dis = discover.New("127.0.0.1:11002")
 
-	dis.Alive("test", "test1").Watch(func(data []*message.ServerInfo) {
-		for i := 0; i < len(data); i++ {
-			console.Info("server:", data[i])
+	dis.Alive("test", "test1").Watch(func(name string, serverInfo []*message.ServerInfo) {
+		for i := 0; i < len(serverInfo); i++ {
+			console.Info("server:", serverInfo[i])
 		}
 	})
 
