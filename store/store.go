@@ -227,12 +227,12 @@ func (s *Store) Get(key string) ([]byte, error) {
 	return s.data[key], nil
 }
 
-func (s *Store) All() []byte {
+func (s *Store) All() []*KV {
 	s.mux.Lock()
 	defer s.mux.Unlock()
-	var res []byte
-	for _, v := range s.data {
-		res = append(res, v...)
+	var res []*KV
+	for k, v := range s.data {
+		res = append(res, &KV{k, v})
 	}
 	return res
 }

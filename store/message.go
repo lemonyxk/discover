@@ -13,6 +13,8 @@ package store
 import (
 	"encoding/binary"
 	"errors"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
 var ErrInvalidMessage = errors.New("invalid message")
@@ -23,6 +25,11 @@ const (
 	Delete Op = iota
 	Set
 )
+
+type KV struct {
+	Key   string              `json:"key"`
+	Value jsoniter.RawMessage `json:"value"`
+}
 
 type Message struct {
 	Op    Op
