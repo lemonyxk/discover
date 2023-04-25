@@ -12,6 +12,7 @@ package http
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net"
@@ -178,8 +179,39 @@ func (api *action) Get(stream *http.Stream) error {
 }
 
 func (api *action) All(stream *http.Stream) error {
+	stream.Parser.Auto()
 	var list = app.Node.Store.All()
-	return api.Success(stream, list)
+	var format = stream.Query.First("format").String()
+	var bts []byte
+	var err error
+	switch format {
+	case "text":
+		var buf = bytes.NewBuffer(nil)
+		for i := 0; i < len(list); i++ {
+			buf.WriteString(list[i].Key)
+			buf.WriteString("\r\n")
+			if jsoniter.Valid(list[i].Value) {
+				var bf = bytes.NewBuffer(nil)
+				err = json.Indent(bf, list[i].Value, "", "    ")
+				if err != nil {
+					return api.Failed(stream, err.Error())
+				}
+				buf.WriteString(bf.String())
+			} else {
+				buf.Write(list[i].Value)
+			}
+
+			buf.WriteString("\r\n\r\n")
+		}
+		bts = buf.Bytes()
+	default:
+		bts, err = jsoniter.Marshal(list)
+		if err != nil {
+			return api.Failed(stream, err.Error())
+		}
+	}
+
+	return api.Success(stream, bts)
 }
 
 func (api *action) Set(stream *http.Stream) error {
