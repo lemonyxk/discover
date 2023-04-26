@@ -89,6 +89,8 @@ github.com/lemonyxk/kitty v0.0.0-20230423070719-331da3df17a3 h1:nVkgiQmgiw7DbseR
 github.com/lemonyxk/kitty v0.0.0-20230423070719-331da3df17a3/go.mod h1:BGScLUV6netbV8tpQo67ua8k7GNs8RXJ3yVuEULxtzs=
 github.com/lemonyxk/kitty v0.0.0-20230426033256-d2382efb67c4 h1:5yfENCORbySfqFS4NTHnxSSmmRyTAMd8TTzA23ieRAg=
 github.com/lemonyxk/kitty v0.0.0-20230426033256-d2382efb67c4/go.mod h1:BGScLUV6netbV8tpQo67ua8k7GNs8RXJ3yVuEULxtzs=
+github.com/lemonyxk/kitty v0.0.0-20230426094846-9f41d9b943ee h1:vePjn5jNYbBOMQ1i28Uel7lV4LsrZ8FF3dH5Ax1hqoA=
+github.com/lemonyxk/kitty v0.0.0-20230426094846-9f41d9b943ee/go.mod h1:BGScLUV6netbV8tpQo67ua8k7GNs8RXJ3yVuEULxtzs=
 github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095 h1:n5yDdLyfqpFgq52ilpEg7iXN3yQik44xMLBt+wYLxMQ=
 github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095/go.mod h1:f/bavXinnw2NOF9Juc55A0+tiskc6GnO+ATZ1xKKAMQ=
 github.com/lemonyxk/structure v0.0.0-20230322000315-cef25fa7c154 h1:Buw30PZA0kjVlLADXZvuzVio6bgpQmglq3t0LcTk2Wc=
