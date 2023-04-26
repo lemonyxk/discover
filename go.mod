@@ -10,7 +10,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/lemonyxk/console v0.0.0-20230423070636-b3637ac701dd
 	github.com/lemonyxk/exception v0.0.0-20220526113322-a27eb8cdffce
-	github.com/lemonyxk/kitty v0.0.0-20230423070719-331da3df17a3
+	github.com/lemonyxk/kitty v0.0.0-20230426033256-d2382efb67c4
 	github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095
 	github.com/lemonyxk/utils v1.0.1-0.20230419093615-083fd78afcca
 )

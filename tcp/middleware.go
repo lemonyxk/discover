@@ -25,7 +25,7 @@ type middleware struct {
 func (api *middleware) isReady(stream *socket.Stream[server.Conn]) error {
 	if !app.Node.IsReady() {
 		var msg = "NOT READY"
-		return api.Failed(stream.Sender(), stream.Event, msg)
+		return api.Failed(stream, stream.Event(), msg)
 	}
 	return nil
 }
@@ -33,7 +33,7 @@ func (api *middleware) isReady(stream *socket.Stream[server.Conn]) error {
 func (api *middleware) isMaster(stream *socket.Stream[server.Conn]) error {
 	if !app.Node.IsMaster() {
 		var msg = "NOT MASTER"
-		return api.Failed(stream.Sender(), stream.Event, msg)
+		return api.Failed(stream, stream.Event(), msg)
 	}
 	return nil
 }

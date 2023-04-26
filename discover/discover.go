@@ -94,10 +94,10 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 		w.client.register.GetRouter().Remove("/Alive")
 		w.client.register.GetRouter().Route("/Alive").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			if stream.Code() != 200 {
-				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data))
+				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data()))
 			}
 			var res message.AliveResponse
-			var err = jsoniter.Unmarshal(stream.Data, &res)
+			var err = jsoniter.Unmarshal(stream.Data(), &res)
 			if err != nil {
 				return errors.New(err)
 			}
@@ -153,7 +153,7 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 			if stream.Code() != 200 {
 				return errors.New(stream.Code())
 			}
-			msg, err := store.Parse(stream.Data)
+			msg, err := store.Parse(stream.Data())
 			if err != nil {
 				return errors.New(err)
 			}
