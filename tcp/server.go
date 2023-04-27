@@ -24,7 +24,7 @@ import (
 
 func Start(host string, fn func()) {
 
-	var tcpServer = server.Server{Name: host, Addr: host, HeartBeatTimeout: 3 * time.Second}
+	var tcpServer = server.Server{Name: host, Addr: host, HeartBeatTimeout: 6 * time.Second}
 
 	tcpServer.OnClose = func(conn server.Conn) {
 
@@ -40,6 +40,8 @@ func Start(host string, fn func()) {
 		}
 
 		app.Node.Register.Delete(conn.FD())
+
+		console.Info("tcp server", conn.FD(), "unregister", data.ServerInfo.Name, data.ServerInfo.Addr)
 
 		for i := 0; i < len(data.ServerList); i++ {
 			app.Node.Alive.DeleteConn(data.ServerList[i], conn.FD())

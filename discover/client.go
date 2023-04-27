@@ -58,7 +58,7 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 
 	var client = &client2.Client{
 		Addr:              "ws://" + dis.master.Tcp,
-		HeartBeatTimeout:  3 * time.Second,
+		HeartBeatTimeout:  6 * time.Second,
 		HeartBeatInterval: 1 * time.Second,
 		ReconnectInterval: 1 * time.Second,
 	}

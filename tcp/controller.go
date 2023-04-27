@@ -20,7 +20,6 @@ type Controller struct{}
 
 func (c *Controller) WithCode(sender socket.Emitter[server.Conn], event string, code uint32, msg any) error {
 	sender.SetCode(code)
-	println(sender.Code())
 	switch v := msg.(type) {
 	case []byte:
 		return sender.Emit(event, v)

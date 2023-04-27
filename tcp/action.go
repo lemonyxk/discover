@@ -69,6 +69,8 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 		}
 	}
 
+	console.Info("tcp server", stream.Conn().FD(), "register", data.Name, data.Addr)
+
 	return nil
 }
 
