@@ -268,6 +268,20 @@ func (s *Store) Delete(key string) error {
 	return f.Error()
 }
 
+// Clear clears all KV pairs in the store.
+func (s *Store) Clear() error {
+	if s.raft.State() != raft.Leader {
+		return fmt.Errorf("not leader")
+	}
+
+	c := &Message{
+		Op: Clear,
+	}
+
+	f := s.raft.Apply(Build(c), raftTimeout)
+	return f.Error()
+}
+
 // Join joins a node, identified by nodeID and located at addr, to this store.
 // The node must be ready to respond to Raft communications at that address.
 // func (s *Store) Join(nodeID, addr string) error {
@@ -371,6 +385,8 @@ func (f *fsm) Apply(l *raft.Log) interface{} {
 		return f.applySet(c.Key, c.Value)
 	case Delete:
 		return f.applyDelete(c.Key)
+	case Clear:
+		return f.applyClear()
 	default:
 		panic(fmt.Sprintf("unrecognized command op: %d", c.Op))
 	}
@@ -412,6 +428,13 @@ func (f *fsm) applyDelete(key string) interface{} {
 	f.mux.Lock()
 	defer f.mux.Unlock()
 	delete(f.data, key)
+	return nil
+}
+
+func (f *fsm) applyClear() interface{} {
+	f.mux.Lock()
+	defer f.mux.Unlock()
+	f.data = make(map[string][]byte)
 	return nil
 }
 

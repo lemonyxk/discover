@@ -38,5 +38,7 @@ func Router(s *router.Router[*http.Stream]) {
 	s.Group().Before(Middleware.localIP, Middleware.isReady, Middleware.isMaster).Handler(func(handler *router.Handler[*http.Stream]) {
 		handler.Post("/Set/:key").Handler(Action.Set)
 		handler.Post("/Delete/:key").Handler(Action.Delete)
+		handler.Post("/Clear").Handler(Action.Clear)
+		handler.Post("/SetMulti").Handler(Action.SetMulti)
 	})
 }

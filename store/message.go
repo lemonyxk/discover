@@ -24,6 +24,7 @@ type Op byte
 const (
 	Delete Op = iota
 	Set
+	Clear
 )
 
 type KV struct {

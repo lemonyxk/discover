@@ -82,5 +82,5 @@ func (n *node) OnKeyChange(op *store.Message) {
 		}
 	}
 
-	console.Info("OnKeyChange", op.Op, op.Key, op.Value)
+	console.Info("OnKeyChange", op.Op, op.Key, len(op.Value))
 }

@@ -19,6 +19,7 @@ import (
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/lemonyxk/discover/app"
+	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/kitty/socket/http"
 	"github.com/lemonyxk/kitty/socket/http/client"
 )
@@ -209,6 +210,18 @@ func (api *action) All(stream *http.Stream) error {
 		if err != nil {
 			return api.Failed(stream, err.Error())
 		}
+		var buf = bytes.NewBuffer(nil)
+		err := json.Compact(buf, bts)
+		if err != nil {
+			return api.Failed(stream, err.Error())
+		}
+		bts = buf.Bytes()
+		buf = bytes.NewBuffer(nil)
+		err = json.Indent(buf, bts, "", "    ")
+		if err != nil {
+			return api.Failed(stream, err.Error())
+		}
+		bts = buf.Bytes()
 	}
 
 	return api.Success(stream, bts)
@@ -248,6 +261,33 @@ func (api *action) Set(stream *http.Stream) error {
 	return api.Success(stream, "OK")
 }
 
+func (api *action) SetMulti(stream *http.Stream) error {
+
+	var value, err = io.ReadAll(stream.Request.Body)
+	if err != nil {
+		return api.Failed(stream, err.Error())
+	}
+
+	if len(value) == 0 {
+		return api.Failed(stream, "VALUE IS EMPTY")
+	}
+
+	var res []store.KV
+	err = jsoniter.Unmarshal(value, &res)
+	if err != nil {
+		return api.Failed(stream, err.Error())
+	}
+
+	for i := 0; i < len(res); i++ {
+		err = app.Node.Store.Set(res[i].Key, res[i].Value)
+		if err != nil {
+			return api.Failed(stream, err.Error())
+		}
+	}
+
+	return api.Success(stream, "OK")
+}
+
 func (api *action) Delete(stream *http.Stream) error {
 	var key = stream.Params.Get("key")
 	if key == "" {
@@ -255,6 +295,15 @@ func (api *action) Delete(stream *http.Stream) error {
 	}
 
 	var err = app.Node.Store.Delete(key)
+	if err != nil {
+		return api.Failed(stream, err.Error())
+	}
+
+	return api.Success(stream, "OK")
+}
+
+func (api *action) Clear(stream *http.Stream) error {
+	var err = app.Node.Store.Clear()
 	if err != nil {
 		return api.Failed(stream, err.Error())
 	}
