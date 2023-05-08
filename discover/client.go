@@ -66,15 +66,19 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 	dis.register = client
 
 	dis.register.OnOpen = func(conn client2.Conn) {
-		console.Errorf("register client open at:%s\n", dis.register.Addr)
+		console.Errorf("register client open at: %s\n", dis.register.Addr)
 	}
 
 	dis.register.OnClose = func(conn client2.Conn) {
-		console.Infof("register client close at:%s\n", dis.register.Addr)
+		console.Infof("register client close at: %s\n", dis.register.Addr)
 	}
 
 	dis.register.OnError = func(stream *socket.Stream[client2.Conn], err error) {
-		console.Infof("register client error:%+v\n", err)
+		console.Infof("register client error: %+v\n", err)
+	}
+
+	dis.register.OnException = func(err error) {
+		console.Infof("register client exception: %+v\n", err)
 	}
 
 	dis.register.OnReconnecting = func() {
@@ -114,15 +118,19 @@ func initLister(dis *Client, wait *sync.WaitGroup) {
 	dis.listen = client
 
 	dis.listen.OnOpen = func(conn client2.Conn) {
-		console.Info("listen client open at:", dis.listen.Addr)
+		console.Infof("listen client open at: %s\n", dis.listen.Addr)
 	}
 
 	dis.listen.OnClose = func(conn client2.Conn) {
-		console.Info("listen client close")
+		console.Infof("listen client close at: %s\n", dis.listen.Addr)
 	}
 
 	dis.listen.OnError = func(stream *socket.Stream[client2.Conn], err error) {
-		console.Errorf("%+v\n", err)
+		console.Errorf("listen client error: %+v\n", err)
+	}
+
+	dis.listen.OnException = func(err error) {
+		console.Errorf("listen client exception: %+v\n", err)
 	}
 
 	dis.listen.OnReconnecting = func() {

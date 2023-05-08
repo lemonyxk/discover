@@ -13,7 +13,6 @@ package discover
 import (
 	"bytes"
 
-	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/kitty/errors"
 	"github.com/lemonyxk/kitty/socket/http/client"
 )
@@ -31,7 +30,7 @@ func (dis *Client) Get(key string) ([]byte, error) {
 	return res.Bytes(), nil
 }
 
-func (dis *Client) All() ([]*store.Message, error) {
+func (dis *Client) All() ([]byte, error) {
 	var res = client.Get(dis.url("/All", false)).Query(nil).Send()
 	if res.Error() != nil {
 		return nil, errors.New(res.Error())
@@ -41,12 +40,7 @@ func (dis *Client) All() ([]*store.Message, error) {
 		return nil, errors.New(res.String())
 	}
 
-	parse, err := store.ParseMulti(res.Bytes())
-	if err != nil {
-		return nil, err
-	}
-
-	return parse, nil
+	return res.Bytes(), nil
 }
 
 func (dis *Client) Set(key string, value []byte) (string, error) {

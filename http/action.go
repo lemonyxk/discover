@@ -213,7 +213,7 @@ func (api *action) All(stream *http.Stream) error {
 		var buf = bytes.NewBuffer(nil)
 		err := json.Compact(buf, bts)
 		if err != nil {
-			return api.Failed(stream, err.Error())
+			return api.Success(stream, bts)
 		}
 		bts = buf.Bytes()
 		buf = bytes.NewBuffer(nil)

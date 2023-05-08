@@ -39,8 +39,9 @@ type Client struct {
 }
 
 type Alive struct {
-	client *Client
-	list   []string
+	client  *Client
+	list    []string
+	onClose func()
 }
 
 func (dis *Client) Register(serverName, addr string) {
@@ -124,9 +125,16 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 	w.client.aliveFn()
 }
 
+func (w *Alive) OnClose(fn func()) {
+	w.client.register.OnClose = func(conn client2.Conn) {
+		fn()
+	}
+}
+
 type KeyList struct {
-	dis  *Client
-	list []string
+	dis     *Client
+	list    []string
+	onClose func()
 }
 
 func (dis *Client) Key(keyList ...string) *KeyList {
@@ -179,6 +187,12 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 	}
 
 	k.dis.listenFn()
+}
+
+func (k *KeyList) OnClose(fn func()) {
+	k.dis.listen.OnClose = func(conn client2.Conn) {
+		fn()
+	}
 }
 
 func (dis *Client) refreshMaster() {

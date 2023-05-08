@@ -31,7 +31,13 @@ func main() {
 
 	var dis = discover.New("127.0.0.1:11002")
 
-	dis.Alive("test", "test1").Watch(func(name string, serverInfo []*message.ServerInfo) {
+	var alive = dis.Alive("test", "test1")
+
+	alive.OnClose(func() {
+		console.Info("alive close")
+	})
+
+	alive.Watch(func(name string, serverInfo []*message.ServerInfo) {
 		for i := 0; i < len(serverInfo); i++ {
 			console.Info("server:", serverInfo[i])
 		}
@@ -39,7 +45,13 @@ func main() {
 
 	dis.Register("test", "127.0.0.1:1191poo1ii")
 
-	dis.Key("test", "test1").Watch(func(message *store.Message) {
+	var key = dis.Key("test", "test1")
+
+	key.OnClose(func() {
+		console.Info("key close")
+	})
+
+	key.Watch(func(message *store.Message) {
 		console.Infof("%+v\n", message)
 	})
 
@@ -70,9 +82,7 @@ func main() {
 			return
 		}
 
-		for i := 0; i < len(all); i++ {
-			console.Infof("%+v\n", all[i])
-		}
+		console.Infof("%s\n", all)
 	})
 
 	select {}

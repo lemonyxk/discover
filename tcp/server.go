@@ -41,7 +41,7 @@ func Start(host string, fn func()) {
 
 		app.Node.Register.Delete(conn.FD())
 
-		console.Info("tcp server", conn.FD(), "unregister", data.ServerInfo.Name, data.ServerInfo.Addr)
+		console.Info("tcp server", conn.FD(), "unregister", data.ServerInfo)
 
 		for i := 0; i < len(data.ServerList); i++ {
 			app.Node.Alive.DeleteConn(data.ServerList[i], conn.FD())

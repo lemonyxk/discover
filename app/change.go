@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/raft"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/store"
+	"github.com/lemonyxk/kitty/socket"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
 
@@ -76,7 +77,9 @@ func (n *node) OnKeyChange(op *store.Message) {
 
 	var connections = Node.Key.Get(op.Key)
 	for i := 0; i < len(connections); i++ {
-		var err = connections[i].Emit("/Key", store.Build(op))
+		var sender = socket.NewSender(connections[i].Conn())
+		sender.SetCode(200)
+		var err = sender.Emit("/Key", store.Build(op))
 		if err != nil {
 			console.Error(err)
 		}
