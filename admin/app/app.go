@@ -12,17 +12,8 @@ package app
 
 import (
 	"sync"
-
-	"github.com/lemonyxk/discover/message"
 )
 
-var App = &app{
-	ServerMap: &serverMap{
-		servers: make(map[string]*message.Address),
-	},
-}
-
 type app struct {
-	ServerMap *serverMap
-	lock      sync.Mutex
+	lock sync.Mutex
 }

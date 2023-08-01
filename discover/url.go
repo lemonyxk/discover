@@ -12,13 +12,13 @@ package discover
 
 import (
 	"fmt"
+	"github.com/lemonyxk/utils/rand"
 	"time"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/kitty/socket/http/client"
-	"github.com/lemonyxk/utils"
 )
 
 // will never be nil
@@ -26,7 +26,7 @@ func (dis *Client) getServerList() []*message.Address {
 	var rAddr = dis.randomAddr()
 	var url = fmt.Sprintf("http://%s/%s", rAddr.Http, "ServerList")
 
-	var res = client.Get(url).Query(nil).Send()
+	var res = client.Get(url).Query().Send()
 	if res.Error() != nil {
 		console.Error(res.Error())
 		time.Sleep(time.Millisecond * 1000)
@@ -76,7 +76,7 @@ func (dis *Client) getMasterServer() *message.Server {
 
 // will never be nil
 func (dis *Client) randomAddr() *message.Server {
-	var index = utils.Rand.RandomIntn(0, len(dis.serverList))
+	var index = rand.RandomIntn(0, len(dis.serverList))
 	return dis.serverList[index].Server
 }
 

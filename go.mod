@@ -10,9 +10,9 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/lemonyxk/console v0.0.0-20230423070636-b3637ac701dd
 	github.com/lemonyxk/exception v0.0.0-20220526113322-a27eb8cdffce
-	github.com/lemonyxk/kitty v0.0.0-20230508091446-ede6d87d6f50
+	github.com/lemonyxk/kitty v0.0.0-20230801021724-f781cf49c1cc
 	github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095
-	github.com/lemonyxk/utils v1.0.1-0.20230419093615-083fd78afcca
+	github.com/lemonyxk/utils v0.0.0-20230729181537-8ccf3f3d43e4
 )
 
 require (
@@ -20,18 +20,18 @@ require (
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/fasthttp/websocket v1.5.2 // indirect
-	github.com/fatih/color v1.15.0 // indirect
+	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-openapi/errors v0.20.3 // indirect
 	github.com/go-openapi/strfmt v0.21.7 // indirect
-	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
+	github.com/hashicorp/go-immutable-radix v1.0.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.0 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible // indirect
 	github.com/klauspost/compress v1.16.5 // indirect
 	github.com/lemonyxk/caller v0.0.0-20230423070323-e226a04be497 // indirect
-	github.com/lemonyxk/structure v0.0.0-20230322000315-cef25fa7c154 // indirect
+	github.com/lemonyxk/structure v1.0.1-0.20230801021443-5292061aabb4 // indirect
 	github.com/lemoyxk/caller v0.0.0-20210923041650-ed223e41b72c // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.18 // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -43,6 +43,5 @@ require (
 	github.com/valyala/fasthttp v1.46.0 // indirect
 	go.mongodb.org/mongo-driver v1.11.4 // indirect
 	golang.org/x/sys v0.7.0 // indirect
-	golang.org/x/time v0.3.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 )

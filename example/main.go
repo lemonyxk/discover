@@ -11,23 +11,25 @@
 package main
 
 import (
+	"github.com/lemonyxk/utils/args"
+	file2 "github.com/lemonyxk/utils/file"
+	"github.com/lemonyxk/utils/json"
 	"os"
 
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover"
 	"github.com/lemonyxk/discover/app"
-	"github.com/lemonyxk/utils"
 )
 
 func main() {
 
-	var configPath = utils.Args.Get("-f", "--config")
-	var dir = utils.Args.Get("--dir")
-	var addr = utils.Args.Get("--addr")
-	var http = utils.Args.Get("--http")
-	var tcp = utils.Args.Get("--tcp")
-	var raft = utils.Args.Get("--raft")
-	var secret = utils.Args.Get("--secret")
+	var configPath = args.Get("-f", "--config")
+	var dir = args.Get("--dir")
+	var addr = args.Get("--addr")
+	var http = args.Get("--http")
+	var tcp = args.Get("--tcp")
+	var raft = args.Get("--raft")
+	var secret = args.Get("--secret")
 
 	var config app.Config
 
@@ -36,11 +38,11 @@ func main() {
 		if err != nil {
 			console.Exit(err)
 		}
-		var file = utils.File.ReadFromReader(f)
+		var file = file2.FromReader(f)
 		if file.Error() != nil {
 			console.Exit(file)
 		}
-		err = utils.Json.Decode(file.Bytes(), &config)
+		err = json.Decode(file.Bytes(), &config)
 		if err != nil {
 			console.Exit(err)
 		}

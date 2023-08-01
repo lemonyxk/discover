@@ -12,10 +12,11 @@ package http
 
 import (
 	"errors"
+	"github.com/lemonyxk/kitty/socket/http/server"
+	"github.com/lemonyxk/utils/address"
 
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/kitty/socket/http"
-	"github.com/lemonyxk/utils"
 )
 
 var Middleware = &middleware{}
@@ -24,7 +25,7 @@ type middleware struct {
 	Controller
 }
 
-func (api *middleware) secret(stream *http.Stream) error {
+func (api *middleware) secret(stream *http.Stream[server.Conn]) error {
 	var secret = stream.AutoGet("secret").String()
 	if app.Node.Config.Secret != secret {
 		var msg = "NO PERMISSION"
@@ -34,7 +35,7 @@ func (api *middleware) secret(stream *http.Stream) error {
 	return nil
 }
 
-func (api *middleware) isMaster(stream *http.Stream) error {
+func (api *middleware) isMaster(stream *http.Stream[server.Conn]) error {
 	if !app.Node.IsMaster() {
 		var msg = "NOT MASTER"
 		_ = api.Failed(stream, msg)
@@ -43,8 +44,8 @@ func (api *middleware) isMaster(stream *http.Stream) error {
 	return nil
 }
 
-func (api *middleware) localIP(stream *http.Stream) error {
-	if !utils.Addr.IsLocalIP(stream.ClientIP()) {
+func (api *middleware) localIP(stream *http.Stream[server.Conn]) error {
+	if !address.IsLocalIP(stream.ClientIP()) {
 		var msg = "NOT LOCAL IP"
 		_ = api.Failed(stream, msg)
 		return errors.New(msg)
@@ -52,7 +53,7 @@ func (api *middleware) localIP(stream *http.Stream) error {
 	return nil
 }
 
-func (api *middleware) isReady(stream *http.Stream) error {
+func (api *middleware) isReady(stream *http.Stream[server.Conn]) error {
 	if !app.Node.IsReady() {
 		var msg = "NOT READY"
 		_ = api.Failed(stream, msg)

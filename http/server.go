@@ -26,7 +26,7 @@ func Start(host string, fn func()) {
 	Router(router)
 
 	httpServer.Use(func(next server.Middle) server.Middle {
-		return func(stream *http.Stream) {
+		return func(stream *http.Stream[server.Conn]) {
 			// proxy websocket to another port
 			next(stream)
 		}

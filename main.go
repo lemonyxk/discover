@@ -11,6 +11,7 @@
 package discover
 
 import (
+	"github.com/lemonyxk/utils/signal"
 	"os"
 	"time"
 
@@ -19,7 +20,6 @@ import (
 	"github.com/lemonyxk/discover/http"
 	"github.com/lemonyxk/discover/tcp"
 	"github.com/lemonyxk/promise"
-	"github.com/lemonyxk/utils"
 )
 
 func Start(config *app.Config) {
@@ -93,7 +93,7 @@ func Start(config *app.Config) {
 		console.Debug("discover server start success")
 	})
 
-	utils.Signal.ListenKill().Done(func(sig os.Signal) {
+	signal.ListenKill().Done(func(sig os.Signal) {
 		console.Info("exit with code", sig)
 	})
 }

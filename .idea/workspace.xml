@@ -6,15 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="1b9bbf93-090f-4100-b063-0a9288e65d86" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/change.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/change.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/discover/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/discover/discover.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/discover.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/discover/key.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/key.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example_client/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example_client/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/app/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/app/app.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/http/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/http/action.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/http/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/http/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/http/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/http/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/discoverd/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cli/discoverd/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/discover/url.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/url.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/http/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/action.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tcp/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/tcp/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/middleware.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +38,7 @@
   <component name="FormatOnSaveOptions">
     <option name="myRunOnSave" value="false" />
   </component>
-  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.20.4/libexec" />
+  <component name="GOROOT" url="file:///opt/homebrew/opt/go/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -64,6 +71,9 @@
   <component name="OptimizeOnSaveOptions">
     <option name="myRunOnSave" value="false" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
   <component name="ProjectId" id="1nuPMAdziRU3YbP10yplp2fSQaZ" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -71,25 +81,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.format.on.save.advertiser.fired&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/lemo&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;go.autoimport&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.format.on.save.advertiser.fired": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/lemo",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "go.autoimport"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/protobuf" />

@@ -12,11 +12,11 @@ package main
 
 import (
 	"flag"
+	"github.com/lemonyxk/utils/signal"
 	"os"
 
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover-admin/http"
-	"github.com/lemonyxk/utils"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 
 	http.Start(addr, func() {})
 
-	utils.Signal.ListenKill().Done(func(sig os.Signal) {
+	signal.ListenKill().Done(func(sig os.Signal) {
 		console.Info("exit with code", sig)
 	})
 }

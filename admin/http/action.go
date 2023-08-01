@@ -12,8 +12,9 @@ package http
 
 import (
 	"github.com/lemonyxk/kitty/socket/http"
+	"github.com/lemonyxk/kitty/socket/http/server"
 )
 
-func ServerList(stream *http.Stream) error {
+func ServerList(stream *http.Stream[server.Conn]) error {
 	return stream.Sender.String("OK")
 }

@@ -13,11 +13,12 @@ package http
 import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/lemonyxk/kitty/socket/http"
+	"github.com/lemonyxk/kitty/socket/http/server"
 )
 
 type Controller struct{}
 
-func (c *Controller) WithCode(stream *http.Stream, code int, msg any) error {
+func (c *Controller) WithCode(stream *http.Stream[server.Conn], code int, msg any) error {
 	stream.Response.WriteHeader(code)
 	switch v := msg.(type) {
 	case []byte:
@@ -31,18 +32,18 @@ func (c *Controller) WithCode(stream *http.Stream, code int, msg any) error {
 	}
 	return stream.Sender.Bytes(bts)
 }
-func (c *Controller) Failed(stream *http.Stream, msg any) error {
+func (c *Controller) Failed(stream *http.Stream[server.Conn], msg any) error {
 	return c.WithCode(stream, 400, msg)
 }
 
-func (c *Controller) Error(stream *http.Stream, msg any) error {
+func (c *Controller) Error(stream *http.Stream[server.Conn], msg any) error {
 	return c.WithCode(stream, 500, msg)
 }
 
-func (c *Controller) Forbidden(stream *http.Stream, msg any) error {
+func (c *Controller) Forbidden(stream *http.Stream[server.Conn], msg any) error {
 	return c.WithCode(stream, 403, msg)
 }
 
-func (c *Controller) Success(stream *http.Stream, msg any) error {
+func (c *Controller) Success(stream *http.Stream[server.Conn], msg any) error {
 	return c.WithCode(stream, 200, msg)
 }

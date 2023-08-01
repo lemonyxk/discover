@@ -14,6 +14,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/lemonyxk/kitty/socket/http/server"
 	"io"
 	"net"
 
@@ -34,7 +35,7 @@ type action struct {
 	Controller
 }
 
-func (api *action) Joins(stream *http.Stream) error {
+func (api *action) Joins(stream *http.Stream[server.Conn]) error {
 
 	var addr []string
 
@@ -80,7 +81,7 @@ func (api *action) Joins(stream *http.Stream) error {
 	return api.Success(stream, errMap)
 }
 
-func (api *action) Join(stream *http.Stream) error {
+func (api *action) Join(stream *http.Stream[server.Conn]) error {
 
 	var addr = stream.Params.Get("addr")
 	if addr == "" {
@@ -106,7 +107,7 @@ func (api *action) Join(stream *http.Stream) error {
 	return api.Success(stream, "OK")
 }
 
-func (api *action) Leave(stream *http.Stream) error {
+func (api *action) Leave(stream *http.Stream[server.Conn]) error {
 
 	var addr = stream.Params.Get("addr")
 	if addr == "" {
@@ -128,19 +129,19 @@ func (api *action) Leave(stream *http.Stream) error {
 	return api.Success(stream, "OK")
 }
 
-func (api *action) IsMaster(stream *http.Stream) error {
+func (api *action) IsMaster(stream *http.Stream[server.Conn]) error {
 	if app.Node.IsMaster() {
 		return api.Success(stream, "OK")
 	}
 	return api.Success(stream, "NO")
 }
 
-func (api *action) WhoIsMaster(stream *http.Stream) error {
+func (api *action) WhoIsMaster(stream *http.Stream[server.Conn]) error {
 	var master = app.Node.GetMaster()
 	return api.Success(stream, master)
 }
 
-func (api *action) BeMaster(stream *http.Stream) error {
+func (api *action) BeMaster(stream *http.Stream[server.Conn]) error {
 	if !app.Node.IsReady() {
 		app.Node.Store.BootstrapCluster(true)
 		return api.Success(stream, "OK")
@@ -151,16 +152,16 @@ func (api *action) BeMaster(stream *http.Stream) error {
 // ServerList NOTICE
 // inaccurate
 // because it need time to notify
-func (api *action) ServerList(stream *http.Stream) error {
+func (api *action) ServerList(stream *http.Stream[server.Conn]) error {
 	var list = app.Node.GetServerList()
 	return api.Success(stream, list)
 }
 
-func (api *action) Test(stream *http.Stream) error {
+func (api *action) Test(stream *http.Stream[server.Conn]) error {
 	return api.Success(stream, "OK")
 }
 
-func (api *action) Get(stream *http.Stream) error {
+func (api *action) Get(stream *http.Stream[server.Conn]) error {
 
 	var key = stream.Params.Get("key")
 	if key == "" {
@@ -179,7 +180,7 @@ func (api *action) Get(stream *http.Stream) error {
 	return api.Success(stream, value)
 }
 
-func (api *action) All(stream *http.Stream) error {
+func (api *action) All(stream *http.Stream[server.Conn]) error {
 	stream.Parser.Auto()
 	var list = app.Node.Store.All()
 	var format = stream.Query.First("format").String()
@@ -227,7 +228,7 @@ func (api *action) All(stream *http.Stream) error {
 	return api.Success(stream, bts)
 }
 
-func (api *action) Set(stream *http.Stream) error {
+func (api *action) Set(stream *http.Stream[server.Conn]) error {
 
 	var key = stream.Params.Get("key")
 	if key == "" {
@@ -261,7 +262,7 @@ func (api *action) Set(stream *http.Stream) error {
 	return api.Success(stream, "OK")
 }
 
-func (api *action) SetMulti(stream *http.Stream) error {
+func (api *action) SetMulti(stream *http.Stream[server.Conn]) error {
 
 	var value, err = io.ReadAll(stream.Request.Body)
 	if err != nil {
@@ -288,7 +289,7 @@ func (api *action) SetMulti(stream *http.Stream) error {
 	return api.Success(stream, "OK")
 }
 
-func (api *action) Delete(stream *http.Stream) error {
+func (api *action) Delete(stream *http.Stream[server.Conn]) error {
 	var key = stream.Params.Get("key")
 	if key == "" {
 		return api.Failed(stream, "PARAMS ERROR")
@@ -302,7 +303,7 @@ func (api *action) Delete(stream *http.Stream) error {
 	return api.Success(stream, "OK")
 }
 
-func (api *action) Clear(stream *http.Stream) error {
+func (api *action) Clear(stream *http.Stream[server.Conn]) error {
 	var err = app.Node.Store.Clear()
 	if err != nil {
 		return api.Failed(stream, err.Error())
