@@ -43,6 +43,11 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 		return api.Failed(stream, stream.Event(), "server name or address is empty")
 	}
 
+	// add to watch queue
+	if !app.Node.Alive.AddData(data.Name, data.Addr) {
+		return api.Failed(stream, stream.Event(), "server name already exists")
+	}
+
 	var register = app.Node.Register.Get(stream.Conn().FD())
 	if register == nil {
 		register = &structs.Register{}
@@ -51,8 +56,6 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 
 	app.Node.Register.Set(stream.Conn().FD(), register)
 
-	// add to watch queue
-	app.Node.Alive.AddData(data.Name, data.Addr)
 	var list = app.Node.Alive.GetData(data.Name)
 
 	var connections = app.Node.Alive.GetConn(data.Name)
