@@ -51,6 +51,13 @@ func (dis *Client) Register(serverName, addr string) {
 	}
 
 	dis.registerFn = func() {
+		dis.register.GetRouter().Remove("/Register")
+		dis.register.GetRouter().Route("/Register").Handler(func(stream *socket.Stream[client2.Conn]) error {
+			if stream.Code() != 200 {
+				return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
+			}
+			return nil
+		})
 		var bts, err = jsoniter.Marshal(&message.ServerInfo{
 			Name: serverName,
 			Addr: addr,
