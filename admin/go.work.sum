@@ -105,8 +105,6 @@ github.com/lemonyxk/kitty v0.0.0-20230801021724-f781cf49c1cc h1:yrvGSMtQDLMp+Ghy
 github.com/lemonyxk/kitty v0.0.0-20230801021724-f781cf49c1cc/go.mod h1:DOr9X9Xg2vBOTKyXoGXecCE8VtXm/e47C623PY4AEjY=
 github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095 h1:n5yDdLyfqpFgq52ilpEg7iXN3yQik44xMLBt+wYLxMQ=
 github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095/go.mod h1:f/bavXinnw2NOF9Juc55A0+tiskc6GnO+ATZ1xKKAMQ=
-github.com/lemonyxk/structure v1.0.1-0.20230801021443-5292061aabb4 h1:RDUIWCAv3zuy3ps4unChOXkB/lQ5zrDzVKFE4LNCJio=
-github.com/lemonyxk/structure v1.0.1-0.20230801021443-5292061aabb4/go.mod h1:7nt3U1dKeVPpqdhrxvYgfftsABObkjHky6kf6ylYfEI=
 github.com/lemonyxk/utils v0.0.0-20230729181537-8ccf3f3d43e4 h1:ZESZU+3EVcWC0r288ovWOMxPAUDQhZ/9BL7UO9CBdlA=
 github.com/lemonyxk/utils v0.0.0-20230729181537-8ccf3f3d43e4/go.mod h1:iy90Q0EKk805hOlZRwd1h0QM7hylqyvPSGoZlRsa8is=
 github.com/lemoyxk/caller v0.0.0-20210923041650-ed223e41b72c h1:igVYbVGvFPB2xzlTfxx/4zaEMFN6/ZKOXt5lszaTMnM=
