@@ -13,6 +13,7 @@ package message
 type ServerInfo struct {
 	Name string `json:"name"`
 	Addr string `json:"addr"`
+	Info any    `json:"info"`
 }
 
 type AliveResponse struct {

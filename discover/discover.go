@@ -44,9 +44,9 @@ type Alive struct {
 	onClose func()
 }
 
-func (dis *Client) Register(serverName, addr string) {
+func (dis *Client) Register(info message.ServerInfo) {
 
-	if serverName == "" || addr == "" {
+	if info.Name == "" || info.Addr == "" {
 		panic("server name or addr is empty")
 	}
 
@@ -58,10 +58,7 @@ func (dis *Client) Register(serverName, addr string) {
 			}
 			return nil
 		})
-		var bts, err = jsoniter.Marshal(&message.ServerInfo{
-			Name: serverName,
-			Addr: addr,
-		})
+		var bts, err = jsoniter.Marshal(info)
 		if err != nil {
 			console.Info(err)
 			time.Sleep(time.Second)

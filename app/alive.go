@@ -118,29 +118,24 @@ func (s *alive) GetData(serverName string) []*message.ServerInfo {
 	return list
 }
 
-func (s *alive) AddData(serverName, addr string) bool {
+func (s *alive) AddData(info message.ServerInfo) bool {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 
-	var info = message.ServerInfo{
-		Name: serverName,
-		Addr: addr,
-	}
-
-	var list, ok = s.data[serverName]
+	var list, ok = s.data[info.Name]
 	if !ok {
-		s.data[serverName] = append(s.data[serverName], &info)
+		s.data[info.Name] = append(s.data[info.Name], &info)
 		return true
 	}
 
 	// already in here
 	for i := 0; i < len(list); i++ {
-		if list[i].Addr == addr {
+		if list[i].Addr == info.Addr {
 			return false
 		}
 	}
 
-	s.data[serverName] = append(s.data[serverName], &info)
+	s.data[info.Name] = append(s.data[info.Name], &info)
 
 	return true
 }

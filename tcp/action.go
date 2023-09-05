@@ -44,7 +44,7 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 	}
 
 	// add to watch queue
-	if !app.Node.Alive.AddData(data.Name, data.Addr) {
+	if !app.Node.Alive.AddData(data) {
 		return api.Failed(stream, stream.Event(), "server name already exists")
 	}
 
