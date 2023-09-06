@@ -28,8 +28,9 @@ type Discover struct {
 	serverList []string
 }
 
-func (d *Discover) Config(config *Config) {
+func (d *Discover) Config(config *Config) *Discover {
 	d.config = config
+	return d
 }
 
 func (d *Discover) Connect() *Client {
