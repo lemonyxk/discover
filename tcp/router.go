@@ -19,6 +19,7 @@ import (
 func Router(s *router.Router[*socket.Stream[server.Conn]]) {
 	s.Group().Before(Middleware.isMaster).Handler(func(handler *router.Handler[*socket.Stream[server.Conn]]) {
 		handler.Route("/Register").Handler(Action.Register)
+		handler.Route("/Update").Handler(Action.Update)
 		handler.Route("/Alive").Handler(Action.Alive)
 	})
 

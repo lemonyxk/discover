@@ -77,6 +77,48 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 	return nil
 }
 
+func (api *action) Update(stream *socket.Stream[server.Conn]) error {
+
+	app.Node.Lock()
+	defer app.Node.Unlock()
+
+	var data message.ServerInfo
+
+	var err = jsoniter.Unmarshal(stream.Data(), &data)
+	if err != nil {
+		return api.Failed(stream, stream.Event(), err.Error())
+	}
+
+	if data.Name == "" || data.Addr == "" {
+		return api.Failed(stream, stream.Event(), "server name or address is empty")
+	}
+
+	// add to watch queue
+	if !app.Node.Alive.SetData(data) {
+		return api.Failed(stream, stream.Event(), "server name not exists")
+	}
+
+	var list = app.Node.Alive.GetData(data.Name)
+
+	var connections = app.Node.Alive.GetConn(data.Name)
+	for i := 0; i < len(connections); i++ {
+		connections[i].SetCode(200)
+		var bts, err = jsoniter.Marshal(message.AliveResponse{Name: data.Name, ServerInfoList: list})
+		if err != nil {
+			console.Error(err)
+			continue
+		}
+		err = connections[i].Emit("/Alive", bts)
+		if err != nil {
+			console.Error(err)
+		}
+	}
+
+	console.Info("tcp server", stream.Conn().FD(), "update", data.Name, data.Addr)
+
+	return nil
+}
+
 func (api *action) Alive(stream *socket.Stream[server.Conn]) error {
 
 	app.Node.Lock()

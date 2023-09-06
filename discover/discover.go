@@ -24,10 +24,16 @@ import (
 	client2 "github.com/lemonyxk/kitty/socket/websocket/client"
 )
 
+type Config struct {
+	AutoUpdateInterval time.Duration
+}
+
 var hasAlive int32 = 0
 var hasKey int32 = 0
 
 type Client struct {
+	config *Config
+
 	serverList []*message.Address
 	master     *message.Server
 	register   *client2.Client
@@ -36,6 +42,9 @@ type Client struct {
 	registerFn func()
 	aliveFn    func()
 	listenFn   func()
+
+	registerClose chan struct{}
+	listenClose   chan struct{}
 }
 
 type Alive struct {
@@ -44,7 +53,9 @@ type Alive struct {
 	onClose func()
 }
 
-func (dis *Client) Register(info message.ServerInfo) {
+func (dis *Client) Register(fn func() message.ServerInfo) {
+
+	var info = fn()
 
 	if info.Name == "" || info.Addr == "" {
 		panic("server name or addr is empty")
@@ -56,6 +67,46 @@ func (dis *Client) Register(info message.ServerInfo) {
 			if stream.Code() != 200 {
 				return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
 			}
+
+			go func() {
+
+				if dis.config == nil || dis.config.AutoUpdateInterval == 0 {
+					return
+				}
+
+				var ticker = time.NewTicker(dis.config.AutoUpdateInterval)
+
+				dis.register.GetRouter().Remove("/Update")
+				dis.register.GetRouter().Route("/Update").Handler(func(stream *socket.Stream[client2.Conn]) error {
+					if stream.Code() != 200 {
+						return errors.New(fmt.Sprintf("update error:%d %s", stream.Code(), stream.Data()))
+					}
+					return nil
+				})
+
+				for {
+					select {
+					case <-dis.registerClose:
+						ticker.Stop()
+						return
+					case <-ticker.C:
+						var info = fn()
+						var bts, err = jsoniter.Marshal(info)
+						if err != nil {
+							console.Info(err)
+							continue
+						}
+
+						err = dis.register.Sender().Emit("/Update", bts)
+						if err != nil {
+							console.Info(err)
+							continue
+						}
+					}
+				}
+
+			}()
+
 			return nil
 		})
 		var bts, err = jsoniter.Marshal(info)
@@ -131,6 +182,7 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 
 func (w *Alive) OnClose(fn func()) {
 	w.client.register.OnClose = func(conn client2.Conn) {
+		w.client.registerClose <- struct{}{}
 		fn()
 	}
 }
@@ -170,6 +222,11 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 				return errors.New(err)
 			}
 			fn(msg)
+
+			go func() {
+				<-k.dis.listenClose // wait listen close and do something
+			}()
+
 			return nil
 		})
 
@@ -195,6 +252,7 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 
 func (k *KeyList) OnClose(fn func()) {
 	k.dis.listen.OnClose = func(conn client2.Conn) {
+		k.dis.listenClose <- struct{}{}
 		fn()
 	}
 }

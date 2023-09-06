@@ -118,6 +118,25 @@ func (s *alive) GetData(serverName string) []*message.ServerInfo {
 	return list
 }
 
+func (s *alive) SetData(info message.ServerInfo) bool {
+	s.mux.Lock()
+	defer s.mux.Unlock()
+
+	var list, ok = s.data[info.Name]
+	if !ok {
+		return false
+	}
+
+	for i := 0; i < len(list); i++ {
+		if list[i].Addr == info.Addr {
+			list[i] = &info
+			return true
+		}
+	}
+
+	return false
+}
+
 func (s *alive) AddData(info message.ServerInfo) bool {
 	s.mux.Lock()
 	defer s.mux.Unlock()

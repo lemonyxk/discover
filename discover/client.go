@@ -11,45 +11,63 @@
 package discover
 
 import (
+	"github.com/lemonyxk/discover/app"
+	"github.com/lemonyxk/discover/message"
 	"sync"
 	"sync/atomic"
 	"time"
 
 	"github.com/lemonyxk/console"
-	"github.com/lemonyxk/discover/app"
-	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/kitty"
 	"github.com/lemonyxk/kitty/socket"
 	client2 "github.com/lemonyxk/kitty/socket/websocket/client"
 )
 
-func New(serverList ...string) *Client {
+type Discover struct {
+	config     *Config
+	serverList []string
+}
 
-	if len(serverList) == 0 {
-		panic("server list is empty")
+func (d *Discover) Config(config *Config) {
+	d.config = config
+}
+
+func (d *Discover) Connect() *Client {
+	var client = &Client{
+		registerClose: make(chan struct{}, 1),
+		listenClose:   make(chan struct{}, 1),
+		config:        d.config,
 	}
 
-	var dis = &Client{}
-
-	for i := 0; i < len(serverList); i++ {
-		dis.serverList = append(dis.serverList, &message.Address{
-			Server: app.ParseAddr(serverList[i]),
+	for i := 0; i < len(d.serverList); i++ {
+		client.serverList = append(client.serverList, &message.Address{
+			Server: app.ParseAddr(d.serverList[i]),
 		})
 	}
 
-	dis.getMasterServer()
+	client.getMasterServer()
 
 	var wait sync.WaitGroup
 
 	wait.Add(2)
 
-	initRegister(dis, &wait)
+	initRegister(client, &wait)
 
-	initLister(dis, &wait)
+	initLister(client, &wait)
 
 	wait.Wait()
 
-	return dis
+	return client
+}
+
+func New(serverList ...string) *Discover {
+	if len(serverList) == 0 {
+		panic("server list is empty")
+	}
+
+	return &Discover{
+		serverList: serverList,
+	}
 }
 
 func initRegister(dis *Client, wait *sync.WaitGroup) {

@@ -29,7 +29,7 @@ func main() {
 	//
 	// console.Info(store.Parse(store.Build(c)))
 
-	var dis = discover.New("127.0.0.1:11002")
+	var dis = discover.New("127.0.0.1:11002").Connect()
 
 	var alive = dis.Alive("test", "test1")
 
@@ -43,7 +43,12 @@ func main() {
 		}
 	})
 
-	dis.Register("test", "127.0.0.1:1191poo1ii")
+	dis.Register(func() message.ServerInfo {
+		return message.ServerInfo{
+			Name: "test",
+			Addr: "127.0.0.1:1191poo1ii",
+		}
+	})
 
 	var key = dis.Key("test", "test1")
 
