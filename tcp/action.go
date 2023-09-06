@@ -74,7 +74,9 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 
 	console.Info("tcp server", stream.Conn().FD(), "register", data.Name, data.Addr)
 
-	return nil
+	stream.SetCode(200)
+
+	return stream.Emit("/Register", nil)
 }
 
 func (api *action) Update(stream *socket.Stream[server.Conn]) error {
@@ -116,7 +118,9 @@ func (api *action) Update(stream *socket.Stream[server.Conn]) error {
 
 	console.Info("tcp server", stream.Conn().FD(), "update", data.Name, data.Addr)
 
-	return nil
+	stream.SetCode(200)
+
+	return stream.Emit("/Update", nil)
 }
 
 func (api *action) Alive(stream *socket.Stream[server.Conn]) error {

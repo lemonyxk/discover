@@ -69,7 +69,6 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 			}
 
 			go func() {
-
 				if dis.config == nil || dis.config.AutoUpdateInterval == 0 {
 					return
 				}
@@ -96,7 +95,6 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 							console.Info(err)
 							continue
 						}
-
 						err = dis.register.Sender().Emit("/Update", bts)
 						if err != nil {
 							console.Info(err)

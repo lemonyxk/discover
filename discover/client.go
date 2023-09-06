@@ -85,7 +85,7 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 	dis.register = client
 
 	dis.register.OnOpen = func(conn client2.Conn) {
-		console.Errorf("register client open at: %s\n", dis.register.Addr)
+		console.Infof("register client open at: %s\n", dis.register.Addr)
 	}
 
 	dis.register.OnClose = func(conn client2.Conn) {
