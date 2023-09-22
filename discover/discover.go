@@ -65,9 +65,11 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 		dis.register.GetRouter().Remove("/Register")
 		dis.register.GetRouter().Route("/Register").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			if stream.Code() != 200 {
+				if string(stream.Data()) == "NOT MASTER" {
+					_ = dis.register.Close()
+				}
 				return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
 			}
-
 			go func() {
 				if dis.config == nil || dis.config.AutoUpdateInterval == 0 {
 					return
@@ -78,6 +80,9 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 				dis.register.GetRouter().Remove("/Update")
 				dis.register.GetRouter().Route("/Update").Handler(func(stream *socket.Stream[client2.Conn]) error {
 					if stream.Code() != 200 {
+						if string(stream.Data()) == "NOT MASTER" {
+							_ = dis.register.Close()
+						}
 						return errors.New(fmt.Sprintf("update error:%d %s", stream.Code(), stream.Data()))
 					}
 					return nil
@@ -148,6 +153,9 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 		w.client.register.GetRouter().Remove("/Alive")
 		w.client.register.GetRouter().Route("/Alive").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			if stream.Code() != 200 {
+				if string(stream.Data()) == "NOT MASTER" {
+					_ = w.client.register.Close()
+				}
 				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data()))
 			}
 			var res message.AliveResponse
