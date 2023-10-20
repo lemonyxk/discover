@@ -34,8 +34,8 @@ type node struct {
 	Store    *store.Store
 	Addr     *message.Server
 	Config   *Config
-	Client   *client2.Client
-	Server   *server.Server
+	Client   *client2.Client[any]
+	Server   *server.Server[any]
 	Register *register
 	Alive    *alive
 	Key      *key

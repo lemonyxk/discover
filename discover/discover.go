@@ -36,8 +36,8 @@ type Client struct {
 
 	serverList []*message.Address
 	master     *message.Server
-	register   *client2.Client
-	listen     *client2.Client
+	register   *client2.Client[any]
+	listen     *client2.Client[any]
 
 	registerFn func()
 	aliveFn    func()

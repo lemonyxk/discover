@@ -16,14 +16,14 @@ import (
 	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
 
-func Router(s *router.Router[*socket.Stream[server.Conn]]) {
-	s.Group().Before(Middleware.isMaster).Handler(func(handler *router.Handler[*socket.Stream[server.Conn]]) {
+func Router(s *router.Router[*socket.Stream[server.Conn], any]) {
+	s.Group().Before(Middleware.isMaster).Handler(func(handler *router.Handler[*socket.Stream[server.Conn], any]) {
 		handler.Route("/Register").Handler(Action.Register)
 		handler.Route("/Update").Handler(Action.Update)
 		handler.Route("/Alive").Handler(Action.Alive)
 	})
 
-	s.Group().Before(Middleware.isReady).Handler(func(handler *router.Handler[*socket.Stream[server.Conn]]) {
+	s.Group().Before(Middleware.isReady).Handler(func(handler *router.Handler[*socket.Stream[server.Conn], any]) {
 		handler.Route("/Key").Handler(Action.Key)
 	})
 }

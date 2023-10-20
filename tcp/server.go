@@ -24,7 +24,7 @@ import (
 
 func Start(host string, fn func()) {
 
-	var tcpServer = server.Server{Name: host, Addr: host, HeartBeatTimeout: 6 * time.Second}
+	var tcpServer = server.Server[any]{Name: host, Addr: host, HeartBeatTimeout: 6 * time.Second}
 
 	tcpServer.OnClose = func(conn server.Conn) {
 
@@ -79,7 +79,7 @@ func Start(host string, fn func()) {
 		console.Info("tcp server", conn.FD(), "open")
 	}
 
-	var router = kitty.NewWebSocketServerRouter()
+	var router = kitty.NewWebSocketServerRouter[any]()
 
 	Router(router)
 

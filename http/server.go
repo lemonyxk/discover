@@ -19,9 +19,9 @@ import (
 
 func Start(host string, fn func()) {
 
-	var httpServer = server.Server{Addr: host}
+	var httpServer = server.Server[any]{Addr: host}
 
-	var router = kitty.NewHttpServerRouter()
+	var router = kitty.NewHttpServerRouter[any]()
 
 	Router(router)
 
