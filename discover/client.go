@@ -75,7 +75,7 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 
 	var isStart int32 = 0
 
-	var client = &client2.Client{
+	var client = &client2.Client[any]{
 		Addr:              "ws://" + dis.master.Tcp,
 		HeartBeatTimeout:  6 * time.Second,
 		HeartBeatInterval: 1 * time.Second,
@@ -116,7 +116,7 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 		}
 	}
 
-	var r = kitty.NewWebSocketClientRouter()
+	var r = kitty.NewWebSocketClientRouter[any]()
 
 	dis.register.SetRouter(r)
 
@@ -127,7 +127,7 @@ func initLister(dis *Client, wait *sync.WaitGroup) {
 
 	var isStart int32 = 0
 
-	var client = &client2.Client{
+	var client = &client2.Client[any]{
 		Addr:              "ws://" + dis.randomAddr().Tcp,
 		HeartBeatTimeout:  3 * time.Second,
 		HeartBeatInterval: 1 * time.Second,
@@ -165,7 +165,7 @@ func initLister(dis *Client, wait *sync.WaitGroup) {
 		}
 	}
 
-	var r = kitty.NewWebSocketClientRouter()
+	var r = kitty.NewWebSocketClientRouter[any]()
 
 	dis.listen.SetRouter(r)
 
