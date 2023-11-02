@@ -37,20 +37,19 @@ type Client struct {
 	serverList []*message.Address
 	master     *message.Server
 	register   *client2.Client[any]
-	listen     *client2.Client[any]
 
 	registerFn func()
 	aliveFn    func()
 	listenFn   func()
 
 	registerClose chan struct{}
-	listenClose   chan struct{}
 }
 
-type Alive struct {
-	client  *Client
-	list    []string
-	onClose func()
+func (dis *Client) OnClose(fn func()) {
+	dis.register.OnClose = func(conn client2.Conn) {
+		dis.registerClose <- struct{}{}
+		fn()
+	}
 }
 
 func (dis *Client) Register(fn func() message.ServerInfo) {
@@ -69,9 +68,6 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 					if dis.register != nil {
 						_ = dis.register.Close()
 					}
-					if dis.listen != nil {
-						_ = dis.listen.Close()
-					}
 				}
 				return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
 			}
@@ -86,9 +82,11 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 				dis.register.GetRouter().Route("/Update").Handler(func(stream *socket.Stream[client2.Conn]) error {
 					if stream.Code() != 200 {
 						if string(stream.Data()) == "NOT MASTER" {
-							_ = dis.register.Close()
+							if dis.register != nil {
+								_ = dis.register.Close()
+							}
 						}
-						return errors.New(fmt.Sprintf("update error:%d %s", stream.Code(), stream.Data()))
+						return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
 					}
 					return nil
 				})
@@ -136,6 +134,12 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 	dis.registerFn()
 }
 
+type Alive struct {
+	client  *Client
+	list    []string
+	onClose func()
+}
+
 func (dis *Client) Alive(serverList ...string) *Alive {
 
 	if atomic.AddInt32(&hasAlive, 1) > 1 {
@@ -161,9 +165,6 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 				if string(stream.Data()) == "NOT MASTER" {
 					if w.client.register != nil {
 						_ = w.client.register.Close()
-					}
-					if w.client.listen != nil {
-						_ = w.client.listen.Close()
 					}
 				}
 				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data()))
@@ -196,13 +197,6 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 	w.client.aliveFn()
 }
 
-func (w *Alive) OnClose(fn func()) {
-	w.client.register.OnClose = func(conn client2.Conn) {
-		w.client.registerClose <- struct{}{}
-		fn()
-	}
-}
-
 type KeyList struct {
 	dis     *Client
 	list    []string
@@ -228,20 +222,21 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 	}
 
 	k.dis.listenFn = func() {
-		k.dis.listen.GetRouter().Remove("/Key")
-		k.dis.listen.GetRouter().Route("/Key").Handler(func(stream *socket.Stream[client2.Conn]) error {
+		k.dis.register.GetRouter().Remove("/Key")
+		k.dis.register.GetRouter().Route("/Key").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			if stream.Code() != 200 {
-				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data()))
+				if string(stream.Data()) == "NOT MASTER" {
+					if k.dis.register != nil {
+						_ = k.dis.register.Close()
+					}
+				}
+				return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
 			}
 			msg, err := store.Parse(stream.Data())
 			if err != nil {
 				return errors.New(err)
 			}
 			fn(msg)
-
-			go func() {
-				<-k.dis.listenClose // wait listen close and do something
-			}()
 
 			return nil
 		})
@@ -254,7 +249,7 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 			return
 		}
 
-		err = k.dis.listen.Sender().Emit("/Key", bts)
+		err = k.dis.register.Sender().Emit("/Key", bts)
 		if err != nil {
 			console.Info(err)
 			time.Sleep(time.Second)
@@ -266,21 +261,8 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 	k.dis.listenFn()
 }
 
-func (k *KeyList) OnClose(fn func()) {
-	k.dis.listen.OnClose = func(conn client2.Conn) {
-		k.dis.listenClose <- struct{}{}
-		fn()
-	}
-}
-
 func (dis *Client) refreshMaster() {
 	var register = dis.getMasterServer()
 	dis.register.Addr = "ws://" + register.Tcp
 	console.Info("new register addr:", register.Addr)
-}
-
-func (dis *Client) refreshCluster() {
-	var listen = dis.randomAddr()
-	dis.listen.Addr = "ws://" + listen.Tcp
-	console.Info("new listen addr:", listen.Addr)
 }

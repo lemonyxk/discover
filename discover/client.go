@@ -36,7 +36,6 @@ func (d *Discover) Config(config *Config) *Discover {
 func (d *Discover) Connect() *Client {
 	var client = &Client{
 		registerClose: make(chan struct{}, 1),
-		listenClose:   make(chan struct{}, 1),
 		config:        d.config,
 	}
 
@@ -50,11 +49,9 @@ func (d *Discover) Connect() *Client {
 
 	var wait sync.WaitGroup
 
-	wait.Add(2)
+	wait.Add(1)
 
 	initRegister(client, &wait)
-
-	initLister(client, &wait)
 
 	wait.Wait()
 
@@ -114,52 +111,6 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 		if dis.aliveFn != nil {
 			go dis.aliveFn()
 		}
-	}
-
-	var r = kitty.NewWebSocketClientRouter[any]()
-
-	dis.register.SetRouter(r)
-
-	go dis.register.Connect()
-}
-
-func initLister(dis *Client, wait *sync.WaitGroup) {
-
-	var isStart int32 = 0
-
-	var client = &client2.Client[any]{
-		Addr:              "ws://" + dis.randomAddr().Tcp,
-		HeartBeatTimeout:  3 * time.Second,
-		HeartBeatInterval: 1 * time.Second,
-		ReconnectInterval: 1 * time.Second,
-	}
-
-	dis.listen = client
-
-	dis.listen.OnOpen = func(conn client2.Conn) {
-		console.Infof("listen client open at: %s\n", dis.listen.Addr)
-	}
-
-	dis.listen.OnClose = func(conn client2.Conn) {
-		console.Infof("listen client close at: %s\n", dis.listen.Addr)
-	}
-
-	dis.listen.OnError = func(stream *socket.Stream[client2.Conn], err error) {
-		console.Errorf("listen client error: %+v\n", err)
-	}
-
-	dis.listen.OnException = func(err error) {
-		console.Errorf("listen client exception: %+v\n", err)
-	}
-
-	dis.listen.OnReconnecting = func() {
-		dis.refreshCluster()
-	}
-
-	dis.listen.OnSuccess = func() {
-		if atomic.AddInt32(&isStart, 1) == 1 {
-			wait.Add(-1)
-		}
 		if dis.listenFn != nil {
 			go dis.listenFn()
 		}
@@ -167,7 +118,7 @@ func initLister(dis *Client, wait *sync.WaitGroup) {
 
 	var r = kitty.NewWebSocketClientRouter[any]()
 
-	dis.listen.SetRouter(r)
+	dis.register.SetRouter(r)
 
-	go dis.listen.Connect()
+	go dis.register.Connect()
 }

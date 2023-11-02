@@ -31,11 +31,11 @@ func main() {
 
 	var dis = discover.New("127.0.0.1:11002").Connect()
 
-	var alive = dis.Alive("test", "test1")
-
-	alive.OnClose(func() {
+	dis.OnClose(func() {
 		console.Info("alive close")
 	})
+
+	var alive = dis.Alive("test", "test1")
 
 	alive.Watch(func(name string, serverInfo []*message.ServerInfo) {
 		for i := 0; i < len(serverInfo); i++ {
@@ -51,10 +51,6 @@ func main() {
 	})
 
 	var key = dis.Key("test", "test1")
-
-	key.OnClose(func() {
-		console.Info("key close")
-	})
 
 	key.Watch(func(message *store.Message) {
 		console.Infof("%+v\n", message)
