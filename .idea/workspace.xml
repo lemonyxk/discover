@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b9bbf93-090f-4100-b063-0a9288e65d86" name="Default Changelist" comment="" />
+    <list default="true" id="1b9bbf93-090f-4100-b063-0a9288e65d86" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/discover/discover.go" beforeDir="false" afterPath="$PROJECT_DIR$/discover/discover.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -159,7 +161,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-fa944a366e83-dfeaa18eee3a-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-233.9802.16" />
+        <option value="bundled-gosdk-e6de5fef99a4-91e4cb603404-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-233.10527.20" />
       </set>
     </attachedChunks>
   </component>

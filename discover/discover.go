@@ -66,7 +66,12 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 		dis.register.GetRouter().Route("/Register").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			if stream.Code() != 200 {
 				if string(stream.Data()) == "NOT MASTER" {
-					_ = dis.register.Close()
+					if dis.register != nil {
+						_ = dis.register.Close()
+					}
+					if dis.listen != nil {
+						_ = dis.listen.Close()
+					}
 				}
 				return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
 			}
@@ -154,7 +159,12 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 		w.client.register.GetRouter().Route("/Alive").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			if stream.Code() != 200 {
 				if string(stream.Data()) == "NOT MASTER" {
-					_ = w.client.register.Close()
+					if w.client.register != nil {
+						_ = w.client.register.Close()
+					}
+					if w.client.listen != nil {
+						_ = w.client.listen.Close()
+					}
 				}
 				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data()))
 			}
@@ -221,7 +231,15 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 		k.dis.listen.GetRouter().Remove("/Key")
 		k.dis.listen.GetRouter().Route("/Key").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			if stream.Code() != 200 {
-				return errors.New(stream.Code())
+				if string(stream.Data()) == "NOT MASTER" {
+					if k.dis.register != nil {
+						_ = k.dis.register.Close()
+					}
+					if k.dis.listen != nil {
+						_ = k.dis.listen.Close()
+					}
+				}
+				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data()))
 			}
 			msg, err := store.Parse(stream.Data())
 			if err != nil {
