@@ -231,14 +231,6 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 		k.dis.listen.GetRouter().Remove("/Key")
 		k.dis.listen.GetRouter().Route("/Key").Handler(func(stream *socket.Stream[client2.Conn]) error {
 			if stream.Code() != 200 {
-				if string(stream.Data()) == "NOT MASTER" {
-					if k.dis.register != nil {
-						_ = k.dis.register.Close()
-					}
-					if k.dis.listen != nil {
-						_ = k.dis.listen.Close()
-					}
-				}
 				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data()))
 			}
 			msg, err := store.Parse(stream.Data())
