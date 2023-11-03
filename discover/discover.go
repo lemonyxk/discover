@@ -43,13 +43,25 @@ type Client struct {
 	listenFn   func()
 
 	registerClose chan struct{}
+
+	openFn  func()
+	closeFn func()
+	errorFn func(err error)
 }
 
 func (dis *Client) OnClose(fn func()) {
-	dis.register.OnClose = func(conn client2.Conn) {
+	dis.closeFn = func() {
 		dis.registerClose <- struct{}{}
 		fn()
 	}
+}
+
+func (dis *Client) OnOpen(fn func()) {
+	dis.openFn = fn
+}
+
+func (dis *Client) OnError(fn func(err error)) {
+	dis.errorFn = fn
 }
 
 func (dis *Client) Register(fn func() message.ServerInfo) {
@@ -71,6 +83,9 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 				}
 				return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
 			}
+
+			console.Info("register success")
+
 			go func() {
 				if dis.config == nil || dis.config.AutoUpdateInterval == 0 {
 					return
@@ -230,7 +245,7 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 						_ = k.dis.register.Close()
 					}
 				}
-				return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
+				return errors.New(fmt.Sprintf("key error:%d %s", stream.Code(), stream.Data()))
 			}
 			msg, err := store.Parse(stream.Data())
 			if err != nil {

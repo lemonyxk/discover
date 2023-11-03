@@ -82,15 +82,27 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 	dis.register = client
 
 	dis.register.OnOpen = func(conn client2.Conn) {
-		console.Infof("register client open at: %s\n", dis.register.Addr)
+		if dis.openFn != nil {
+			dis.openFn()
+		} else {
+			console.Infof("register client open at: %s\n", dis.register.Addr)
+		}
 	}
 
 	dis.register.OnClose = func(conn client2.Conn) {
-		console.Infof("register client close at: %s\n", dis.register.Addr)
+		if dis.closeFn != nil {
+			dis.closeFn()
+		} else {
+			console.Infof("register client close at: %s\n", dis.register.Addr)
+		}
 	}
 
 	dis.register.OnError = func(stream *socket.Stream[client2.Conn], err error) {
-		console.Infof("register client error: %+v\n", err)
+		if dis.errorFn != nil {
+			dis.errorFn(err)
+		} else {
+			console.Infof("register client error: %+v\n", err)
+		}
 	}
 
 	dis.register.OnException = func(err error) {
