@@ -91,8 +91,6 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 					return
 				}
 
-				var ticker = time.NewTicker(dis.config.AutoUpdateInterval)
-
 				dis.register.GetRouter().Remove("/Update")
 				dis.register.GetRouter().Route("/Update").Handler(func(stream *socket.Stream[client2.Conn]) error {
 					if stream.Code() != 200 {
@@ -105,6 +103,8 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 					}
 					return nil
 				})
+
+				var ticker = time.NewTicker(dis.config.AutoUpdateInterval)
 
 				for {
 					select {
@@ -125,7 +125,6 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 						}
 					}
 				}
-
 			}()
 
 			return nil
