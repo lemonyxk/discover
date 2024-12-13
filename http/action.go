@@ -12,9 +12,7 @@ package http
 
 import (
 	"bytes"
-
 	"fmt"
-
 	"github.com/lemonyxk/kitty/socket/http/server"
 	"io"
 	"net"
@@ -182,13 +180,19 @@ func (api *action) Get(stream *http.Stream[server.Conn]) error {
 }
 
 func (api *action) All(stream *http.Stream[server.Conn]) error {
-	stream.Parser.Auto()
+
 	var list = app.Node.Store.All()
-	bts, err := json.Marshal(list)
-	if err != nil {
-		return api.Failed(stream, err.Error())
+
+	var buf = new(bytes.Buffer)
+
+	for i := 0; i < len(list); i++ {
+		buf.WriteString(list[i].Key)
+		buf.WriteString("\t")
+		buf.Write(list[i].Value)
+		buf.WriteString("\r\n")
 	}
-	return api.Success(stream, bts)
+
+	return api.Success(stream, buf.Bytes())
 }
 
 func (api *action) Set(stream *http.Stream[server.Conn]) error {

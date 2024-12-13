@@ -76,6 +76,10 @@ func main() {
 		console.Info(dis.Get("test1"))
 	})
 
+	time.AfterFunc(3*time.Second, func() {
+		console.Info(dis.Get("test2"))
+	})
+
 	time.AfterFunc(2*time.Second, func() {
 		var all, err = dis.All()
 		if err != nil {

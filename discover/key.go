@@ -12,7 +12,6 @@ package discover
 
 import (
 	"bytes"
-
 	"github.com/lemonyxk/kitty/errors"
 	"github.com/lemonyxk/kitty/socket/http/client"
 )

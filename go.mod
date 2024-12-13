@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/raft v1.5.0
 	github.com/lemonyxk/console v0.0.0-20230712071747-b48fc1b65fb2
 	github.com/lemonyxk/exception v0.0.0-20220526113322-a27eb8cdffce
-	github.com/lemonyxk/kitty v0.0.0-20241213095835-386c19d464a5
+	github.com/lemonyxk/kitty v0.0.0-20241213170018-596a2cb8d2bc
 	github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095
 	github.com/lemonyxk/utils v0.0.0-20241211130741-fdca16b130ad
 )
@@ -38,7 +38,6 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/savsgio/gotils v0.0.0-20240704082632-aef3928b8a38 // indirect
