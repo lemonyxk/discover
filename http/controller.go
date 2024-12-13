@@ -11,7 +11,7 @@
 package http
 
 import (
-	jsoniter "github.com/json-iterator/go"
+	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/kitty/socket/http"
 	"github.com/lemonyxk/kitty/socket/http/server"
 )
@@ -26,7 +26,7 @@ func (c *Controller) WithCode(stream *http.Stream[server.Conn], code int, msg an
 	case string:
 		return stream.Sender.String(v)
 	}
-	var bts, err = jsoniter.Marshal(msg)
+	var bts, err = json.Marshal(msg)
 	if err != nil {
 		return err
 	}

@@ -15,7 +15,7 @@ import (
 	"github.com/lemonyxk/utils/rand"
 	"time"
 
-	jsoniter "github.com/json-iterator/go"
+	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/kitty/socket/http/client"
@@ -40,7 +40,7 @@ func (dis *Client) getServerList() []*message.Address {
 	}
 
 	var addr []*message.Address
-	var err = jsoniter.Unmarshal(res.Bytes(), &addr)
+	var err = json.Unmarshal(res.Bytes(), &addr)
 	if err != nil {
 		console.Error(err)
 		time.Sleep(time.Millisecond * 1000)

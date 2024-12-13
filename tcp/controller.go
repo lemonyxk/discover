@@ -11,7 +11,7 @@
 package tcp
 
 import (
-	jsoniter "github.com/json-iterator/go"
+	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/kitty/socket"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
 )
@@ -26,7 +26,7 @@ func (c *Controller) WithCode(sender socket.Emitter[server.Conn], event string, 
 	case string:
 		return sender.Emit(event, []byte(v))
 	}
-	var bts, err = jsoniter.Marshal(msg)
+	var bts, err = json.Marshal(msg)
 	if err != nil {
 		return err
 	}

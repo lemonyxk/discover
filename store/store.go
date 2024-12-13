@@ -9,6 +9,7 @@ package store
 
 import (
 	"fmt"
+	json "github.com/bytedance/sonic"
 	"io"
 	"net"
 	"os"
@@ -18,7 +19,6 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/raft"
-	jsoniter "github.com/json-iterator/go"
 	"github.com/lemonyxk/console"
 )
 
@@ -407,7 +407,7 @@ func (f *fsm) Snapshot() (raft.FSMSnapshot, error) {
 // Restore stores the key-value store to a previous state.
 func (f *fsm) Restore(rc io.ReadCloser) error {
 	o := make(map[string][]byte)
-	if err := jsoniter.NewDecoder(rc).Decode(&o); err != nil {
+	if err := json.ConfigDefault.NewDecoder(rc).Decode(&o); err != nil {
 		return err
 	}
 
@@ -445,7 +445,7 @@ type fsmSnapshot struct {
 func (f *fsmSnapshot) Persist(sink raft.SnapshotSink) error {
 	err := func() error {
 		// Encode data.
-		b, err := jsoniter.Marshal(f.store)
+		b, err := json.Marshal(f.store)
 		if err != nil {
 			return err
 		}

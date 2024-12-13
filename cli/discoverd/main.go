@@ -11,9 +11,10 @@
 package main
 
 import (
+	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/utils/args"
 	file2 "github.com/lemonyxk/utils/file"
-	"github.com/lemonyxk/utils/json"
+
 	"os"
 
 	"github.com/lemonyxk/console"
@@ -42,7 +43,7 @@ func main() {
 		if file.Error() != nil {
 			console.Exit(file)
 		}
-		err = json.Decode(file.Bytes(), &config)
+		err = json.Unmarshal(file.Bytes(), &config)
 		if err != nil {
 			console.Exit(err)
 		}

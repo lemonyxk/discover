@@ -15,7 +15,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	jsoniter "github.com/json-iterator/go"
+	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/discover/store"
@@ -113,7 +113,7 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 						return
 					case <-ticker.C:
 						var info = fn()
-						var bts, err = jsoniter.Marshal(info)
+						var bts, err = json.Marshal(info)
 						if err != nil {
 							console.Info(err)
 							continue
@@ -129,7 +129,7 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 
 			return nil
 		})
-		var bts, err = jsoniter.Marshal(info)
+		var bts, err = json.Marshal(info)
 		if err != nil {
 			console.Info(err)
 			time.Sleep(time.Second)
@@ -184,7 +184,7 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 				return errors.New(fmt.Sprintf("alive error:%d %s", stream.Code(), stream.Data()))
 			}
 			var res message.AliveResponse
-			var err = jsoniter.Unmarshal(stream.Data(), &res)
+			var err = json.Unmarshal(stream.Data(), &res)
 			if err != nil {
 				return errors.New(err)
 			}
@@ -192,7 +192,7 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 			return nil
 		})
 
-		var bts, err = jsoniter.Marshal(w.list)
+		var bts, err = json.Marshal(w.list)
 		if err != nil {
 			console.Info(err)
 			time.Sleep(time.Second)
@@ -255,7 +255,7 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 			return nil
 		})
 
-		var bts, err = jsoniter.Marshal(k.list)
+		var bts, err = json.Marshal(k.list)
 		if err != nil {
 			console.Info(err)
 			time.Sleep(time.Second)

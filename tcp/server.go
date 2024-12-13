@@ -11,9 +11,9 @@
 package tcp
 
 import (
+	json "github.com/bytedance/sonic"
 	"time"
 
-	jsoniter "github.com/json-iterator/go"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/discover/message"
@@ -57,7 +57,7 @@ func Start(host string, fn func()) {
 			var connections = app.Node.Alive.GetConn(data.ServerInfo.Name)
 			for i := 0; i < len(connections); i++ {
 				connections[i].SetCode(200)
-				var bts, err = jsoniter.Marshal(message.AliveResponse{Name: data.ServerInfo.Name, ServerInfoList: list})
+				var bts, err = json.Marshal(message.AliveResponse{Name: data.ServerInfo.Name, ServerInfoList: list})
 				if err != nil {
 					console.Error(err)
 					continue

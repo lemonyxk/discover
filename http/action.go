@@ -12,13 +12,14 @@ package http
 
 import (
 	"bytes"
-	"encoding/json"
+
 	"fmt"
+
 	"github.com/lemonyxk/kitty/socket/http/server"
 	"io"
 	"net"
 
-	jsoniter "github.com/json-iterator/go"
+	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/kitty/socket/http"
@@ -44,7 +45,7 @@ func (api *action) Joins(stream *http.Stream[server.Conn]) error {
 		return api.Failed(stream, err.Error())
 	}
 
-	err = jsoniter.Unmarshal(all, &addr)
+	err = json.Unmarshal(all, &addr)
 	if err != nil {
 		return api.Failed(stream, err.Error())
 	}
@@ -183,48 +184,10 @@ func (api *action) Get(stream *http.Stream[server.Conn]) error {
 func (api *action) All(stream *http.Stream[server.Conn]) error {
 	stream.Parser.Auto()
 	var list = app.Node.Store.All()
-	var format = stream.Query.First("format").String()
-	var bts []byte
-	var err error
-	switch format {
-	case "text":
-		var buf = bytes.NewBuffer(nil)
-		for i := 0; i < len(list); i++ {
-			buf.WriteString(list[i].Key)
-			buf.WriteString("\r\n")
-			if jsoniter.Valid(list[i].Value) {
-				var bf = bytes.NewBuffer(nil)
-				err = json.Indent(bf, list[i].Value, "", "    ")
-				if err != nil {
-					return api.Failed(stream, err.Error())
-				}
-				buf.WriteString(bf.String())
-			} else {
-				buf.Write(list[i].Value)
-			}
-
-			buf.WriteString("\r\n\r\n")
-		}
-		bts = buf.Bytes()
-	default:
-		bts, err = jsoniter.Marshal(list)
-		if err != nil {
-			return api.Failed(stream, err.Error())
-		}
-		var buf = bytes.NewBuffer(nil)
-		err := json.Compact(buf, bts)
-		if err != nil {
-			return api.Success(stream, bts)
-		}
-		bts = buf.Bytes()
-		buf = bytes.NewBuffer(nil)
-		err = json.Indent(buf, bts, "", "    ")
-		if err != nil {
-			return api.Failed(stream, err.Error())
-		}
-		bts = buf.Bytes()
+	bts, err := json.Marshal(list)
+	if err != nil {
+		return api.Failed(stream, err.Error())
 	}
-
 	return api.Success(stream, bts)
 }
 
@@ -274,7 +237,7 @@ func (api *action) SetMulti(stream *http.Stream[server.Conn]) error {
 	}
 
 	var res []store.KV
-	err = jsoniter.Unmarshal(value, &res)
+	err = json.Unmarshal(value, &res)
 	if err != nil {
 		return api.Failed(stream, err.Error())
 	}

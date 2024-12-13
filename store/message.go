@@ -13,8 +13,7 @@ package store
 import (
 	"encoding/binary"
 	"errors"
-
-	jsoniter "github.com/json-iterator/go"
+	json "github.com/bytedance/sonic"
 )
 
 var ErrInvalidMessage = errors.New("invalid message")
@@ -28,8 +27,8 @@ const (
 )
 
 type KV struct {
-	Key   string              `json:"key"`
-	Value jsoniter.RawMessage `json:"value"`
+	Key   string                `json:"key"`
+	Value json.NoCopyRawMessage `json:"value"`
 }
 
 type Message struct {

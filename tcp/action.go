@@ -11,7 +11,7 @@
 package tcp
 
 import (
-	jsoniter "github.com/json-iterator/go"
+	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/discover/message"
@@ -34,7 +34,7 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 
 	var data message.ServerInfo
 
-	var err = jsoniter.Unmarshal(stream.Data(), &data)
+	var err = json.Unmarshal(stream.Data(), &data)
 	if err != nil {
 		return api.Failed(stream, stream.Event(), err.Error())
 	}
@@ -61,7 +61,7 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 	var connections = app.Node.Alive.GetConn(data.Name)
 	for i := 0; i < len(connections); i++ {
 		connections[i].SetCode(200)
-		var bts, err = jsoniter.Marshal(message.AliveResponse{Name: data.Name, ServerInfoList: list})
+		var bts, err = json.Marshal(message.AliveResponse{Name: data.Name, ServerInfoList: list})
 		if err != nil {
 			console.Error(err)
 			continue
@@ -86,7 +86,7 @@ func (api *action) Update(stream *socket.Stream[server.Conn]) error {
 
 	var data message.ServerInfo
 
-	var err = jsoniter.Unmarshal(stream.Data(), &data)
+	var err = json.Unmarshal(stream.Data(), &data)
 	if err != nil {
 		return api.Failed(stream, stream.Event(), err.Error())
 	}
@@ -105,7 +105,7 @@ func (api *action) Update(stream *socket.Stream[server.Conn]) error {
 	var connections = app.Node.Alive.GetConn(data.Name)
 	for i := 0; i < len(connections); i++ {
 		connections[i].SetCode(200)
-		var bts, err = jsoniter.Marshal(message.AliveResponse{Name: data.Name, ServerInfoList: list})
+		var bts, err = json.Marshal(message.AliveResponse{Name: data.Name, ServerInfoList: list})
 		if err != nil {
 			console.Error(err)
 			continue
@@ -131,7 +131,7 @@ func (api *action) Alive(stream *socket.Stream[server.Conn]) error {
 
 	var list []string
 
-	var err = jsoniter.Unmarshal(stream.Data(), &list)
+	var err = json.Unmarshal(stream.Data(), &list)
 	if err != nil {
 		return api.Failed(stream, stream.Event(), err.Error())
 	}
@@ -162,7 +162,7 @@ func (api *action) Alive(stream *socket.Stream[server.Conn]) error {
 		}
 
 		stream.SetCode(200)
-		var bts, err = jsoniter.Marshal(message.AliveResponse{Name: list[i], ServerInfoList: info})
+		var bts, err = json.Marshal(message.AliveResponse{Name: list[i], ServerInfoList: info})
 		if err != nil {
 			console.Error(err)
 			continue
@@ -183,7 +183,7 @@ func (api *action) Key(stream *socket.Stream[server.Conn]) error {
 
 	var list []string
 
-	var err = jsoniter.Unmarshal(stream.Data(), &list)
+	var err = json.Unmarshal(stream.Data(), &list)
 	if err != nil {
 		return api.Failed(stream, stream.Event(), err.Error())
 	}

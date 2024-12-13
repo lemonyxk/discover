@@ -12,6 +12,7 @@ package http
 
 import (
 	"errors"
+	"github.com/lemonyxk/kitty/kitty/header"
 	"github.com/lemonyxk/kitty/socket/http/server"
 	"github.com/lemonyxk/utils/address"
 
@@ -26,11 +27,13 @@ type middleware struct {
 }
 
 func (api *middleware) secret(stream *http.Stream[server.Conn]) error {
-	var secret = stream.AutoGet("secret").String()
-	if app.Node.Config.Secret != secret {
-		var msg = "NO PERMISSION"
-		_ = api.Forbidden(stream, msg)
-		return errors.New(msg)
+	if app.Node.Config.Secret != "" {
+		var secret = stream.Request.Header.Get(header.Authorization)
+		if secret != app.Node.Config.Secret {
+			var msg = "NO PERMISSION"
+			_ = api.Forbidden(stream, msg)
+			return errors.New(msg)
+		}
 	}
 	return nil
 }
