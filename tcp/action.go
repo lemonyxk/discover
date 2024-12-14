@@ -11,12 +11,12 @@
 package tcp
 
 import (
-	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/discover/structs"
+	json "github.com/lemonyxk/kitty/js
 	"github.com/lemonyxk/kitty/socket"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
 )

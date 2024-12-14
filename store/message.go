@@ -13,7 +13,7 @@ package store
 import (
 	"encoding/binary"
 	"errors"
-	json "github.com/bytedance/sonic"
+	json "github.com/lemonyxk/kitty/json"
 )
 
 var ErrInvalidMessage = errors.New("invalid message")
@@ -27,8 +27,8 @@ const (
 )
 
 type KV struct {
-	Key   string                `json:"key"`
-	Value json.NoCopyRawMessage `json:"value"`
+	Key   string          `json:"key"`
+	Value json.RawMessage `json:"value"`
 }
 
 type Message struct {

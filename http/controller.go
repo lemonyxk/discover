@@ -11,7 +11,7 @@
 package http
 
 import (
-	json "github.com/bytedance/sonic"
+	json "github.com/lemonyxk/kitty/json"
 	"github.com/lemonyxk/kitty/socket/http"
 	"github.com/lemonyxk/kitty/socket/http/server"
 )

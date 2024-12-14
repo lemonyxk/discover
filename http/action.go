@@ -17,9 +17,10 @@ import (
 	"io"
 	"net"
 
-	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/discover/app"
 	"github.com/lemonyxk/discover/store"
+	json "github.com/lemonyxk/kitty/json"
+	
 	"github.com/lemonyxk/kitty/socket/http"
 	"github.com/lemonyxk/kitty/socket/http/client"
 )

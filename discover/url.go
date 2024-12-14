@@ -15,9 +15,9 @@ import (
 	"github.com/lemonyxk/utils/rand"
 	"time"
 
-	json "github.com/bytedance/sonic"
 	"github.com/lemonyxk/console"
 	"github.com/lemonyxk/discover/message"
+	json "github.com/lemonyxk/kitty/json"
 	"github.com/lemonyxk/kitty/socket/http/client"
 )
 

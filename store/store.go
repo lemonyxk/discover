@@ -9,7 +9,7 @@ package store
 
 import (
 	"fmt"
-	json "github.com/bytedance/sonic"
+	json "github.com/lemonyxk/kitty/json"
 	"io"
 	"net"
 	"os"
@@ -407,7 +407,7 @@ func (f *fsm) Snapshot() (raft.FSMSnapshot, error) {
 // Restore stores the key-value store to a previous state.
 func (f *fsm) Restore(rc io.ReadCloser) error {
 	o := make(map[string][]byte)
-	if err := json.ConfigDefault.NewDecoder(rc).Decode(&o); err != nil {
+	if err := json.NewDecoder(rc).Decode(&o); err != nil {
 		return err
 	}
 

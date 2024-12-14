@@ -11,7 +11,7 @@
 package main
 
 import (
-	json "github.com/bytedance/sonic"
+	json "github.com/lemonyxk/kitty/json"
 	"github.com/lemonyxk/utils/args"
 	file2 "github.com/lemonyxk/utils/file"
 	"os"

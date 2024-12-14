@@ -11,7 +11,7 @@
 package tcp
 
 import (
-	json "github.com/bytedance/sonic"
+	json "github.com/lemonyxk/kitty/json"
 	"time"
 
 	"github.com/lemonyxk/console"
