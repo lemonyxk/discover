@@ -16,7 +16,7 @@ import (
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/discover/structs"
-	json "github.com/lemonyxk/kitty/js
+	json "github.com/lemonyxk/kitty/json"
 	"github.com/lemonyxk/kitty/socket"
 	"github.com/lemonyxk/kitty/socket/websocket/server"
 )

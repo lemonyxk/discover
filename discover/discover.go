@@ -12,6 +12,7 @@ package discover
 
 import (
 	"fmt"
+	"github.com/lemonyxk/kitty/json"
 	"sync/atomic"
 	"time"
 
@@ -19,7 +20,6 @@ import (
 	"github.com/lemonyxk/discover/message"
 	"github.com/lemonyxk/discover/store"
 	"github.com/lemonyxk/kitty/errors"
-	json "github.com/lemonyxk/kitty/js
 	"github.com/lemonyxk/kitty/socket"
 	client2 "github.com/lemonyxk/kitty/socket/websocket/client"
 )
