@@ -43,7 +43,7 @@ func LoseLeader(leader raft.LeaderObservation) {
 	Node.Server.Range(func(conn server.Conn) {
 		var err = conn.Close()
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("node close conn error: %s", err)
 		}
 	})
 
@@ -52,7 +52,7 @@ func LoseLeader(leader raft.LeaderObservation) {
 	Node.Register.Destroy()
 	Node.Key.Destroy()
 
-	console.Warning("LoseLeader addr:", Node.Addr.Addr, "leader:", leader.LeaderID, "master:", Node.IsMaster())
+	console.Warn.Logf("LoseLeader addr: %s leader: %s master: %v", Node.Addr.Addr, leader.Leader, Node.IsMaster())
 }
 
 func NewLeader(leader raft.LeaderObservation) {
@@ -62,12 +62,12 @@ func NewLeader(leader raft.LeaderObservation) {
 
 	}
 
-	console.Warning("NewLeader addr:", Node.Addr.Addr, "leader:", leader.LeaderID, "master:", Node.IsMaster())
+	console.Warn.Logf("NewLeader addr: %s leader: %s master: %v", Node.Addr.Addr, leader.Leader, Node.IsMaster())
 }
 
 // OnPeerChange YOU GOT PEER CHANGE
 func (n *node) OnPeerChange(peer raft.PeerObservation) {
-	console.Warning("OnPeerChange peer:", peer.Peer, "remove:", peer.Removed)
+	console.Warn.Logf("OnPeerChange peer: %s remove: %v", peer.Peer, peer.Removed)
 }
 
 // OnKeyChange YOU GOT KEY CHANGE
@@ -81,9 +81,9 @@ func (n *node) OnKeyChange(op *store.Message) {
 		sender.SetCode(200)
 		var err = sender.Emit("/Key", store.Build(op))
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("OnKeyChange error: %s", err)
 		}
 	}
 
-	console.Info("OnKeyChange", op.Op, op.Key, len(op.Value))
+	console.Info.Logf("OnKeyChange %v %s %d", op.Op, op.Key, len(op.Value))
 }

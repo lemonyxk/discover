@@ -32,14 +32,14 @@ func main() {
 	var dis = discover.New("127.0.0.1:11002").Connect()
 
 	dis.OnClose(func() {
-		console.Info("alive close")
+		console.Info.Log("alive close")
 	})
 
 	var alive = dis.Alive("test", "test1")
 
 	alive.Watch(func(name string, serverInfo []*message.ServerInfo) {
 		for i := 0; i < len(serverInfo); i++ {
-			console.Info("server:", serverInfo[i])
+			console.Info.Logf("%s %+v", name, serverInfo[i])
 		}
 	})
 
@@ -53,41 +53,47 @@ func main() {
 	var key = dis.Key("test", "test1")
 
 	key.Watch(func(message *store.Message) {
-		console.Infof("%+v\n", message)
+		console.Info.Log(message)
 	})
 
 	time.AfterFunc(time.Second, func() {
-		console.Info(dis.Delete("test"))
+		var res, err = dis.Delete("test")
+		console.Info.Logf("%s %s", res, err)
 	})
 
 	time.AfterFunc(2*time.Second, func() {
-		console.Info(dis.Set("test1", []byte("set test1")))
+		var res, err = dis.Set("test1", []byte("set test1"))
+		console.Info.Logf("%s %s", res, err)
 	})
 
 	time.AfterFunc(time.Second, func() {
-		console.Info(dis.Delete("test1"))
+		var res, err = dis.Delete("test1")
+		console.Info.Logf("%s %s", res, err)
 	})
 
 	time.AfterFunc(2*time.Second, func() {
-		console.Info(dis.Set("test2", []byte("set test2")))
+		var res, err = dis.Set("test2", []byte("set test2"))
+		console.Info.Logf("%s %s", res, err)
 	})
 
 	time.AfterFunc(3*time.Second, func() {
-		console.Info(dis.Get("test1"))
+		var res, err = dis.Get("test1")
+		console.Info.Logf("%s %s", res, err)
 	})
 
 	time.AfterFunc(3*time.Second, func() {
-		console.Info(dis.Get("test2"))
+		var res, err = dis.Get("test2")
+		console.Info.Logf("%s %s", res, err)
 	})
 
 	time.AfterFunc(2*time.Second, func() {
 		var all, err = dis.All()
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("%s", err)
 			return
 		}
 
-		console.Infof("%s\n", all)
+		console.Info.Log(all)
 	})
 
 	select {}

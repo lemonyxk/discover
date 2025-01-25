@@ -86,7 +86,7 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 			dis.openFn()
 		}
 
-		console.Infof("register client open at: %s\n", dis.register.Addr)
+		console.Info.Logf("register client open at: %s", dis.register.Addr)
 	}
 
 	dis.register.OnClose = func(conn client2.Conn) {
@@ -94,7 +94,7 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 			dis.closeFn()
 		}
 
-		console.Infof("register client close at: %s\n", dis.register.Addr)
+		console.Info.Logf("register client close at: %s", dis.register.Addr)
 	}
 
 	dis.register.OnError = func(stream *socket.Stream[client2.Conn], err error) {
@@ -102,11 +102,11 @@ func initRegister(dis *Client, wait *sync.WaitGroup) {
 			dis.errorFn(err)
 		}
 
-		console.Infof("register client error: %+v\n", err)
+		console.Error.Logf("register client error: %s", err)
 	}
 
 	dis.register.OnException = func(err error) {
-		console.Infof("register client exception: %+v\n", err)
+		console.Error.Logf("register client exception: %s", err)
 	}
 
 	dis.register.OnReconnecting = func() {

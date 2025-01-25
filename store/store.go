@@ -171,15 +171,15 @@ func (s *Store) Open() error {
 			// } else {
 			// 	console.Info("raft failed heartbeat", v.PeerID, time.Now().Sub(v.LastContact))
 			// }
-			console.Info("raft failed heartbeat", v.PeerID, time.Now().Sub(v.LastContact))
+			console.Info.Logf("raft failed heartbeat: %s %s", v.PeerID, time.Now().Sub(v.LastContact))
 		case raft.ResumedHeartbeatObservation:
-			console.Info("raft resumed heartbeat", v.PeerID)
+			console.Info.Logf("raft resumed heartbeat: %s", v.PeerID)
 		case raft.RequestVoteRequest:
-			console.Info("raft request vote request", string(v.ID))
+			console.Info.Logf("raft request vote request: %s", string(v.ID))
 		case raft.RaftState:
-			console.Info("raft state", v.String())
+			console.Info.Logf("raft state %s", v.String())
 		default:
-			console.Infof("raft other %+v\n", v)
+			console.Info.Logf("raft other %+v", v)
 		}
 		return true
 	}))
@@ -195,7 +195,7 @@ func (s *Store) Open() error {
 		}
 	}()
 
-	console.Info("raft server start at", s.RaftAddr, "state", ra.State())
+	console.Info.Logf("raft server start at: %s, state: %s", s.RaftAddr, ra.State())
 
 	return nil
 }
@@ -323,13 +323,13 @@ func (s *Store) Join(addr string) error {
 
 	configFuture := s.raft.GetConfiguration()
 	if err := configFuture.Error(); err != nil {
-		console.Info("failed to get raft configuration:", err)
+		console.Error.Logf("failed to get raft configuration: %s", err)
 		return err
 	}
 
 	for _, srv := range configFuture.Configuration().Servers {
 		if srv.Address == raft.ServerAddress(addr) {
-			console.Info("node at", addr, "already member of cluster, ignoring join request")
+			console.Info.Logf("node at %s already member of cluster, ignoring join request", addr)
 			return nil
 		}
 	}
@@ -339,7 +339,7 @@ func (s *Store) Join(addr string) error {
 		return f.Error()
 	}
 
-	console.Info("node at", addr, "joined successfully")
+	console.Info.Logf("node at %s joined successfully", addr)
 
 	return nil
 }
@@ -348,7 +348,7 @@ func (s *Store) Leave(addr string) error {
 
 	configFuture := s.raft.GetConfiguration()
 	if err := configFuture.Error(); err != nil {
-		console.Info("failed to get raft configuration:", err)
+		console.Error.Logf("failed to get raft configuration: %s", err)
 		return err
 	}
 
@@ -359,12 +359,12 @@ func (s *Store) Leave(addr string) error {
 				return fmt.Errorf("error removing existing node at %s: %s", addr, err)
 			}
 
-			console.Info("node at", addr, "removed successfully")
+			console.Info.Logf("node at %s removed successfully", addr)
 			return nil
 		}
 	}
 
-	console.Info("node at", addr, "not found")
+	console.Info.Logf("node at %s not found", addr)
 
 	return nil
 }

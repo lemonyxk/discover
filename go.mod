@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/go-hclog v1.5.0
 	github.com/hashicorp/go-msgpack v0.5.5
 	github.com/hashicorp/raft v1.5.0
-	github.com/lemonyxk/console v0.0.0-20230712071747-b48fc1b65fb2
+	github.com/lemonyxk/console v0.0.0-20250125084444-28fe756b2970
 	github.com/lemonyxk/exception v0.0.0-20220526113322-a27eb8cdffce
 	github.com/lemonyxk/kitty v0.0.0-20241219082254-98a9f9bf6cd8
 	github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095
@@ -34,12 +34,13 @@ require (
 	github.com/lemonyxk/caller v0.0.0-20230423070323-e226a04be497 // indirect
 	github.com/lemonyxk/structure v0.0.0-20230801021443-5292061aabb4 // indirect
 	github.com/lemoyxk/caller v0.0.0-20210923041650-ed223e41b72c // indirect
-	github.com/mattn/go-colorable v0.1.12 // indirect
-	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/mattn/go-colorable v0.1.14 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/rs/zerolog v1.33.0 // indirect
 	github.com/savsgio/gotils v0.0.0-20240704082632-aef3928b8a38 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
@@ -47,6 +48,6 @@ require (
 	go.mongodb.org/mongo-driver v1.11.4 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/net v0.31.0 // indirect
-	golang.org/x/sys v0.27.0 // indirect
+	golang.org/x/sys v0.29.0 // indirect
 	google.golang.org/protobuf v1.35.2 // indirect
 )

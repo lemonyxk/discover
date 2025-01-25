@@ -84,7 +84,7 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 				return errors.New(fmt.Sprintf("register error:%d %s", stream.Code(), stream.Data()))
 			}
 
-			console.Info("register success")
+			console.Info.Log("register success")
 
 			go func() {
 				if dis.config == nil || dis.config.AutoUpdateInterval == 0 {
@@ -115,12 +115,12 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 						var info = fn()
 						var bts, err = json.Marshal(info)
 						if err != nil {
-							console.Info(err)
+							console.Error.Logf("auto update json error: %s", err)
 							continue
 						}
 						err = dis.register.Sender().Emit("/Update", bts)
 						if err != nil {
-							console.Info(err)
+							console.Error.Logf("auto update send error: %s", err)
 							continue
 						}
 					}
@@ -131,14 +131,14 @@ func (dis *Client) Register(fn func() message.ServerInfo) {
 		})
 		var bts, err = json.Marshal(info)
 		if err != nil {
-			console.Info(err)
+			console.Error.Logf("register json error: %s", err)
 			time.Sleep(time.Second)
 			dis.registerFn()
 			return
 		}
 		err = dis.register.Sender().Emit("/Register", bts)
 		if err != nil {
-			console.Info(err)
+			console.Error.Logf("register send error: %s", err)
 			time.Sleep(time.Second)
 			dis.registerFn()
 			return
@@ -194,7 +194,7 @@ func (w *Alive) Watch(fn func(name string, serverInfo []*message.ServerInfo)) {
 
 		var bts, err = json.Marshal(w.list)
 		if err != nil {
-			console.Info(err)
+			console.Error.Logf("alive json error: %s", err)
 			time.Sleep(time.Second)
 			w.client.aliveFn()
 			return
@@ -257,7 +257,7 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 
 		var bts, err = json.Marshal(k.list)
 		if err != nil {
-			console.Info(err)
+			console.Error.Logf("key json error: %s", err)
 			time.Sleep(time.Second)
 			k.dis.listenFn()
 			return
@@ -265,7 +265,7 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 
 		err = k.dis.register.Sender().Emit("/Key", bts)
 		if err != nil {
-			console.Info(err)
+			console.Error.Logf("key send error: %s", err)
 			time.Sleep(time.Second)
 			k.dis.listenFn()
 			return
@@ -278,5 +278,5 @@ func (k *KeyList) Watch(fn func(op *store.Message)) {
 func (dis *Client) refreshMaster() {
 	var register = dis.getMasterServer()
 	dis.register.Addr = "ws://" + register.Tcp
-	console.Info("new register addr:", register.Addr)
+	console.Info.Logf("refresh master addr: %s", register.Addr)
 }

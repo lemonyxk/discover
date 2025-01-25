@@ -28,13 +28,13 @@ func (dis *Client) getServerList() []*message.Address {
 
 	var res = client.Get(url).Query().Send()
 	if res.Error() != nil {
-		console.Error(res.Error())
+		console.Error.Logf("get server list error: %s", res.Error())
 		time.Sleep(time.Millisecond * 1000)
 		return dis.getServerList()
 	}
 
 	if res.Code() != 200 {
-		console.Error("get server list error:", res.String())
+		console.Error.Logf("get server list error: %s", res.String())
 		time.Sleep(time.Millisecond * 1000)
 		return dis.getServerList()
 	}
@@ -42,7 +42,7 @@ func (dis *Client) getServerList() []*message.Address {
 	var addr []*message.Address
 	var err = json.Unmarshal(res.Bytes(), &addr)
 	if err != nil {
-		console.Error(err)
+		console.Error.Logf("get server list error: %s", err)
 		time.Sleep(time.Millisecond * 1000)
 		return dis.getServerList()
 	}
