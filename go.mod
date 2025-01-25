@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/raft v1.5.0
 	github.com/lemonyxk/console v0.0.0-20250125084444-28fe756b2970
 	github.com/lemonyxk/exception v0.0.0-20220526113322-a27eb8cdffce
-	github.com/lemonyxk/kitty v0.0.0-20250125094543-e278d24b69c2
+	github.com/lemonyxk/kitty v0.0.0-20250125181921-89a43ed00014
 	github.com/lemonyxk/promise v0.0.0-20220524105311-4bac06bf0095
 	github.com/lemonyxk/utils v0.0.0-20241211130741-fdca16b130ad
 )
