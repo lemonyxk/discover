@@ -56,7 +56,5 @@ func main() {
 		config.Secret = secret
 	}
 
-	console.DefaultLogger.AddField("addr", config.Addr)
-
 	discover.Start(&config)
 }

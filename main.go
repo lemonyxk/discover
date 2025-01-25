@@ -90,10 +90,10 @@ func Start(config *app.Config) {
 	})
 
 	promise.Fall(p2, p4, p5, p6).Then(func(res []any) {
-		console.Debug("discover server start success")
+		console.Info.Logf("discover server start success")
 	})
 
 	signal.ListenKill().Done(func(sig os.Signal) {
-		console.Info("exit with code", sig)
+		console.Info.Logf("exit with code %+v", sig)
 	})
 }

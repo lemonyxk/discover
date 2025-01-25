@@ -32,7 +32,7 @@ func Start(host string, fn func()) {
 
 		defer app.Node.Unlock()
 
-		console.Info("tcp server", conn.FD(), "close")
+		console.Info.Logf("tcp server %d close", conn.FD())
 
 		var data = app.Node.Register.Get(conn.FD())
 		if data == nil {
@@ -41,7 +41,7 @@ func Start(host string, fn func()) {
 
 		app.Node.Register.Delete(conn.FD())
 
-		console.Info("tcp server", conn.FD(), "unregister", data.ServerInfo)
+		console.Info.Logf("tcp server %d unregister %v", conn.FD(), data.ServerInfo)
 
 		for i := 0; i < len(data.ServerList); i++ {
 			app.Node.Alive.DeleteConn(data.ServerList[i], conn.FD())
@@ -59,12 +59,12 @@ func Start(host string, fn func()) {
 				connections[i].SetCode(200)
 				var bts, err = json.Marshal(message.AliveResponse{Name: data.ServerInfo.Name, ServerInfoList: list})
 				if err != nil {
-					console.Error(err)
+					console.Error.Logf("%+v", err)
 					continue
 				}
 				err = connections[i].Emit("/Alive", bts)
 				if err != nil {
-					console.Error(err)
+					console.Error.Logf("%+v", err)
 					continue
 				}
 			}
@@ -72,11 +72,11 @@ func Start(host string, fn func()) {
 	}
 
 	tcpServer.OnError = func(stream *socket.Stream[server.Conn], err error) {
-		console.Error("tcp server", err)
+		console.Error.Logf("tcp server error: %s", err)
 	}
 
 	tcpServer.OnOpen = func(conn server.Conn) {
-		console.Info("tcp server", conn.FD(), "open")
+		console.Info.Logf("tcp server %d open", conn.FD())
 	}
 
 	var router = kitty.NewWebSocketServerRouter[any]()
@@ -84,7 +84,7 @@ func Start(host string, fn func()) {
 	Router(router)
 
 	tcpServer.OnSuccess = func() {
-		console.Info("tcp server start at", host, "success")
+		console.Info.Logf("tcp server start at: %s success", host)
 		fn()
 	}
 

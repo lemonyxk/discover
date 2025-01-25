@@ -63,16 +63,16 @@ func (api *action) Register(stream *socket.Stream[server.Conn]) error {
 		connections[i].SetCode(200)
 		var bts, err = json.Marshal(message.AliveResponse{Name: data.Name, ServerInfoList: list})
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("%+v", err)
 			continue
 		}
 		err = connections[i].Emit("/Alive", bts)
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("%+v", err)
 		}
 	}
 
-	console.Info("tcp server", stream.Conn().FD(), "register", data.Name, data.Addr)
+	console.Info.Logf("tcp server %d register %s %s", stream.Conn().FD(), data.Name, data.Addr)
 
 	stream.SetCode(200)
 
@@ -107,16 +107,16 @@ func (api *action) Update(stream *socket.Stream[server.Conn]) error {
 		connections[i].SetCode(200)
 		var bts, err = json.Marshal(message.AliveResponse{Name: data.Name, ServerInfoList: list})
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("%+v", err)
 			continue
 		}
 		err = connections[i].Emit("/Alive", bts)
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("%+v", err)
 		}
 	}
 
-	console.Info("tcp server", stream.Conn().FD(), "update", data.Name, data.Addr)
+	console.Info.Logf("tcp server %d update %s %s", stream.Conn().FD(), data.Name, data.Addr)
 
 	stream.SetCode(200)
 
@@ -164,12 +164,12 @@ func (api *action) Alive(stream *socket.Stream[server.Conn]) error {
 		stream.SetCode(200)
 		var bts, err = json.Marshal(message.AliveResponse{Name: list[i], ServerInfoList: info})
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("%+v", err)
 			continue
 		}
 		err = api.Success(stream, "/Alive", bts)
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("%+v", err)
 		}
 	}
 
@@ -219,7 +219,7 @@ func (api *action) Key(stream *socket.Stream[server.Conn]) error {
 		msg := store.Build(&store.Message{Op: store.Set, Key: key, Value: value})
 		err = api.Success(stream, stream.Event(), msg)
 		if err != nil {
-			console.Error(err)
+			console.Error.Logf("%+v", err)
 		}
 	}
 
